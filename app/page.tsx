@@ -1,5 +1,15 @@
 import { prisma } from "@/prisma/prisma";
 
+export async function getServerSideProps() {
+  const data = await getData();
+
+  return {
+    props: {
+      data,
+    },
+  };
+}
+
 async function getData() {
   const data = await prisma.cut.findMany({
     select: {
@@ -17,15 +27,14 @@ async function getData() {
   return data;
 }
 
-export default async function page() {
+export default async function HomePage() {
   const data = await getData();
   return (
     <div className="container mx-auto">
       <h1 className="text-2xl font-bold mb-4">Cortes</h1>
       <div className="grid grid-cols-2 gap-4">
         {data.map((cut, id) => (
-          <div key={id} className="p-4 border rounded shadow">
-            <p className="text-sm">Color: {id + 1}</p>
+          <div key={cut.id} className="p-4 border rounded shadow">
             <p className="text-sm">Color: {cut.color}</p>
             <p className="text-sm">Size: {cut.size}</p>
             <p className="text-sm">Total Quantity: {cut.total_quantity}</p>
