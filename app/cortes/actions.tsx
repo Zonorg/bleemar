@@ -1,6 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/prisma";
+import { prisma } from "@/prisma/prisma";
 
 export async function createCut(formData: FormData) {
   const color = formData.get("color") as string;
