@@ -1,3 +1,4 @@
+"use client"
 import { useState, useRef, FormEvent } from "react";
 import { createCut } from "@/app/api/actions/cutActions";
 
