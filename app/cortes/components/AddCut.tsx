@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import { useState, useRef, FormEvent } from "react";
-import { createCut } from "@/app/api/actions/cutActions";
+import { createCut } from "../actions";
 
 export default function AddCut() {
   const [color, setColor] = useState<string>("");
