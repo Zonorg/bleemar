@@ -1,6 +1,6 @@
 import { prisma } from "@/prisma/prisma";
 
-export async function getData() {
+async function getData() {
   const data = await prisma.cut.findMany({
     select: {
       id: true,
@@ -36,12 +36,6 @@ export default async function Page() {
     </div>
   );
 }
-
-
-
-
-
-
 
 // ("use client");
 // import { useEffect, useState } from "react";
