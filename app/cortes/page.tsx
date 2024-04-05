@@ -1,5 +1,4 @@
-"use client";
-
+'use client'
 import AddCut from "./components/AddCut";
 import CutData from "./components/CutData";
 

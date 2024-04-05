@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
@@ -14,18 +13,20 @@ interface Cut {
 export default function CutData() {
   const [cuts, setCuts] = useState<Cut[]>([]);
 
-  async function fetchData() {
-    try {
-      const res = await fetch("/api/cortes");
-      if (res.ok) {
-        const cuts = await res.json();
-        setCuts(cuts);
-      } else {
-        console.error("Error fetching cuts:", res.statusText);
+  function fetchData() {
+    (async function() {
+      try {
+        const res = await fetch("/api/cortes");
+        if (res.ok) {
+          const cuts = await res.json();
+          setCuts(cuts);
+        } else {
+          console.error("Error fetching cuts:", res.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching cuts:", error);
       }
-    } catch (error) {
-      console.error("Error fetching cuts:", error);
-    }
+    })();
   }
 
   useEffect(() => {
