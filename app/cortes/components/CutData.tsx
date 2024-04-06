@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
+import DeleteCut from "./DeleteCut";
 
 interface Cut {
   id: number;
@@ -58,6 +59,7 @@ export default function CutData() {
               <td className="px-4 py-2 flex items-center gap-1">
                 <PiPencilSimpleLineFill size={20} />
                 <FaEye size={20} />
+                <DeleteCut id={cut.id} />
               </td>
             </tr>
           ))}
