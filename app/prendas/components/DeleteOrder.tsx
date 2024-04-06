@@ -38,8 +38,8 @@ const DeleteOrder: React.FC<DeleteOrderProps> = ({ id }) => {
       console.log(data);
     } catch (error) {
       console.error(error);
-    } finally{
-      setIsLoading(false)
+    } finally {
+      setIsLoading(false);
     }
   }
 

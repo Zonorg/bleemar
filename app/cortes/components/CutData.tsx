@@ -34,7 +34,7 @@ export default function CutData() {
   }, [cuts]);
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto max-h-128">
       <table className="w-full bg-white rounded-lg">
         <thead>
           <tr>

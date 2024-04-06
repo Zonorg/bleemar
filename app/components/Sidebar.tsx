@@ -18,12 +18,12 @@ export default function Sidebar() {
 
   return (
     <nav className="navigation bg-white h-full w-64 flex flex-col justify-start shadow-lg max-md:w-64 max-md:hidden">
-      <div className="bg-blue-l py-10 px-5">
-        <Link href="/" className="text-2xl text-white">
+      <div className="py-5 px-5">
+        <Link href="/" className="text-2xl">
           BleeMar
         </Link>
       </div>
-      <div className="flex flex-col justify-between h-full p-4">
+      <div className="flex flex-col justify-between h-full px-4">
         <div className="sidebar_top_menu flex flex-col ">
           <Link
             className={`flex items-center gap-2 hover:bg-background-gray p-2 rounded-md ${

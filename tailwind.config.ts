@@ -21,6 +21,9 @@ const config: Config = {
         "green-l": "#0c5149",
         "blue-l": "#0d192b",
       },
+      spacing: {
+        "128": "32rem",
+      },
     },
   },
   plugins: [],

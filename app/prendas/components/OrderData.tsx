@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
@@ -35,7 +34,7 @@ export default function OrderData() {
   }, [orders]);
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto max-h-128">
       <table className="w-full bg-white rounded-lg">
         <thead>
           <tr>

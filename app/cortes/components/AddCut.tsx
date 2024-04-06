@@ -1,5 +1,5 @@
-"use client";
 import { useState, FormEvent, ChangeEvent } from "react";
+import Modal from "react-modal";
 
 interface FormData {
   color: string;
@@ -15,6 +15,7 @@ export default function AddCut() {
     total_quantity: 0,
     cut_date: "",
   });
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
@@ -32,8 +33,19 @@ export default function AddCut() {
         },
         body: JSON.stringify(formData),
       });
+      if (response.status === 422) {
+        alert("Rellena todos los campos");
+        return;
+      }
       if (response.ok) {
         alert("Corte agregado ");
+        setModalIsOpen(false);
+        setFormData({
+          color: "",
+          size: "",
+          total_quantity: 0,
+          cut_date: "",
+        });
       }
     } catch (error) {
       console.log("Error", error);
@@ -42,46 +54,98 @@ export default function AddCut() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="flex gap-5">
-        <input
-          className="p-1"
-          type="text"
-          name="color"
-          placeholder="Color"
-          value={formData.color}
-          onChange={handleChange}
-        />
-        <input
-          className="p-1"
-          type="text"
-          name="size"
-          placeholder="Talle"
-          value={formData.size}
-          onChange={handleChange}
-        />
-        <input
-          className="p-1"
-          type="number"
-          name="total_quantity"
-          placeholder="Cantidad"
-          value={formData.total_quantity}
-          onChange={handleChange}
-        />
-        <input
-          className="p-1"
-          type="date"
-          name="cut_date"
-          placeholder="Cantidad"
-          value={formData.cut_date}
-          onChange={handleChange}
-        />
-        <button
-          type="submit"
-          className="bg-green-s text-white font-bold px-4 py-2 rounded-lg"
-        >
-          Agregar corte
-        </button>
-      </form>
+      <button
+        onClick={() => setModalIsOpen(true)}
+        className="bg-green-s text-white font-bold px-4 py-2 rounded"
+      >
+        Agregar corte
+      </button>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        ariaHideApp={false}
+        contentLabel="Agregar Corte"
+        style={{
+          content: {
+            maxHeight: "20vh",
+            maxWidth: "60vw",
+            margin: "auto",
+            overflow: "auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        }}
+      >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <div className="flex">
+            <div className="flex flex-col">
+              <label htmlFor="color" className="font-bold">
+                Color
+              </label>
+              <input
+                className="p-1 border h-9"
+                type="text"
+                name="color"
+                value={formData.color}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="size" className="font-bold">
+                Talle
+              </label>
+              <input
+                className="p-1 border h-9"
+                type="text"
+                name="size"
+                value={formData.size}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="total_quantity" className="font-bold">
+                Cantidad
+              </label>
+              <input
+                className="p-1 border h-9"
+                type="number"
+                name="total_quantity"
+                value={formData.total_quantity}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="cut_date" className="font-bold">
+                Fecha
+              </label>
+              <input
+                className="p-1 border h-9"
+                type="date"
+                name="cut_date"
+                placeholder="Fecha de corte"
+                value={formData.cut_date}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-2 ml-auto">
+            <button
+              type="submit"
+              className="bg-green-s text-white font-bold px-4 py-2 rounded"
+            >
+              Agregar corte
+            </button>
+            <button
+              onClick={() => setModalIsOpen(false)}
+              className="border px-4 py-2 rounded font-bold"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
