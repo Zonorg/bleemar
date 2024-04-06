@@ -1,80 +1,87 @@
 "use client";
-import { useState, useRef, FormEvent } from "react";
-import { createCut } from "../actions";
+import { useState, FormEvent, ChangeEvent } from "react";
+
+interface FormData {
+  color: string;
+  size: string;
+  total_quantity: number;
+  cut_date: string;
+}
 
 export default function AddCut() {
-  const [color, setColor] = useState<string>("");
-  const [size, setSize] = useState<string>("");
-  const [totalQuantity, setTotalQuantity] = useState<number | string>("");
-  const [cutDate, setCutDate] = useState<string>("");
+  const [formData, setFormData] = useState<FormData>({
+    color: "",
+    size: "",
+    total_quantity: 0,
+    cut_date: "",
+  });
 
-  const formRef = useRef<HTMLFormElement>(null);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    const parsedValue = name === "total_quantity" ? parseInt(value, 10) : value;
+    setFormData({ ...formData, [name]: parsedValue });
+  };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-
-    const formData = new FormData(formRef.current!);
     try {
-      await createCut(formData);
-
-      setColor("");
-      setSize("");
-      setTotalQuantity("");
-      setCutDate("");
-
-      alert("El corte se ha creado exitosamente.");
+      const response = await fetch("api/cortes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "aplication/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        alert("Corte agregado ");
+      }
     } catch (error) {
-      console.error("Error al crear el corte:");
+      console.log("Error", error);
     }
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit}>
-      <label>
-        Color:
+    <div>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <input
+          className="p-1"
           type="text"
           name="color"
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
-          required
+          placeholder="Color"
+          value={formData.color}
+          onChange={handleChange}
         />
-      </label>
-      <br />
-      <label>
-        Tamaño:
         <input
+          className="p-1"
           type="text"
           name="size"
-          value={size}
-          onChange={(e) => setSize(e.target.value)}
-          required
+          placeholder="Talle"
+          value={formData.size}
+          onChange={handleChange}
         />
-      </label>
-      <br />
-      <label>
-        Cantidad total:
         <input
+          className="p-1"
           type="number"
           name="total_quantity"
-          value={totalQuantity}
-          onChange={(e) => setTotalQuantity(e.target.value)}
-          required
+          placeholder="Cantidad"
+          value={formData.total_quantity}
+          onChange={handleChange}
         />
-      </label>
-      <br />
-      <label>
-        Fecha del corte:
         <input
+          className="p-1"
           type="date"
           name="cut_date"
-          value={cutDate}
-          onChange={(e) => setCutDate(e.target.value)}
-          required
+          placeholder="Cantidad"
+          value={formData.cut_date}
+          onChange={handleChange}
         />
-      </label>
-      <br />
-      <button type="submit">Crear Corte</button>
-    </form>
+        <button
+          type="submit"
+          className="bg-green-s text-white font-bold px-4 py-2 rounded-lg"
+        >
+          Agregar corte
+        </button>
+      </form>
+    </div>
   );
 }
