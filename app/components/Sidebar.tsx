@@ -50,8 +50,12 @@ export default function Sidebar() {
         </div>
         <div className="sidebar_bottom_menu flex flex-col">
           <Link
-            className="flex items-center gap-2 hover:bg-background-gray p-2 rounded-md"
-            href="#"
+            className={`flex items-center gap-2 hover:bg-background-gray p-2 rounded-md ${
+              isActive("/settings")
+                ? "bg-green-s text-white hover:bg-green-s"
+                : ""
+            }`}
+            href="/settings"
           >
             <FaGear size={16} />
             Panel de control

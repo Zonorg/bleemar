@@ -45,7 +45,7 @@ export default function AddOrder() {
       ...formData,
       garmentcuts: [
         ...formData.garmentcuts,
-        { color: "", combined: "", lining: "", quantity: 0 }, // Changed quantity to number
+        { color: "", combined: "", lining: "", quantity: 0 },
       ],
     });
   };
@@ -90,6 +90,10 @@ export default function AddOrder() {
         },
         body: JSON.stringify(formData),
       });
+      if (response.status === 422) {
+        alert("Rellena todos los campos");
+        return;
+      }
       if (response.ok) {
         alert("Pedido agregado");
         setFormData({
@@ -201,7 +205,7 @@ export default function AddOrder() {
           {/* Cortes */}
           {formData.garmentcuts.map((garmentcuts, index) => (
             <div key={index} className="flex">
-              <div className="flex flex-col w-full">
+              <div className="flex flex-col">
                 <label htmlFor={`color-${index}`}>Color</label>
                 <input
                   className="p-1 border h-9"

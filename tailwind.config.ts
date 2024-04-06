@@ -15,6 +15,7 @@ const config: Config = {
       },
       colors: {
         "background-gray": "#f0f2f5",
+        "background-gray-hover": "#d5d6d9",
         "green-xs": "#07f9a2",
         "green-s": "#09c184",
         "green-m": "#0a8967",
