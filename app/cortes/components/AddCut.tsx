@@ -25,7 +25,7 @@ export default function AddCut() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
-      const response = await fetch("api/cortes", {
+      const response = await fetch("/api/cortes", {
         method: "POST",
         headers: {
           "Content-Type": "aplication/json",

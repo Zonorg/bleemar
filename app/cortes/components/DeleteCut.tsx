@@ -20,7 +20,7 @@ const DeleteCut: React.FC<DeleteCutProps> = ({ id }) => {
 
     setIsLoading(true);
     try {
-      const response = await fetch("api/cortes", {
+      const response = await fetch("/api/cortes", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
