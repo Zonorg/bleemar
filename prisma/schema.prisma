@@ -9,7 +9,7 @@ datasource db {
 
 model Order {
   id             String    @id @default(uuid()) @map("_id")
-  title          String?
+  title          String
   gender         String
   total_quantity Int
   order_date     String

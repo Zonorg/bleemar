@@ -42,7 +42,7 @@ export default function AddCut() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <form onSubmit={handleSubmit} className="flex gap-5">
         <input
           className="p-1"
           type="text"
