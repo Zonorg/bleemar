@@ -3,20 +3,27 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/prisma/server-helpers";
 
 export async function GET() {
-  const data = await prisma.cut.findMany({
-    select: {
-      id: true,
-      color: true,
-      size: true,
-      total_quantity: true,
-      cut_date: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  try {
+    const data = await prisma.cut.findMany({
+      select: {
+        id: true,
+        color: true,
+        size: true,
+        total_quantity: true,
+        cut_date: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-  return NextResponse.json(data);
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: "Error de servidor" }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 
 export async function POST(req: Request) {

@@ -109,7 +109,7 @@ export default function Login() {
         </div>
         <button
           type="submit"
-          className="bg-green-s text-white font-bold px-4 py-2 rounded-lg hover:bg-green-m"
+          className="bg-green-s text-white font-bold px-4 py-2 rounded hover:bg-green-m"
         >
           {loading ? (
             <span className="loader">Cargando...</span>

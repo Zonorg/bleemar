@@ -9,20 +9,21 @@ export default function AddOrder() {
     total_quantity: 0,
     order_date: "",
     size: "",
-    cuts: [] as {
+    workshop: "",
+    garmentcuts: [] as {
       color: string;
       combined: string;
       lining: string;
-      quantity: string;
+      quantity: 0;
     }[],
     details: [] as {
-      nombre: string;
-      cantidad: string;
+      title: string;
+      quantity: 0;
     }[],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleOrderChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     const parsedValue = name === "total_quantity" ? parseInt(value, 10) : value;
     setFormData({ ...formData, [name]: parsedValue });
@@ -33,9 +34,26 @@ export default function AddOrder() {
     index: number
   ): void => {
     const { name, value } = e.target;
-    const updatedCuts = [...formData.cuts];
-    updatedCuts[index] = { ...updatedCuts[index], [name]: value };
-    setFormData({ ...formData, cuts: updatedCuts });
+    const parsedValue = name === "quantity" ? parseInt(value, 10) : value;
+    const updatedCuts = [...formData.garmentcuts];
+    updatedCuts[index] = { ...updatedCuts[index], [name]: parsedValue };
+    setFormData({ ...formData, garmentcuts: updatedCuts });
+  };
+
+  const handleAddCut = (): void => {
+    setFormData({
+      ...formData,
+      garmentcuts: [
+        ...formData.garmentcuts,
+        { color: "", combined: "", lining: "", quantity: 0 }, // Changed quantity to number
+      ],
+    });
+  };
+
+  const handleRemoveCut = (index: number): void => {
+    const updatedCuts = [...formData.garmentcuts];
+    updatedCuts.splice(index, 1);
+    setFormData({ ...formData, garmentcuts: updatedCuts });
   };
 
   const handleDetailChange = (
@@ -43,31 +61,16 @@ export default function AddOrder() {
     index: number
   ): void => {
     const { name, value } = e.target;
+    const parsedValue = name === "quantity" ? parseInt(value, 10) : value;
     const updatedDetails = [...formData.details];
-    updatedDetails[index] = { ...updatedDetails[index], [name]: value };
+    updatedDetails[index] = { ...updatedDetails[index], [name]: parsedValue };
     setFormData({ ...formData, details: updatedDetails });
-  };
-
-  const handleAddCut = (): void => {
-    setFormData({
-      ...formData,
-      cuts: [
-        ...formData.cuts,
-        { color: "", combined: "", lining: "", quantity: "" },
-      ],
-    });
-  };
-
-  const handleRemoveCut = (index: number): void => {
-    const updatedCuts = [...formData.cuts];
-    updatedCuts.splice(index, 1);
-    setFormData({ ...formData, cuts: updatedCuts });
   };
 
   const handleAddDetail = (): void => {
     setFormData({
       ...formData,
-      details: [...formData.details, { nombre: "", cantidad: "" }],
+      details: [...formData.details, { title: "", quantity: 0 }],
     });
   };
 
@@ -95,7 +98,8 @@ export default function AddOrder() {
           total_quantity: 0,
           order_date: "",
           size: "",
-          cuts: [],
+          workshop: "",
+          garmentcuts: [],
           details: [],
         });
         setModalIsOpen(false);
@@ -121,7 +125,7 @@ export default function AddOrder() {
         style={{
           content: {
             maxHeight: "70vh",
-            maxWidth: "60vw",
+            maxWidth: "70vw",
             margin: "auto",
             overflow: "auto",
             display: "flex",
@@ -139,7 +143,7 @@ export default function AddOrder() {
                 type="text"
                 name="title"
                 value={formData.title}
-                onChange={handleChange}
+                onChange={handleOrderChange}
               />
             </div>
             <div className="flex flex-col">
@@ -149,7 +153,7 @@ export default function AddOrder() {
                 type="text"
                 name="gender"
                 value={formData.gender}
-                onChange={handleChange}
+                onChange={handleOrderChange}
               />
             </div>
             <div className="flex flex-col">
@@ -159,7 +163,17 @@ export default function AddOrder() {
                 type="text"
                 name="size"
                 value={formData.size}
-                onChange={handleChange}
+                onChange={handleOrderChange}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="workshop">Taller</label>
+              <input
+                className="p-1 border h-9"
+                type="text"
+                name="workshop"
+                value={formData.workshop}
+                onChange={handleOrderChange}
               />
             </div>
             <div className="flex flex-col">
@@ -169,7 +183,7 @@ export default function AddOrder() {
                 type="number"
                 name="total_quantity"
                 value={formData.total_quantity}
-                onChange={handleChange}
+                onChange={handleOrderChange}
               />
             </div>
             <div className="flex flex-col">
@@ -179,13 +193,13 @@ export default function AddOrder() {
                 type="date"
                 name="order_date"
                 value={formData.order_date}
-                onChange={handleChange}
+                onChange={handleOrderChange}
               />
             </div>
           </div>
 
           {/* Cortes */}
-          {formData.cuts.map((cut, index) => (
+          {formData.garmentcuts.map((garmentcuts, index) => (
             <div key={index} className="flex">
               <div className="flex flex-col w-full">
                 <label htmlFor={`color-${index}`}>Color</label>
@@ -193,7 +207,7 @@ export default function AddOrder() {
                   className="p-1 border h-9"
                   type="text"
                   name="color"
-                  value={cut.color}
+                  value={garmentcuts.color}
                   onChange={(e) => handleCutChange(e, index)}
                 />
               </div>
@@ -203,7 +217,7 @@ export default function AddOrder() {
                   className="p-1 border h-9"
                   type="text"
                   name="combined"
-                  value={cut.combined}
+                  value={garmentcuts.combined}
                   onChange={(e) => handleCutChange(e, index)}
                 />
               </div>
@@ -213,7 +227,7 @@ export default function AddOrder() {
                   className="p-1 border h-9"
                   type="text"
                   name="lining"
-                  value={cut.lining}
+                  value={garmentcuts.lining}
                   onChange={(e) => handleCutChange(e, index)}
                 />
               </div>
@@ -221,9 +235,9 @@ export default function AddOrder() {
                 <label htmlFor={`quantity-${index}`}>Cantidad</label>
                 <input
                   className="p-1 border h-9"
-                  type="text"
+                  type="number"
                   name="quantity"
-                  value={cut.quantity}
+                  value={garmentcuts.quantity}
                   onChange={(e) => handleCutChange(e, index)}
                 />
               </div>
@@ -252,22 +266,22 @@ export default function AddOrder() {
           {formData.details.map((detail, index) => (
             <div key={index} className="flex">
               <div className="flex flex-col w-full">
-                <label htmlFor={`nombre-${index}`}>Nombre</label>
+                <label htmlFor={`title-${index}`}>Detalle</label>
                 <input
                   className="p-1 border h-9"
                   type="text"
-                  name="nombre"
-                  value={detail.nombre}
+                  name="title"
+                  value={detail.title}
                   onChange={(e) => handleDetailChange(e, index)}
                 />
               </div>
               <div className="flex flex-col">
-                <label htmlFor={`cantidad-${index}`}>Cantidad</label>
+                <label htmlFor={`quantity-${index}`}>Cantidad</label>
                 <input
                   className="p-1 border h-9"
-                  type="text"
-                  name="cantidad"
-                  value={detail.cantidad}
+                  type="number"
+                  name="quantity"
+                  value={detail.quantity}
                   onChange={(e) => handleDetailChange(e, index)}
                 />
               </div>

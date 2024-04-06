@@ -121,7 +121,7 @@ export default function Register() {
         )}
         <button
           type="submit"
-          className="bg-green-s text-white font-bold px-4 py-2 rounded-lg"
+          className="bg-green-s text-white font-bold px-4 py-2 rounded"
         >
           Crear usuario
         </button>
