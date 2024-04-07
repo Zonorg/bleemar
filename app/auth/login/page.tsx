@@ -74,7 +74,7 @@ export default function Login() {
 
   return (
     <div className="m-auto w-1/4 h-screen px-2 max-md:w-full max-xl:w-1/2">
-      <h1 className="text-2xl text-center">Bleemar</h1>
+      <h1 className="text-2xl text-center">Gestión BleeMar</h1>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-5 m-auto justify-between bg-white p-5 mt-5"

@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { FaEye } from "react-icons/fa";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
 import DeleteCut from "./DeleteCut";
 
@@ -56,9 +55,8 @@ export default function CutData() {
               <td className="px-4 py-2">
                 {new Date(cut.cut_date).toLocaleDateString()}
               </td>
-              <td className="px-4 py-2 flex items-center gap-1">
+              <td className="px-4 py-2 flex items-center gap-3">
                 <PiPencilSimpleLineFill size={20} />
-                <FaEye size={20} />
                 <DeleteCut id={cut.id} />
               </td>
             </tr>

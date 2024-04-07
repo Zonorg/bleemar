@@ -17,12 +17,19 @@ export default function AddCut() {
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
     const { name, value } = e.target;
-    const parsedValue = name === "total_quantity" ? parseInt(value, 10) : value;
-    setFormData({ ...formData, [name]: parsedValue });
-  };
 
+    if (e.target.tagName === "INPUT") {
+      const parsedValue =
+        name === "total_quantity" ? parseInt(value, 10) : value;
+      setFormData({ ...formData, [name]: parsedValue });
+    } else if (e.target.tagName === "SELECT") {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
@@ -95,13 +102,20 @@ export default function AddCut() {
               <label htmlFor="size" className="font-bold">
                 Talle
               </label>
-              <input
+              <select
                 className="p-1 border h-9"
-                type="text"
                 name="size"
                 value={formData.size}
                 onChange={handleChange}
-              />
+              >
+                <option value="">Seleccionar Talle</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+              </select>
             </div>
             <div className="flex flex-col">
               <label htmlFor="total_quantity" className="font-bold">
@@ -113,6 +127,7 @@ export default function AddCut() {
                 name="total_quantity"
                 value={formData.total_quantity}
                 onChange={handleChange}
+                min={1}
               />
             </div>
             <div className="flex flex-col">

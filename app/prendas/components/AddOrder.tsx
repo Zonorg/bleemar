@@ -23,10 +23,18 @@ export default function AddOrder() {
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const handleOrderChange = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleOrderChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
     const { name, value } = e.target;
-    const parsedValue = name === "total_quantity" ? parseInt(value, 10) : value;
-    setFormData({ ...formData, [name]: parsedValue });
+
+    if (e.target.tagName === "INPUT") {
+      const parsedValue =
+        name === "total_quantity" ? parseInt(value, 10) : value;
+      setFormData({ ...formData, [name]: parsedValue });
+    } else if (e.target.tagName === "SELECT") {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleCutChange = (
@@ -162,13 +170,20 @@ export default function AddOrder() {
             </div>
             <div className="flex flex-col">
               <label htmlFor="size">Talles</label>
-              <input
+              <select
                 className="p-1 border h-9"
-                type="text"
                 name="size"
                 value={formData.size}
                 onChange={handleOrderChange}
-              />
+              >
+                <option value="">Seleccionar Talle</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+              </select>
             </div>
             <div className="flex flex-col">
               <label htmlFor="workshop">Taller</label>
@@ -188,6 +203,7 @@ export default function AddOrder() {
                 name="total_quantity"
                 value={formData.total_quantity}
                 onChange={handleOrderChange}
+                min={1}
               />
             </div>
             <div className="flex flex-col">
@@ -243,6 +259,7 @@ export default function AddOrder() {
                   name="quantity"
                   value={garmentcuts.quantity}
                   onChange={(e) => handleCutChange(e, index)}
+                  min={1}
                 />
               </div>
               <button
@@ -287,6 +304,7 @@ export default function AddOrder() {
                   name="quantity"
                   value={detail.quantity}
                   onChange={(e) => handleDetailChange(e, index)}
+                  min={1}
                 />
               </div>
               <button

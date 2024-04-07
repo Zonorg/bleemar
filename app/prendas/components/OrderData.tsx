@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { FaEye } from "react-icons/fa";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
 import DeleteOrder from "./DeleteOrder";
 
@@ -87,9 +86,8 @@ export default function OrderData() {
                   ))}
                 </ul>
               </td>
-              <td className="px-4 py-2 flex items-center gap-1">
+              <td className="px-4 py-2 flex items-center gap-3">
                 <PiPencilSimpleLineFill size={20} />
-                <FaEye size={20} />
                 <DeleteOrder id={order.id} />
               </td>
             </tr>
