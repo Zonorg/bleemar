@@ -2,9 +2,14 @@ import { connectToDatabase } from "@/prisma/server-helpers";
 import { prisma } from "@/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../[...nextauth]/route";
 
-export const POST = async (req: Request) => {
+export default async function POST(req: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user)
+      return NextResponse.json({ messagge: "Unauthorize" }, { status: 401 });
     const { username, password } = await req.json();
     if (!username || !password)
       return NextResponse.json(
@@ -36,4 +41,4 @@ export const POST = async (req: Request) => {
   } finally {
     await prisma.$disconnect();
   }
-};
+}
