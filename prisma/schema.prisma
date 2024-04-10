@@ -34,7 +34,7 @@ model Garmentcuts {
 
 model Details {
   id        String   @id @default(uuid()) @map("_id")
-  title    String
+  title     String
   quantity  Int
   createdAt DateTime @default(now())
   Order     Order?   @relation(fields: [orderId], references: [id])
@@ -55,12 +55,7 @@ model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   username  String   @unique
   password  String
-  role      UserRole @default(USER)
+  role      String   @default("User")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-enum UserRole {
-  USER
-  ADMIN
 }

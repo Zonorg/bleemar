@@ -1,10 +1,17 @@
+import { getServerSession } from "next-auth/next";
 import { connectToDatabase } from "@/prisma/server-helpers";
 import { prisma } from "@/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { authOptions } from "../[...nextauth]/route";
 
 export const POST = async (req: Request) => {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
     const { username, password } = await req.json();
     if (!username || !password)
       return NextResponse.json(
