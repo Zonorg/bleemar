@@ -2,20 +2,6 @@ import { connectToDatabase } from "@/prisma/server-helpers";
 import { prisma } from "@/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { getSession } from "next-auth/react";
-import { NextApiRequest, NextApiResponse } from "next";
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const session = await getSession({ req });
-
-  if (!session)
-    return res.status(401).send({
-      message: "Unauthenticated user. Your IP has been logged",
-    });
-}
 
 export const POST = async (req: Request) => {
   try {
