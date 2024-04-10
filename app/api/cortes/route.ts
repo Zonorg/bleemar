@@ -1,6 +1,15 @@
 import { prisma } from "@/prisma";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/prisma/server-helpers";
+import { getServerSession } from "next-auth";
+
+async function getSession() {
+  const session = await getServerSession();
+  if (!session?.user) {
+    return NextResponse.json({ message: "Unauthorize" }, { status: 401 });
+  }
+  return session;
+}
 
 export async function GET() {
   try {
@@ -28,6 +37,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    await getSession();
     const { color, size, total_quantity, cut_date } = await req.json();
     if (!color || !size || !total_quantity || !cut_date)
       return NextResponse.json(
@@ -49,6 +59,7 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    await getSession();
     const { id } = await req.json();
     if (!id)
       return NextResponse.json(

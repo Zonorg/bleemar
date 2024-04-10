@@ -4,11 +4,17 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { getServerSession } from "next-auth";
 
+async function getSession() {
+  const session = await getServerSession();
+  if (!session?.user) {
+    return NextResponse.json({ message: "Unauthorize" }, { status: 401 });
+  }
+  return session;
+}
+
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession();
-    if (!session?.user)
-      return NextResponse.json({ messagge: "Unauthorize" }, { status: 401 });
+    await getSession();
     const { username, password } = await req.json();
     if (!username || !password)
       return NextResponse.json(
