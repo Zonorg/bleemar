@@ -2,11 +2,8 @@
 import Link from "next/link";
 import React from "react";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 export default function Navbar() {
-  const { data: session } = useSession();
-  console.log(session?.user?.name);
   const pathname = usePathname();
   if (pathname === "/auth/login") return null;
   return (
