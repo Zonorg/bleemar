@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { getServerSession } from "next-auth";
 
-export default async function POST(req: Request) {
+export async function POST(req: Request) {
   try {
     const session = await getServerSession();
     if (!session?.user)
