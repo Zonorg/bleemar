@@ -1,22 +1,21 @@
-import { getServerSession } from "next-auth/next";
 import { connectToDatabase } from "@/prisma/server-helpers";
 import { prisma } from "@/prisma";
 import { NextResponse } from "next/server";
-import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-import { authOptions } from "../[...nextauth]/route";
+import { getSession } from "next-auth/react";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getServerSession(req, res, authOptions);
-  if (session) {
-    // Signed in
-    console.log("Session", JSON.stringify(session, null, 2));
-  } else {
-    // Not Signed in
-    res.status(401);
-  }
-  res.end();
-};
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const session = await getSession({ req });
+
+  if (!session)
+    return res.status(401).send({
+      message: "Unauthenticated user. Your IP has been logged",
+    });
+}
 
 export const POST = async (req: Request) => {
   try {
