@@ -30,12 +30,8 @@ const DeleteCut: React.FC<DeleteCutProps> = ({ id }) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      setTimeout(() => {
-        alert("Corte eliminado");
-      }, 1000);
-
-      const data = await response.json();
-      console.log(data);
+      window.location.reload();
+      alert("Corte eliminado");
     } catch (error) {
       console.error(error);
     } finally {

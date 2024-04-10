@@ -22,6 +22,7 @@ interface Order {
 
 export default function OrderData() {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   async function fetchData() {
     try {
@@ -39,10 +40,26 @@ export default function OrderData() {
 
   useEffect(() => {
     fetchData();
-  }, [orders]);
+  }, []);
+
+  const filteredOrders = orders.filter(
+    (order) =>
+      order.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      new Date(order.order_date)
+        .toLocaleDateString()
+        .includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="overflow-x-auto max-h-128">
+      <input
+        type="text"
+        placeholder="Buscar por título, género o fecha..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full p-2 border border-gray-300 rounded-md mb-4"
+      />
       <table className="w-full bg-white rounded-lg">
         <thead>
           <tr>
@@ -58,7 +75,7 @@ export default function OrderData() {
           </tr>
         </thead>
         <tbody className="align-top">
-          {orders.map((order, index) => (
+          {filteredOrders.map((order, index) => (
             <tr key={index} className="border-b">
               <td className="px-4 py-2">{index + 1}</td>
               <td className="px-4 py-2">{order.title}</td>

@@ -46,13 +46,13 @@ export default function AddCut() {
       }
       if (response.ok) {
         alert("Corte agregado ");
-        setModalIsOpen(false);
         setFormData({
           color: "",
           size: "",
           total_quantity: 0,
           cut_date: "",
         });
+        window.location.reload();
       }
     } catch (error) {
       console.log("Error", error);

@@ -21,6 +21,7 @@ export default function AddOrder() {
       quantity: 0;
     }[],
   });
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleOrderChange = (
@@ -114,7 +115,7 @@ export default function AddOrder() {
           garmentcuts: [],
           details: [],
         });
-        setModalIsOpen(false);
+        window.location.reload()
       }
     } catch (error) {
       console.log("Error", error);

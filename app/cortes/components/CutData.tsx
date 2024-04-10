@@ -13,6 +13,7 @@ interface Cut {
 
 export default function CutData() {
   const [cuts, setCuts] = useState<Cut[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   async function fetchData() {
     try {
@@ -30,10 +31,26 @@ export default function CutData() {
 
   useEffect(() => {
     fetchData();
-  }, [cuts]);
+  }, []);
+
+  const filteredCuts = cuts.filter(
+    (cut) =>
+      cut.color.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cut.size.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cut.total_quantity.toString().includes(searchTerm.toLowerCase()) ||
+      cut.id.toString().includes(searchTerm.toLowerCase()) ||
+      cut.cut_date.toString().includes(searchTerm)
+  );
 
   return (
     <div className="overflow-x-auto max-h-128">
+      <input
+        type="text"
+        placeholder="Buscar por corte, cantidad o fecha..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full p-2 border border-gray-300 rounded-md mb-4"
+      />
       <table className="w-full bg-white rounded-lg">
         <thead>
           <tr>
@@ -46,7 +63,7 @@ export default function CutData() {
           </tr>
         </thead>
         <tbody className="align-top">
-          {cuts.map((cut, index) => (
+          {filteredCuts.map((cut, index) => (
             <tr key={index} className="border-b">
               <td className="px-4 py-2">{index + 1}</td>
               <td className="px-4 py-2">{cut.color}</td>

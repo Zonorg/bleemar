@@ -30,12 +30,8 @@ const DeleteOrder: React.FC<DeleteOrderProps> = ({ id }) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      setTimeout(() => {
-        alert("Pedido eliminado");
-      }, 1000);
-
-      const data = await response.json();
-      console.log(data);
+      alert("Pedido eliminado");
+      window.location.reload();
     } catch (error) {
       console.error(error);
     } finally {
