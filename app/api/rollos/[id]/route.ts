@@ -18,13 +18,12 @@ export async function GET(req: Request, { params }: { params: any }) {
         id: true,
         name: true,
         order_number: true,
-        color: true,
-        combined: true,
-        lining: true,
         size: true,
         workshop: true,
         total_quantity: true,
         order_date: true,
+        rollcuts: true,
+        rolldetails: true,
       },
     });
 

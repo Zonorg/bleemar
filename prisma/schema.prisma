@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  username  String   @unique
+  password  String
+  role      String   @default("Usuario")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Order {
   id             String        @id @default(uuid()) @map("_id")
   title          String
@@ -42,25 +51,34 @@ model Details {
 }
 
 model Roll {
-  id             String    @id @default(uuid()) @map("_id")
+  id             String        @id @default(uuid()) @map("_id")
   order_number   Int
   name           String
-  color          String
-  combined       String
-  lining         String
   size           String
   workshop       String
   total_quantity Int
   order_date     String
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime? @updatedAt
+  rollcuts       RollCuts[]
+  rolldetails    RollDetails[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime?     @updatedAt
 }
 
-model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  username  String   @unique
-  password  String
-  role      String   @default("Usuario")
+model RollCuts {
+  id       String  @id @default(uuid()) @map("_id")
+  color    String
+  combined String
+  lining   String
+  quantity Int
+  Roll     Roll?   @relation(fields: [rollId], references: [id])
+  rollId   String?
+}
+
+model RollDetails {
+  id        String   @id @default(uuid()) @map("_id")
+  title     String
+  quantity  Int
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  Roll      Roll?    @relation(fields: [rollId], references: [id])
+  rollId    String?
 }

@@ -10,13 +10,12 @@ export async function GET() {
         id: true,
         order_number: true,
         name: true,
-        color: true,
-        combined: true,
-        lining: true,
         size: true,
         workshop: true,
         total_quantity: true,
         order_date: true,
+        rollcuts: true,
+        rolldetails: true,
       },
       orderBy: {
         createdAt: "asc",
@@ -37,24 +36,22 @@ export async function POST(req: Request) {
     const {
       order_number,
       name,
-      color,
-      combined,
       size,
-      lining,
       workshop,
       total_quantity,
       order_date,
+      rollcuts,
+      rolldetails,
     } = await req.json();
     if (
       !order_number ||
       !name ||
-      !color ||
-      !combined ||
       !size ||
-      !lining ||
       !workshop ||
       !total_quantity ||
-      !order_date
+      !order_date ||
+      !rollcuts ||
+      !rolldetails
     )
       return NextResponse.json(
         { message: "Provide all the data" },
@@ -65,13 +62,12 @@ export async function POST(req: Request) {
       data: {
         order_number,
         name,
-        color,
-        combined,
         size,
-        lining,
         workshop,
         total_quantity,
         order_date,
+        rollcuts: { createMany: { data: rollcuts } },
+        rolldetails: { createMany: { data: rolldetails } },
       },
     });
     return NextResponse.json({ roll }, { status: 201 });
