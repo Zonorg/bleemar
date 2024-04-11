@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { PiPencilSimpleLineFill } from "react-icons/pi";
 import Link from "next/link";
 
 export default function CutDetails() {
@@ -51,6 +52,9 @@ export default function CutDetails() {
               <td className="px-4 py-2">{rollData.total_quantity}</td>
               <td className="px-4 py-2">
                 {new Date(rollData.order_date).toLocaleDateString()}
+              </td>
+              <td className="px-4 py-2">
+                <PiPencilSimpleLineFill size={20} />
               </td>
             </tr>
           )}

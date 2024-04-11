@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { PiPencilSimpleLineFill } from "react-icons/pi";
+import { FaEye } from "react-icons/fa";
 import DeleteCut from "./DeleteCut";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -78,7 +78,7 @@ export default function RollData() {
               </td>
               <td className="px-4 py-2 flex items-center gap-3">
                 <Link href={`/cortes/${roll.id}`}>
-                  <PiPencilSimpleLineFill size={20} />
+                  <FaEye size={20} />
                 </Link>
                 {session?.role === "Admin" && <DeleteCut id={roll.id} />}
               </td>
