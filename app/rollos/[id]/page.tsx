@@ -126,7 +126,7 @@ export default function RollDetails() {
       </div>
       <Link
         href="/rollos"
-        className="bg-green-s text-white font-bold px-4 py-2 rounded ml-auto"
+        className="bg-green-s text-white font-bold px-4 py-2 rounded mx-auto"
       >
         Volver
       </Link>
