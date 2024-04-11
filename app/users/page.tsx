@@ -7,7 +7,7 @@ interface Order {
   role: string;
 }
 
-export default function userData() {
+export default function UserData() {
   const [users, setUsers] = useState<Order[]>([]);
 
   async function fetchData() {
