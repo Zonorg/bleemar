@@ -7,6 +7,6 @@ export const config = {
     "/prendas/:path*",
     "/settings/:path*",
     "/auth/register",
-    "/api/:path*"
+    "/api/:path*",
   ],
 };

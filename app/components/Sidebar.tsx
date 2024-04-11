@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { RiScissors2Fill } from "react-icons/ri";
+import { GiRolledCloth } from "react-icons/gi";
 import { FaShirt, FaGear } from "react-icons/fa6";
 import { IoIosExit } from "react-icons/io";
 import { usePathname } from "next/navigation";
@@ -13,7 +13,7 @@ export default function Sidebar() {
   }
 
   const isActive = (href: string) => {
-    return pathname === href;
+    return pathname.startsWith(href);
   };
 
   return (
@@ -44,8 +44,8 @@ export default function Sidebar() {
             }`}
             href="/cortes"
           >
-            <RiScissors2Fill className="rotate-12" size={18} />
-            Cortes
+            <GiRolledCloth className="rotate-12" size={18} />
+            Rollos
           </Link>
         </div>
         <div className="sidebar_bottom_menu flex flex-col">

@@ -4,16 +4,22 @@ import { connectToDatabase } from "@/prisma/server-helpers";
 
 export async function GET() {
   try {
-    const data = await prisma.cut.findMany({
+    await connectToDatabase();
+    const data = await prisma.roll.findMany({
       select: {
         id: true,
+        order_number: true,
+        name: true,
         color: true,
+        combined: true,
+        lining: true,
         size: true,
+        workshop: true,
         total_quantity: true,
-        cut_date: true,
+        order_date: true,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
 
@@ -28,17 +34,47 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const { color, size, total_quantity, cut_date } = await req.json();
-    if (!color || !size || !total_quantity || !cut_date)
+    const {
+      order_number,
+      name,
+      color,
+      combined,
+      size,
+      lining,
+      workshop,
+      total_quantity,
+      order_date,
+    } = await req.json();
+    if (
+      !order_number ||
+      !name ||
+      !color ||
+      !combined ||
+      !size ||
+      !lining ||
+      !workshop ||
+      !total_quantity ||
+      !order_date
+    )
       return NextResponse.json(
-        { message: "Ingresa los datos correctamente" },
+        { message: "Provide all the data" },
         { status: 422 }
       );
     await connectToDatabase();
-    const cut = await prisma.cut.create({
-      data: { color, size, total_quantity, cut_date },
+    const roll = await prisma.roll.create({
+      data: {
+        order_number,
+        name,
+        color,
+        combined,
+        size,
+        lining,
+        workshop,
+        total_quantity,
+        order_date,
+      },
     });
-    return NextResponse.json({ cut }, { status: 201 });
+    return NextResponse.json({ roll }, { status: 201 });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: "Error de servidor" }, { status: 500 });
@@ -52,14 +88,14 @@ export async function DELETE(req: Request) {
     const { id } = await req.json();
     if (!id)
       return NextResponse.json(
-        { message: "Ingresa el id correctamente" },
+        { message: "Provide the ID properly" },
         { status: 422 }
       );
     await connectToDatabase();
-    const cut = await prisma.cut.delete({
+    const roll = await prisma.roll.delete({
       where: { id },
     });
-    return NextResponse.json({ cut }, { status: 200 });
+    return NextResponse.json({ roll }, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: "Error de servidor" }, { status: 500 });

@@ -14,7 +14,7 @@ export default function page() {
           Crear usuario <FaUserPlus />
         </Link>
         <Link
-          href="#"
+          href="/users"
           className="bg-background-gray hover:bg-background-gray-hover p-4 rounded-lg mb-auto flex flex-col items-center w-36"
         >
           Modificar usuario <FaUserCog />

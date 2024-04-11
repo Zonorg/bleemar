@@ -41,12 +41,17 @@ model Details {
   orderId   String?
 }
 
-model Cut {
+model Roll {
   id             String    @id @default(uuid()) @map("_id")
+  order_number   Int
+  name           String
   color          String
+  combined       String
+  lining         String
   size           String
+  workshop       String
   total_quantity Int
-  cut_date       String
+  order_date     String
   createdAt      DateTime  @default(now())
   updatedAt      DateTime? @updatedAt
 }
@@ -55,7 +60,7 @@ model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   username  String   @unique
   password  String
-  role      String   @default("User")
+  role      String   @default("Usuario")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

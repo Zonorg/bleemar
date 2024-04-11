@@ -2,30 +2,34 @@
 import { useEffect, useState } from "react";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
 import DeleteCut from "./DeleteCut";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
-interface Cut {
+interface Roll {
   id: number;
-  color: string;
-  size: string;
+  order_number: number;
+  name: string;
+  workshop: string;
   total_quantity: number;
-  cut_date: string;
+  order_date: string;
 }
 
-export default function CutData() {
-  const [cuts, setCuts] = useState<Cut[]>([]);
+export default function RollData() {
+  const [rolls, setRolls] = useState<Roll[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const { data: session } = useSession();
 
   async function fetchData() {
     try {
       const res = await fetch("/api/cortes");
       if (res.ok) {
-        const cuts = await res.json();
-        setCuts(cuts);
+        const rolls = await res.json();
+        setRolls(rolls);
       } else {
-        console.error("Error fetching cuts:", res.statusText);
+        console.error("Error fetching rolls:", res.statusText);
       }
     } catch (error) {
-      console.error("Error fetching cuts:", error);
+      console.error("Error fetching rolls:", error);
     }
   }
 
@@ -33,20 +37,20 @@ export default function CutData() {
     fetchData();
   }, []);
 
-  const filteredCuts = cuts.filter(
-    (cut) =>
-      cut.color.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cut.size.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cut.total_quantity.toString().includes(searchTerm.toLowerCase()) ||
-      cut.id.toString().includes(searchTerm.toLowerCase()) ||
-      cut.cut_date.toString().includes(searchTerm)
+  const filteredRolls = rolls.filter(
+    (roll) =>
+      roll.order_number.toString().includes(searchTerm.toLowerCase()) ||
+      roll.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      roll.workshop.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      roll.total_quantity.toString().includes(searchTerm.toLowerCase()) ||
+      roll.order_date.toString().includes(searchTerm)
   );
 
   return (
     <div className="overflow-x-auto max-h-128">
       <input
         type="text"
-        placeholder="Buscar por corte, cantidad o fecha..."
+        placeholder="Buscar pedido..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full p-2 border border-gray-300 rounded-md mb-4"
@@ -54,27 +58,29 @@ export default function CutData() {
       <table className="w-full bg-white rounded-lg">
         <thead>
           <tr>
-            <th className="px-4 py-2 text-start">Nº</th>
-            <th className="px-4 py-2 text-start">Color</th>
-            <th className="px-4 py-2 text-start">Talle</th>
+            <th className="px-4 py-2 text-start">Nº Pedido</th>
+            <th className="px-4 py-2 text-start">Nombre</th>
+            <th className="px-4 py-2 text-start">Taller</th>
             <th className="px-4 py-2 text-start">Cantidad</th>
             <th className="px-4 py-2 text-start">Fecha del pedido</th>
             <th className="px-4 py-2 text-start">Acciones</th>
           </tr>
         </thead>
         <tbody className="align-top">
-          {filteredCuts.map((cut, index) => (
+          {filteredRolls.map((roll, index) => (
             <tr key={index} className="border-b">
-              <td className="px-4 py-2">{index + 1}</td>
-              <td className="px-4 py-2">{cut.color}</td>
-              <td className="px-4 py-2">{cut.size}</td>
-              <td className="px-4 py-2">{cut.total_quantity}</td>
+              <td className="px-4 py-2">{roll.order_number}</td>
+              <td className="px-4 py-2">{roll.name}</td>
+              <td className="px-4 py-2">{roll.workshop}</td>
+              <td className="px-4 py-2">{roll.total_quantity}</td>
               <td className="px-4 py-2">
-                {new Date(cut.cut_date).toLocaleDateString()}
+                {new Date(roll.order_date).toLocaleDateString()}
               </td>
               <td className="px-4 py-2 flex items-center gap-3">
-                <PiPencilSimpleLineFill size={20} />
-                <DeleteCut id={cut.id} />
+                <Link href={`/cortes/${roll.id}`}>
+                  <PiPencilSimpleLineFill size={20} />
+                </Link>
+                {session?.role === "Admin" && <DeleteCut id={roll.id} />}
               </td>
             </tr>
           ))}

@@ -2,18 +2,28 @@ import { useState, FormEvent, ChangeEvent } from "react";
 import Modal from "react-modal";
 
 interface FormData {
+  name: string;
+  order_number: number;
   color: string;
+  combined: string;
+  lining: string;
   size: string;
+  workshop: string;
   total_quantity: number;
-  cut_date: string;
+  order_date: string;
 }
 
 export default function AddCut() {
   const [formData, setFormData] = useState<FormData>({
+    name: "",
+    order_number: 0,
     color: "",
+    combined: "",
+    lining: "",
     size: "",
+    workshop: "",
     total_quantity: 0,
-    cut_date: "",
+    order_date: "",
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -21,15 +31,20 @@ export default function AddCut() {
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ): void => {
     const { name, value } = e.target;
+    let parsedValue: string | number | Date;
 
-    if (e.target.tagName === "INPUT") {
-      const parsedValue =
-        name === "total_quantity" ? parseInt(value, 10) : value;
-      setFormData({ ...formData, [name]: parsedValue });
-    } else if (e.target.tagName === "SELECT") {
-      setFormData({ ...formData, [name]: value });
+    switch (e.target.type) {
+      case "number":
+        parsedValue = parseInt(value, 10);
+        break;
+      default:
+        parsedValue = value;
+        break;
     }
+
+    setFormData({ ...formData, [name]: parsedValue });
   };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
@@ -47,10 +62,15 @@ export default function AddCut() {
       if (response.ok) {
         alert("Corte agregado ");
         setFormData({
+          name: "",
+          order_number: 0,
           color: "",
+          combined: "",
+          lining: "",
           size: "",
+          workshop: "",
           total_quantity: 0,
-          cut_date: "",
+          order_date: "",
         });
         window.location.reload();
       }
@@ -75,7 +95,6 @@ export default function AddCut() {
         style={{
           content: {
             maxHeight: "20vh",
-            maxWidth: "60vw",
             margin: "auto",
             overflow: "auto",
             display: "flex",
@@ -86,6 +105,30 @@ export default function AddCut() {
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex">
+            <div className="flex flex-col">
+              <label htmlFor="name" className="font-bold">
+                Nombre
+              </label>
+              <input
+                className="p-1 border h-9"
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="order_number" className="font-bold">
+                Número de pedido
+              </label>
+              <input
+                className="p-1 border h-9"
+                type="number"
+                name="order_number"
+                value={formData.order_number}
+                onChange={handleChange}
+              />
+            </div>
             <div className="flex flex-col">
               <label htmlFor="color" className="font-bold">
                 Color
@@ -99,8 +142,32 @@ export default function AddCut() {
               />
             </div>
             <div className="flex flex-col">
+              <label htmlFor="combined" className="font-bold">
+                Combinado
+              </label>
+              <input
+                className="p-1 border h-9"
+                type="text"
+                name="combined"
+                value={formData.combined}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="lining" className="font-bold">
+                Forro
+              </label>
+              <input
+                className="p-1 border h-9"
+                type="text"
+                name="lining"
+                value={formData.lining}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex flex-col">
               <label htmlFor="size" className="font-bold">
-                Talle
+                Talles
               </label>
               <select
                 className="p-1 border h-9"
@@ -108,13 +175,31 @@ export default function AddCut() {
                 value={formData.size}
                 onChange={handleChange}
               >
-                <option value="">Seleccionar Talle</option>
+                <option value="">Seleccionar Talles</option>
                 <option value="XS">XS</option>
                 <option value="S">S</option>
                 <option value="M">M</option>
                 <option value="L">L</option>
                 <option value="XL">XL</option>
                 <option value="XXL">XXL</option>
+              </select>
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="workshop" className="font-bold">
+                Taller
+              </label>
+              <select
+                className="p-1 border h-9"
+                name="workshop"
+                value={formData.workshop}
+                onChange={handleChange}
+              >
+                <option value="">Seleccionar Taller</option>
+                <option value="HUGO">HUGO</option>
+                <option value="CHINO">CHINO</option>
+                <option value="SOLTERO">SOLTERO</option>
+                <option value="FREDY">FREDY</option>
+                <option value="DANIEL">DANIEL</option>
               </select>
             </div>
             <div className="flex flex-col">
@@ -131,20 +216,19 @@ export default function AddCut() {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="cut_date" className="font-bold">
+              <label htmlFor="order_date" className="font-bold">
                 Fecha
               </label>
               <input
                 className="p-1 border h-9"
                 type="date"
-                name="cut_date"
+                name="order_date"
                 placeholder="Fecha de corte"
-                value={formData.cut_date}
+                value={formData.order_date}
                 onChange={handleChange}
               />
             </div>
           </div>
-
           <div className="flex gap-2 ml-auto">
             <button
               type="submit"

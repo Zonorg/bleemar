@@ -82,7 +82,7 @@ export default function Register() {
   };
 
   return (
-    <div className="m-auto">
+    <div className="m-auto bg-white w-64 h-64">
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <input
           className="p-1"
