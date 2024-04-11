@@ -2,16 +2,16 @@ import { useState } from "react";
 import { BsFillTrashFill } from "react-icons/bs";
 import { FiLoader } from "react-icons/fi";
 
-interface DeleteCutProps {
+interface DeleteRollProps {
   id: number;
 }
 
-const DeleteCut: React.FC<DeleteCutProps> = ({ id }) => {
+const DeleteRoll: React.FC<DeleteRollProps> = ({ id }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleDelete() {
     const confirmDelete = window.confirm(
-      "¿Estás seguro de que deseas eliminar este corte?"
+      "¿Estás seguro de que deseas eliminar este pedido?"
     );
 
     if (!confirmDelete) {
@@ -20,7 +20,7 @@ const DeleteCut: React.FC<DeleteCutProps> = ({ id }) => {
 
     setIsLoading(true);
     try {
-      const response = await fetch("/api/cortes", {
+      const response = await fetch("/api/rollos", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -31,7 +31,7 @@ const DeleteCut: React.FC<DeleteCutProps> = ({ id }) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       window.location.reload();
-      alert("Corte eliminado");
+      alert("Pedido eliminado");
     } catch (error) {
       console.error(error);
     } finally {
@@ -46,4 +46,4 @@ const DeleteCut: React.FC<DeleteCutProps> = ({ id }) => {
   );
 };
 
-export default DeleteCut;
+export default DeleteRoll;

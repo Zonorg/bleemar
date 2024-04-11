@@ -4,14 +4,14 @@ import { useParams } from "next/navigation";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
 import Link from "next/link";
 
-export default function CutDetails() {
+export default function RollDetails() {
   const [rollData, setRollData] = useState<any>(null);
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/cortes/${id}`);
+        const response = await fetch(`/api/rollos/${id}`);
         const data = await response.json();
         setRollData(data);
       } catch (error) {
@@ -62,7 +62,7 @@ export default function CutDetails() {
       </table>
       <div>
         <Link
-          href="/cortes"
+          href="/rollos"
           className="bg-green-s text-white font-bold px-4 py-2 rounded"
         >
           Volver

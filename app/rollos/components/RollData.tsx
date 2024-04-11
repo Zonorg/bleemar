@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
-import DeleteCut from "./DeleteCut";
+import DeleteRoll from "./DeleteRoll";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
@@ -21,7 +21,7 @@ export default function RollData() {
 
   async function fetchData() {
     try {
-      const res = await fetch("/api/cortes");
+      const res = await fetch("/api/rollos");
       if (res.ok) {
         const rolls = await res.json();
         setRolls(rolls);
@@ -77,10 +77,10 @@ export default function RollData() {
                 {new Date(roll.order_date).toLocaleDateString()}
               </td>
               <td className="px-4 py-2 flex items-center gap-3">
-                <Link href={`/cortes/${roll.id}`}>
+                <Link href={`/rollos/${roll.id}`}>
                   <FaEye size={20} />
                 </Link>
-                {session?.role === "Admin" && <DeleteCut id={roll.id} />}
+                {session?.role === "Admin" && <DeleteRoll id={roll.id} />}
               </td>
             </tr>
           ))}

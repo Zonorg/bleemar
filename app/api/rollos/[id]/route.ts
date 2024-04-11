@@ -8,11 +8,11 @@ export async function GET(req: Request, { params }: { params: any }) {
   try {
     await connectToDatabase();
     console.log("Database connected");
-    const cutId = String(params.id);
+    const rollId = String(params.id);
 
     const data = await prisma.roll.findUnique({
       where: {
-        id: cutId,
+        id: rollId,
       },
       select: {
         id: true,
@@ -32,11 +32,11 @@ export async function GET(req: Request, { params }: { params: any }) {
       console.log("Data: ", data);
       return NextResponse.json(data);
     } else {
-      console.log("No cut found with ID: ", cutId);
-      return NextResponse.json({ message: "No cut found" }, { status: 404 });
+      console.log("No data found with ID: ", rollId);
+      return NextResponse.json({ message: "No data found" }, { status: 404 });
     }
   } catch (error) {
-    console.error("Error fetching cut: ", error);
+    console.error("Error fetching data: ", error);
     return NextResponse.json(
       { message: "Server error", error: error },
       { status: 500 }

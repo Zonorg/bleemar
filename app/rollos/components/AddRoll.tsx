@@ -13,7 +13,7 @@ interface FormData {
   order_date: string;
 }
 
-export default function AddCut() {
+export default function AddRoll() {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     order_number: 0,
@@ -48,7 +48,7 @@ export default function AddCut() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/cortes", {
+      const response = await fetch("/api/rollos", {
         method: "POST",
         headers: {
           "Content-Type": "aplication/json",
@@ -60,7 +60,7 @@ export default function AddCut() {
         return;
       }
       if (response.ok) {
-        alert("Corte agregado ");
+        alert("Rollo agregado ");
         setFormData({
           name: "",
           order_number: 0,
@@ -85,13 +85,13 @@ export default function AddCut() {
         onClick={() => setModalIsOpen(true)}
         className="bg-green-s text-white font-bold px-4 py-2 rounded"
       >
-        Agregar corte
+        Agregar pedido
       </button>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         ariaHideApp={false}
-        contentLabel="Agregar Corte"
+        contentLabel="Agregar pedido"
         style={{
           content: {
             maxHeight: "20vh",
@@ -223,7 +223,7 @@ export default function AddCut() {
                 className="p-1 border h-9"
                 type="date"
                 name="order_date"
-                placeholder="Fecha de corte"
+                placeholder="Fecha de pedido"
                 value={formData.order_date}
                 onChange={handleChange}
               />
@@ -234,7 +234,7 @@ export default function AddCut() {
               type="submit"
               className="bg-green-s text-white font-bold px-4 py-2 rounded"
             >
-              Agregar corte
+              Agregar pedido
             </button>
             <button
               onClick={() => setModalIsOpen(false)}

@@ -38,11 +38,11 @@ export default function Sidebar() {
           </Link>
           <Link
             className={`flex items-center gap-2 hover:bg-background-gray p-2 rounded-md ${
-              isActive("/cortes")
+              isActive("/rollos")
                 ? "bg-green-s text-white hover:bg-green-s"
                 : ""
             }`}
-            href="/cortes"
+            href="/rollos"
           >
             <GiRolledCloth className="rotate-12" size={18} />
             Rollos
