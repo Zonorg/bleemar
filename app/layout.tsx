@@ -22,16 +22,16 @@ export default async function RootLayout({
   const session = await getServerSession();
   return (
     <html lang="en">
-      <body className={`${roboto.className} flex h-full`}>
-        <SessionProvider session={session}>
+      <SessionProvider session={session}>
+        <body className={`${roboto.className} flex h-full`}>
           <Sidebar />
           <div className="children h-full w-5/6 max-md:w-full flex flex-col justify-between m-auto py-6">
             <Header />
             {children}
             <Footer />
           </div>
-        </SessionProvider>
-      </body>
+        </body>
+      </SessionProvider>
     </html>
   );
 }
