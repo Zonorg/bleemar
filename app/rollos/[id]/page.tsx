@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
 import Link from "next/link";
+import Payments from "../components/Payments";
 
 interface RollData {
   order_number: number;
@@ -24,8 +25,9 @@ interface RollData {
 }
 
 export default function RollDetails() {
-  const [rollData, setRollData] = useState<RollData | null>(null);
   const { id } = useParams<{ id: string }>();
+  const [rollData, setRollData] = useState<RollData | null>(null);
+  const [showPayments, setShowPayments] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -121,8 +123,17 @@ export default function RollDetails() {
         </div>
       </div>
 
-      <div className="w-full">
-        <h3>Pagos</h3>
+      <div className="w-full flex flex-col gap-3 items-start">
+        <h3 className="text-lg font-bold">Pagos</h3>
+        {/* Botón para mostrar/ocultar Payments */}
+        <button
+          onClick={() => setShowPayments(!showPayments)}
+          className="font-medium"
+        >
+          {showPayments ? "Ocultar Pagos" : "+ Agregar pagos"}
+        </button>
+        {/* Renderizado condicional del componente Payments */}
+        {showPayments && <Payments />}
       </div>
       <Link
         href="/rollos"

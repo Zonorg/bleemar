@@ -11,7 +11,7 @@ model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   username  String   @unique
   password  String
-  role      String   @default("Usuario")
+  role      String   @default("User ")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -60,6 +60,7 @@ model Roll {
   order_date     String
   rollcuts       RollCuts[]
   rolldetails    RollDetails[]
+  payments       Payments[]
   createdAt      DateTime      @default(now())
   updatedAt      DateTime?     @updatedAt
 }
@@ -80,5 +81,17 @@ model RollDetails {
   quantity  Int
   createdAt DateTime @default(now())
   Roll      Roll?    @relation(fields: [rollId], references: [id])
+  rollId    String?
+}
+
+model Payments {
+  id        String    @id @default(uuid()) @map("_id")
+  amount    String
+  date      String
+  status    Boolean?
+  signature String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  Roll      Roll?     @relation(fields: [rollId], references: [id])
   rollId    String?
 }
