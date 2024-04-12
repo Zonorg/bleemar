@@ -1,15 +1,32 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 export default function Navbar() {
+  const [loadingSession, setLoadingSession] = useState(true);
   const { data: session } = useSession();
-  console.log(session);
-
   const pathname = usePathname();
-  if (pathname === "/auth/login") return null;
+  console.log(session)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getSession();
+      setLoadingSession(false);
+    };
+    fetchData();
+  }, []);
+
+  const getSession = async () => {
+    try {
+      await session;
+    } catch (error) {
+      console.error("Error fetching session:", error);
+    }
+  };
+
+  if (loadingSession || pathname === "/auth/login") return null;
 
   return (
     <div className="flex flex-col">

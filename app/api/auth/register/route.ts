@@ -15,8 +15,8 @@ async function getSession() {
 export async function POST(req: Request) {
   try {
     await getSession();
-    const { username, password } = await req.json();
-    if (!username || !password)
+    const { username, name, password } = await req.json();
+    if (!username || !name || !password)
       return NextResponse.json(
         { message: "Ingresa los datos correctamente" },
         { status: 422 }
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
     await connectToDatabase();
     const user = await prisma.user.create({
-      data: { username, password: hashedPassword },
+      data: { username, name, password: hashedPassword },
     });
     return NextResponse.json({ user }, { status: 201 });
   } catch (error) {

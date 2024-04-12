@@ -30,6 +30,7 @@ const authOptions: AuthOptions = {
         if (!matchPassword) throw new Error("Contraseña incorrecta");
         return {
           id: userFound.id,
+          name: userFound.name,
           username: userFound.username,
           role: userFound.role,
         } as User;
@@ -47,6 +48,8 @@ const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        token.name;
+        token.username;
         token.role = user.role;
       }
       return token;

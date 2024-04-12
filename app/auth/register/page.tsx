@@ -4,12 +4,14 @@ import { useRouter } from "next/navigation";
 
 interface FormData {
   username: string;
+  name: string;
   password: string;
   confirm_password: string;
 }
 
 interface Errors {
   username: string;
+  name: string;
   password: string;
   confirm_password: string;
 }
@@ -19,12 +21,14 @@ export default function Register() {
 
   const [formData, setFormData] = useState<FormData>({
     username: "",
+    name: "",
     password: "",
     confirm_password: "",
   });
 
   const [errors, setErrors] = useState<Errors>({
     username: "",
+    name: "",
     password: "",
     confirm_password: "",
   });
@@ -45,6 +49,13 @@ export default function Register() {
       newErrors.username = "Escribe un nombre de usuario";
     } else {
       newErrors.username = "";
+    }
+
+    if (!formData.name.trim()) {
+      formIsValid = false;
+      newErrors.name = "Escribe un nombre";
+    } else {
+      newErrors.name = "";
     }
 
     if (!formData.password.trim()) {
@@ -73,7 +84,13 @@ export default function Register() {
           body: JSON.stringify(formData),
         });
         if (response.ok) {
-          router.push("/");
+          alert("Usuario creado con éxito");
+          setFormData({
+            username: "",
+            name: "",
+            password: "",
+            confirm_password: "",
+          });
         }
       } catch (error) {
         console.log("Error", error);
@@ -94,6 +111,17 @@ export default function Register() {
         />
         {errors.username && (
           <span className="text-red-500 text-sm">{errors.username}</span>
+        )}
+        <input
+          className="p-1"
+          type="text"
+          name="name"
+          placeholder="Nombre"
+          value={formData.name}
+          onChange={handleChange}
+        />
+        {errors.name && (
+          <span className="text-red-500 text-sm">{errors.name}</span>
         )}
         <input
           className="p-1"
