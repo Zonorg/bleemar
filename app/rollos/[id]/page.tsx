@@ -42,6 +42,24 @@ export default function RollDetails() {
 
     fetchData();
   }, [id]);
+
+  const sizeOrder: { [size: string]: number } = {
+    XS: 0,
+    S: 1,
+    M: 2,
+    L: 3,
+    XL: 4,
+    XXL: 5,
+  };
+
+  // Ordenar los talles en base al orden personalizado
+  const sortedSizes = (sizes: string) => {
+    // Dividir el string en tamaños individuales
+    const sizeArray = sizes.split(", ").map((size) => size.trim());
+    // Ordenar los tamaños
+    return sizeArray.sort((a, b) => sizeOrder[a] - sizeOrder[b]);
+  };
+
   return (
     <div className="w-full px-4 py-4 h-screen flex flex-col gap-5">
       <h2 className="text-xl font-bold">Detalles del pedido</h2>
@@ -63,7 +81,9 @@ export default function RollDetails() {
               <td className="px-4 py-2">{rollData.order_number}</td>
               <td className="px-4 py-2">{rollData.name}</td>
               <td className="px-4 py-2">{rollData.workshop}</td>
-              <td className="px-4 py-2">{rollData.size}</td>
+              <td className="px-4 py-2">
+                {sortedSizes(rollData.size).join(", ")}
+              </td>
               <td className="px-4 py-2">{rollData.total_quantity}</td>
               <td className="px-4 py-2">
                 {new Date(rollData.order_date).toLocaleDateString()}
