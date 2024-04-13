@@ -2,25 +2,45 @@ import { useState, FormEvent, ChangeEvent } from "react";
 import Modal from "react-modal";
 import { FaRegTrashAlt } from "react-icons/fa";
 
+type FormData = {
+  name: string;
+  order_number: number;
+  size: string[];
+  workshop: string;
+  total_quantity: number;
+  order_date: string;
+  rollcuts: {
+    color: string;
+    combined: string;
+    lining: string;
+    quantity: number;
+  }[];
+  rolldetails: {
+    title: string;
+    quantity: number;
+  }[];
+};
+
 export default function AddRoll() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     order_number: 0,
-    size: "",
+    size: [],
     workshop: "",
     total_quantity: 0,
     order_date: "",
     rollcuts: [] as {
-      color: "";
-      combined: "";
-      lining: "";
-      quantity: 0;
+      color: string;
+      combined: string;
+      lining: string;
+      quantity: number;
     }[],
     rolldetails: [] as {
-      title: "";
-      quantity: 0;
+      title: string;
+      quantity: number;
     }[],
   });
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleChange = (
@@ -50,6 +70,22 @@ export default function AddRoll() {
     const updatedCuts = [...formData.rollcuts];
     updatedCuts[index] = { ...updatedCuts[index], [name]: parsedValue };
     setFormData({ ...formData, rollcuts: updatedCuts });
+  };
+
+  const handleSizeChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const { name, checked } = e.target;
+    setFormData((prevState) => {
+      if (checked) {
+        // Si el checkbox está marcado, añade el talle al array de size.
+        return { ...prevState, size: [...prevState.size, name] };
+      } else {
+        // Si el checkbox no está marcado, remueve el talle del array de size.
+        return {
+          ...prevState,
+          size: prevState.size.filter((size) => size !== name),
+        };
+      }
+    });
   };
 
   const handleAddCut = (): void => {
@@ -102,6 +138,7 @@ export default function AddRoll() {
         },
         body: JSON.stringify(formData),
       });
+      console.log(formData);
       if (response.status === 422) {
         alert("Rellena todos los campos");
         return;
@@ -111,7 +148,7 @@ export default function AddRoll() {
         setFormData({
           name: "",
           order_number: 0,
-          size: "",
+          size: [],
           workshop: "",
           total_quantity: 0,
           order_date: "",
@@ -176,24 +213,63 @@ export default function AddRoll() {
             </div>
 
             <div className="flex flex-col">
-              <label htmlFor="size" className="font-bold">
-                Talles
-              </label>
-              <select
-                className="p-1 border h-9"
-                name="size"
-                value={formData.size}
-                onChange={handleChange}
-              >
-                <option value="">Seleccionar Talles</option>
-                <option value="XS">XS</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-              </select>
+              <label className="font-bold">Talles</label>
+              <div>
+                <input
+                  type="checkbox"
+                  name="XS"
+                  checked={formData.size.includes("XS")}
+                  onChange={handleSizeChange}
+                />
+                <label htmlFor="size_XS">XS</label>
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  name="S"
+                  checked={formData.size.includes("S")}
+                  onChange={handleSizeChange}
+                />
+                <label htmlFor="size_S">S</label>
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  name="M"
+                  checked={formData.size.includes("M")}
+                  onChange={handleSizeChange}
+                />
+                <label htmlFor="size_M">M</label>
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  name="L"
+                  checked={formData.size.includes("L")}
+                  onChange={handleSizeChange}
+                />
+                <label htmlFor="size_L">L</label>
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  name="XL"
+                  checked={formData.size.includes("XL")}
+                  onChange={handleSizeChange}
+                />
+                <label htmlFor="size_XL">XL</label>
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  name="XXL"
+                  checked={formData.size.includes("XXL")}
+                  onChange={handleSizeChange}
+                />
+                <label htmlFor="size_XXL">XXL</label>
+              </div>
             </div>
+
             <div className="flex flex-col">
               <label htmlFor="workshop" className="font-bold">
                 Taller

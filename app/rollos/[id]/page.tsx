@@ -133,7 +133,7 @@ export default function RollDetails() {
           {showPayments ? "Ocultar Pagos" : "+ Agregar pagos"}
         </button>
         {/* Renderizado condicional del componente Payments */}
-        {showPayments && <Payments />}
+        {showPayments && <Payments rollId={id} />}
       </div>
       <Link
         href="/rollos"

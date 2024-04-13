@@ -3,11 +3,10 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/prisma/server-helpers";
 
 export async function GET(req: Request, { params }: { params: any }) {
-  console.log("Params: ", params);
-
+  // console.log("Params: ", params);
   try {
     await connectToDatabase();
-    console.log("Database connected");
+    // console.log("Database connected");
     const rollId = String(params.id);
 
     const data = await prisma.roll.findUnique({
@@ -28,7 +27,7 @@ export async function GET(req: Request, { params }: { params: any }) {
     });
 
     if (data) {
-      console.log("Data: ", data);
+      // console.log("Data: ", data);
       return NextResponse.json(data);
     } else {
       console.log("No data found with ID: ", rollId);
@@ -41,7 +40,7 @@ export async function GET(req: Request, { params }: { params: any }) {
       { status: 500 }
     );
   } finally {
-    console.log("Database disconnected");
+    // console.log("Database disconnected");
     await prisma.$disconnect();
   }
 }

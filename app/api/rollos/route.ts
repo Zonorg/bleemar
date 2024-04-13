@@ -58,11 +58,12 @@ export async function POST(req: Request) {
         { status: 422 }
       );
     await connectToDatabase();
+    const sizeString = size.join(", ");
     const roll = await prisma.roll.create({
       data: {
         order_number,
         name,
-        size,
+        size: sizeString,
         workshop,
         total_quantity,
         order_date,
