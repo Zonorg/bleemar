@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 interface Order {
   id: number;
   username: string;
+  name: string;
   role: string;
 }
 
@@ -35,6 +36,7 @@ export default function UserData() {
           <tr>
             <th className="px-4 py-2 text-start">ID</th>
             <th className="px-4 py-2 text-start">Nombre de usuario</th>
+            <th className="px-4 py-2 text-start">Nombre</th>
             <th className="px-4 py-2 text-start">Rol</th>
             <th className="px-4 py-2 text-start">Acciones</th>
           </tr>
@@ -44,6 +46,7 @@ export default function UserData() {
             <tr key={index} className="border-b">
               <td className="px-4 py-2">{index + 1}</td>
               <td className="px-4 py-2">{order.username}</td>
+              <td className="px-4 py-2">{order.name}</td>
               <td className="px-4 py-2">{order.role}</td>
             </tr>
           ))}

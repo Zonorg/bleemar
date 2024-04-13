@@ -22,6 +22,8 @@ type FormData = {
 };
 
 export default function AddRoll() {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const [formData, setFormData] = useState<FormData>({
     name: "",
     order_number: 0,
@@ -29,19 +31,28 @@ export default function AddRoll() {
     workshop: "",
     total_quantity: 0,
     order_date: "",
-    rollcuts: [] as {
-      color: string;
-      combined: string;
-      lining: string;
-      quantity: number;
-    }[],
-    rolldetails: [] as {
-      title: string;
-      quantity: number;
-    }[],
+    rollcuts: [
+      { color: "", combined: "", lining: "", quantity: 0 },
+      { color: "", combined: "", lining: "", quantity: 0 },
+      { color: "", combined: "", lining: "", quantity: 0 },
+      { color: "", combined: "", lining: "", quantity: 0 },
+      { color: "", combined: "", lining: "", quantity: 0 },
+    ],
+    rolldetails: [
+      {
+        title: "",
+        quantity: 0,
+      },
+      {
+        title: "",
+        quantity: 0,
+      },
+      {
+        title: "",
+        quantity: 0,
+      },
+    ],
   });
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -59,6 +70,22 @@ export default function AddRoll() {
     }
 
     setFormData({ ...formData, [name]: parsedValue });
+  };
+
+  const handleAddCut = (): void => {
+    setFormData({
+      ...formData,
+      rollcuts: [
+        ...formData.rollcuts,
+        { color: "", combined: "", lining: "", quantity: 0 },
+      ],
+    });
+  };
+
+  const handleRemoveCut = (index: number): void => {
+    const updatedCuts = [...formData.rollcuts];
+    updatedCuts.splice(index, 1);
+    setFormData({ ...formData, rollcuts: updatedCuts });
   };
 
   const handleCutChange = (
@@ -86,22 +113,6 @@ export default function AddRoll() {
         };
       }
     });
-  };
-
-  const handleAddCut = (): void => {
-    setFormData({
-      ...formData,
-      rollcuts: [
-        ...formData.rollcuts,
-        { color: "", combined: "", lining: "", quantity: 0 },
-      ],
-    });
-  };
-
-  const handleRemoveCut = (index: number): void => {
-    const updatedCuts = [...formData.rollcuts];
-    updatedCuts.splice(index, 1);
-    setFormData({ ...formData, rollcuts: updatedCuts });
   };
 
   const handleDetailChange = (
@@ -178,16 +189,14 @@ export default function AddRoll() {
         style={{
           content: {
             margin: "auto",
+            maxHeight: "80vh",
             overflow: "auto",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
           },
         }}
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <div className="flex">
-            <div className="flex flex-col">
+          <div className="flex justify-between">
+            {/* <div className="flex flex-col">
               <label htmlFor="order_number" className="font-bold">
                 Número de pedido
               </label>
@@ -198,7 +207,7 @@ export default function AddRoll() {
                 value={formData.order_number}
                 onChange={handleChange}
               />
-            </div>
+            </div> */}
             <div className="flex flex-col">
               <label htmlFor="name" className="font-bold">
                 Nombre del pedido
@@ -210,64 +219,6 @@ export default function AddRoll() {
                 value={formData.name}
                 onChange={handleChange}
               />
-            </div>
-
-            <div className="flex flex-col">
-              <label className="font-bold">Talles</label>
-              <div>
-                <input
-                  type="checkbox"
-                  name="XS"
-                  checked={formData.size.includes("XS")}
-                  onChange={handleSizeChange}
-                />
-                <label htmlFor="size_XS">XS</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="S"
-                  checked={formData.size.includes("S")}
-                  onChange={handleSizeChange}
-                />
-                <label htmlFor="size_S">S</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="M"
-                  checked={formData.size.includes("M")}
-                  onChange={handleSizeChange}
-                />
-                <label htmlFor="size_M">M</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="L"
-                  checked={formData.size.includes("L")}
-                  onChange={handleSizeChange}
-                />
-                <label htmlFor="size_L">L</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="XL"
-                  checked={formData.size.includes("XL")}
-                  onChange={handleSizeChange}
-                />
-                <label htmlFor="size_XL">XL</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="XXL"
-                  checked={formData.size.includes("XXL")}
-                  onChange={handleSizeChange}
-                />
-                <label htmlFor="size_XXL">XXL</label>
-              </div>
             </div>
 
             <div className="flex flex-col">
@@ -318,7 +269,7 @@ export default function AddRoll() {
 
           {/* Cortes */}
           {formData.rollcuts.map((cut, index) => (
-            <div key={index} className="flex">
+            <div key={index} className="flex justify-between">
               <div className="flex flex-col">
                 <label htmlFor={`color-${index}`}>Color</label>
                 <input
@@ -381,7 +332,6 @@ export default function AddRoll() {
           {/* Cortes */}
 
           {/* Detalles */}
-
           {formData.rolldetails.map((detail, index) => (
             <div key={index} className="flex">
               <div className="flex flex-col w-full">
@@ -422,8 +372,67 @@ export default function AddRoll() {
           >
             + Agregar detalle
           </button>
-
           {/* Detalles */}
+
+          {/* Talles */}
+          <div className="flex gap-3 items-center justify-center border rounded p-2">
+            <label className="font-bold">Talles</label>
+            <div className="flex flex-col">
+              <input
+                type="checkbox"
+                name="XS"
+                checked={formData.size.includes("XS")}
+                onChange={handleSizeChange}
+              />
+              <label htmlFor="size_XS">XS</label>
+            </div>
+            <div className="flex flex-col">
+              <input
+                type="checkbox"
+                name="S"
+                checked={formData.size.includes("S")}
+                onChange={handleSizeChange}
+              />
+              <label htmlFor="size_S">S</label>
+            </div>
+            <div className="flex flex-col">
+              <input
+                type="checkbox"
+                name="M"
+                checked={formData.size.includes("M")}
+                onChange={handleSizeChange}
+              />
+              <label htmlFor="size_M">M</label>
+            </div>
+            <div className="flex flex-col">
+              <input
+                type="checkbox"
+                name="L"
+                checked={formData.size.includes("L")}
+                onChange={handleSizeChange}
+              />
+              <label htmlFor="size_L">L</label>
+            </div>
+            <div className="flex flex-col">
+              <input
+                type="checkbox"
+                name="XL"
+                checked={formData.size.includes("XL")}
+                onChange={handleSizeChange}
+              />
+              <label htmlFor="size_XL">XL</label>
+            </div>
+            <div className="flex flex-col">
+              <input
+                type="checkbox"
+                name="XXL"
+                checked={formData.size.includes("XXL")}
+                onChange={handleSizeChange}
+              />
+              <label htmlFor="size_XXL">XXL</label>
+            </div>
+          </div>
+          {/* Talles */}
 
           <div className="flex gap-2 ml-auto">
             <button

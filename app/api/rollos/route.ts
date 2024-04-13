@@ -31,10 +31,23 @@ export async function GET() {
   }
 }
 
+async function getNextOrderNumber() {
+  try {
+    await connectToDatabase();
+    const lastRoll = await prisma.roll.findFirst({
+      orderBy: { order_number: "desc" },
+    });
+    const lastOrderNumber = lastRoll ? lastRoll.order_number : 0;
+    return lastOrderNumber + 1;
+  } catch (error) {
+    console.error("Error al obtener el próximo número de pedido:", error);
+    throw error;
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const {
-      order_number,
       name,
       size,
       workshop,
@@ -43,8 +56,8 @@ export async function POST(req: Request) {
       rollcuts,
       rolldetails,
     } = await req.json();
+
     if (
-      !order_number ||
       !name ||
       !size ||
       !workshop ||
@@ -52,16 +65,22 @@ export async function POST(req: Request) {
       !order_date ||
       !rollcuts ||
       !rolldetails
-    )
+    ) {
       return NextResponse.json(
         { message: "Provide all the data" },
         { status: 422 }
       );
+    }
+
     await connectToDatabase();
+
+    // Pedido autoincremental
+    const orderNumber = await getNextOrderNumber();
+
     const sizeString = size.join(", ");
     const roll = await prisma.roll.create({
       data: {
-        order_number,
+        order_number: orderNumber,
         name,
         size: sizeString,
         workshop,
@@ -71,15 +90,15 @@ export async function POST(req: Request) {
         rolldetails: { createMany: { data: rolldetails } },
       },
     });
+
     return NextResponse.json({ roll }, { status: 201 });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ message: "Error de servidor" }, { status: 500 });
+    return NextResponse.json({ message: "Server Error" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
 }
-
 export async function DELETE(req: Request) {
   try {
     const { id } = await req.json();
