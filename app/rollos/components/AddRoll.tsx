@@ -103,10 +103,8 @@ export default function AddRoll() {
     const { name, checked } = e.target;
     setFormData((prevState) => {
       if (checked) {
-        // Si el checkbox está marcado, añade el talle al array de size.
         return { ...prevState, size: [...prevState.size, name] };
       } else {
-        // Si el checkbox no está marcado, remueve el talle del array de size.
         return {
           ...prevState,
           size: prevState.size.filter((size) => size !== name),

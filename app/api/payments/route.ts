@@ -6,7 +6,11 @@ export async function POST(req: Request) {
   try {
     const formData = await req.formData();
 
-    const { signature, rollId, amount, date } = await req.json();
+    const signature = formData.get("signature") as string;
+    const rollId = formData.get("rollId") as string;
+    const amount = formData.get("amount") as string;
+    const date = formData.get("date") as string;
+
     if (!signature || !rollId || !amount || !date) {
       return NextResponse.json(
         { message: "Datos incompletos" },
@@ -16,9 +20,19 @@ export async function POST(req: Request) {
 
     // Guardar la firma en la carpeta pública
     const fs = require("fs");
-    const publicFolderPath = "./public";
-    const signatureFilePath = `${publicFolderPath}/signature.png`;
-    fs.writeFileSync(signatureFilePath, signature, "base64");
+    const path = require("path");
+    const publicFolderPath = "./public/signatures";
+    const timestamp = Date.now();
+    const fileName = `signature_${timestamp}.png`;
+
+    const signatureFilePath = path.join(publicFolderPath, fileName);
+
+    // Guardar la imagen en el sistema de archivos
+    fs.writeFileSync(
+      signatureFilePath,
+      signature.replace(/^data:image\/\w+;base64,/, ""),
+      "base64"
+    );
 
     // Crear un registro en el modelo Payments
     await connectToDatabase();
@@ -26,7 +40,7 @@ export async function POST(req: Request) {
       data: {
         amount,
         date,
-        signature: signatureFilePath, // Guardar la ruta del archivo de firma
+        signature: signatureFilePath,
         Roll: {
           connect: {
             id: rollId,

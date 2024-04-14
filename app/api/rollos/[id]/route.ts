@@ -23,6 +23,7 @@ export async function GET(req: Request, { params }: { params: any }) {
         order_date: true,
         rollcuts: true,
         rolldetails: true,
+        payments: true,
       },
     });
 

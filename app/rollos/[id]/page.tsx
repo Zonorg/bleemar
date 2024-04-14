@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
 import Link from "next/link";
 import Payments from "../components/Payments";
+import Image from "next/image";
 
 interface RollData {
   order_number: number;
@@ -22,6 +23,7 @@ interface RollData {
     quantity: number;
   }[];
   rolldetails: { title: string; quantity: number }[];
+  payments: { amount: string; date: string; signature: string }[];
 }
 
 export default function RollDetails() {
@@ -52,11 +54,8 @@ export default function RollDetails() {
     XXL: 5,
   };
 
-  // Ordenar los talles en base al orden personalizado
   const sortedSizes = (sizes: string) => {
-    // Dividir el string en tamaños individuales
     const sizeArray = sizes.split(", ").map((size) => size.trim());
-    // Ordenar los tamaños
     return sizeArray.sort((a, b) => sizeOrder[a] - sizeOrder[b]);
   };
 
@@ -142,17 +141,43 @@ export default function RollDetails() {
           </table>
         </div>
       </div>
+      <div className="details flex flex-col gap-3">
+        <h3 className="text-lg font-bold">Pagos</h3>
+        <table className="w-full bg-white rounded-lg">
+          <thead>
+            <tr>
+              <th className="px-4 py-2 text-start">Monto</th>
+              <th className="px-4 py-2 text-start">Fecha</th>
+              <th className="px-4 py-2 text-start">Firma</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rollData?.payments &&
+              rollData.payments.map((payment, payIndex) => (
+                <tr key={payIndex}>
+                  <td className="px-4 py-2">{payment.amount}</td>
+                  <td className="px-4 py-2">{payment.date}</td>
+                  <td className="px-4 py-2">
+                    <img
+                      src={payment.signature.replace("public", "")}
+                      alt={`Pago ${payIndex + 1}`}
+                      width={100}
+                      height={100}
+                    />
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="w-full flex flex-col gap-3 items-start">
-        <h3 className="text-lg font-bold">Pagos</h3>
-        {/* Botón para mostrar/ocultar Payments */}
         <button
           onClick={() => setShowPayments(!showPayments)}
           className="font-medium"
         >
           {showPayments ? "Ocultar Pagos" : "+ Agregar pagos"}
         </button>
-        {/* Renderizado condicional del componente Payments */}
         {showPayments && <Payments rollId={id} />}
       </div>
       <Link

@@ -31,22 +31,22 @@ const Payments: React.FC<PaymentsProps> = ({ rollId }) => {
       formData.append("amount", amount);
       formData.append("date", date);
       formData.append("rollId", rollId);
-      console.log(rollId);
-      console.log(date);
-      console.log(amount);
-      console.log(base64Image);
 
-      // Enviar la solicitud POST al servidor
-      fetch("/api/payments", {
-        method: "POST",
-        body: formData,
-      })
-        .then((res) => {
-          // Manejar la respuesta del servidor (si es necesario)
-        })
-        .catch((error) => {
-          console.error("Error al guardar la firma:", error);
+      try {
+        const response = await fetch("/api/payments", {
+          method: "POST",
+          body: formData,
         });
+
+        if (!response.ok) {
+          throw new Error("Error while saving data");
+        }
+
+        const data = await response.json();
+        console.log("Data saved successfully", data);
+      } catch (error) {
+        console.error("Error while saving data:", error);
+      }
     }
   };
 
