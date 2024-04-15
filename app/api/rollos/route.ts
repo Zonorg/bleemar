@@ -114,7 +114,7 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ roll }, { status: 200 });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ message: "Error de servidor" }, { status: 500 });
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }

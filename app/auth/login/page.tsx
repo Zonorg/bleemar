@@ -88,6 +88,7 @@ export default function Login() {
             className="p-1 border rounded"
             type="text"
             name="username"
+            autoComplete="username"
             placeholder="Nombre de usuario"
             value={formData.username}
             onChange={handleChange}
@@ -99,6 +100,7 @@ export default function Login() {
             className="p-1 border rounded"
             type="password"
             name="password"
+            autoComplete="current-password"
             placeholder="Contraseña"
             value={formData.password}
             onChange={handleChange}

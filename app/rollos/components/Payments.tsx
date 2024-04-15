@@ -27,7 +27,6 @@ const Payments: React.FC<PaymentsProps> = ({ rollId }) => {
       const formData = new FormData();
       formData.append("signature", base64Image); // Adjuntar la imagen como cadena base64
 
-      // Adjuntar otros datos necesarios
       formData.append("amount", amount);
       formData.append("date", date);
       formData.append("rollId", rollId);
@@ -44,6 +43,8 @@ const Payments: React.FC<PaymentsProps> = ({ rollId }) => {
 
         const data = await response.json();
         console.log("Data saved successfully", data);
+        alert("Pago guardado");
+        window.location.reload();
       } catch (error) {
         console.error("Error while saving data:", error);
       }
@@ -51,44 +52,40 @@ const Payments: React.FC<PaymentsProps> = ({ rollId }) => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col gap-3">
       <div style={{ border: "2px solid black", width: 500, height: 200 }}>
         <SignatureCanvas
-          canvasProps={{ width: 500, height: 200, className: "sigCanvas" }}
+          canvasProps={{
+            width: 500,
+            height: 200,
+            className: "sigCanvas",
+          }}
           ref={(ref) => {
             if (ref) sigCanvas.current = ref;
           }}
         />
       </div>
+      <div className="flex gap-3 items-center">
+        <label htmlFor="amount">$</label>
+        <input
+          type="text"
+          placeholder="Monto"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          className="p-1"
+        />
+        <label htmlFor="amount">Fecha:</label>
 
-      <br />
-      <input
-        type="text"
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-      <br />
-      <input
-        type="text"
-        placeholder="Date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-      />
-      <br />
-      <button style={{ height: "30px", width: "60px" }} onClick={handleClear}>
-        Borrar
-      </button>
-      <button
-        style={{ height: "30px", width: "60px" }}
-        onClick={handleGenerate}
-      >
-        Guardar
-      </button>
-
-      <br />
-      <br />
-      {url && <img src={url} alt="signature" />}
+        <input
+          type="date"
+          placeholder="Fecha"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className="p-1"
+        />
+        <button onClick={handleGenerate}>Guardar pago</button>
+        <button onClick={handleClear}>Limpiar firma</button>
+      </div>
     </div>
   );
 };

@@ -23,7 +23,7 @@ interface RollData {
     quantity: number;
   }[];
   rolldetails: { title: string; quantity: number }[];
-  payments: { amount: string; date: string; signature: string }[];
+  payments: { id: string; amount: string; date: string; signature: string }[];
 }
 
 export default function RollDetails() {
@@ -59,8 +59,34 @@ export default function RollDetails() {
     return sizeArray.sort((a, b) => sizeOrder[a] - sizeOrder[b]);
   };
 
+  const handleDeletePayment = async (paymentId: string) => {
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de que deseas eliminar este pago?"
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+    try {
+      const response = await fetch("/api/payments", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: paymentId }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      window.location.reload();
+      alert("Pago eliminado");
+    } catch (error) {
+      console.error("Error deleting payment", error);
+    }
+  };
+
   return (
-    <div className="w-full px-4 py-4 h-screen flex flex-col gap-5">
+    <div className="w-full px-4 py-4 flex flex-col gap-5">
       <h2 className="text-xl font-bold">Detalles del pedido</h2>
       <table className="w-full bg-white rounded-lg">
         <thead>
@@ -155,15 +181,27 @@ export default function RollDetails() {
             {rollData?.payments &&
               rollData.payments.map((payment, payIndex) => (
                 <tr key={payIndex}>
-                  <td className="px-4 py-2">{payment.amount}</td>
-                  <td className="px-4 py-2">{payment.date}</td>
                   <td className="px-4 py-2">
-                    <img
+                    {new Intl.NumberFormat("es-AR", {
+                      style: "currency",
+                      currency: "ARS",
+                    }).format(parseFloat(payment.amount))}
+                  </td>
+                  <td className="px-4 py-2">
+                    {new Date(payment.date).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-2">
+                    <Image
                       src={payment.signature.replace("public", "")}
                       alt={`Pago ${payIndex + 1}`}
                       width={100}
                       height={100}
                     />
+                  </td>
+                  <td className="px-4 py-2">
+                    <button onClick={() => handleDeletePayment(payment.id)}>
+                      Eliminar pago
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -176,7 +214,7 @@ export default function RollDetails() {
           onClick={() => setShowPayments(!showPayments)}
           className="font-medium"
         >
-          {showPayments ? "Ocultar Pagos" : "+ Agregar pagos"}
+          {showPayments ? "- Cancelar" : "+ Agregar pagos"}
         </button>
         {showPayments && <Payments rollId={id} />}
       </div>

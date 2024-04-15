@@ -25,7 +25,9 @@ export async function POST(req: Request) {
     const timestamp = Date.now();
     const fileName = `signature_${timestamp}.png`;
 
-    const signatureFilePath = path.join(publicFolderPath, fileName);
+    const signatureFilePath = path
+      .join(publicFolderPath, fileName)
+      .replace(/\\/g, "/");
 
     // Guardar la imagen en el sistema de archivos
     fs.writeFileSync(
@@ -55,6 +57,28 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error("Error al guardar la firma y el pago:", error);
-    return NextResponse.json({ message: "Error de servidor" }, { status: 500 });
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const { id } = await req.json();
+    if (!id) {
+      return NextResponse.json(
+        { message: "Provide the ID properly" },
+        { status: 422 }
+      );
+    }
+    await connectToDatabase();
+    const payment = await prisma.payments.delete({
+      where: { id },
+    });
+    return NextResponse.json({ payment }, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
   }
 }

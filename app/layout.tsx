@@ -3,7 +3,7 @@ import { Roboto_Condensed } from "next/font/google";
 import Sidebar from "./components/Sidebar";
 import "./globals.css";
 import Footer from "./components/Footer";
-import Header from "./components/Header";
+// import Header from "./components/Header";
 import SessionProvider from "./components/SessionProvider";
 import { getServerSession } from "next-auth";
 
@@ -25,11 +25,11 @@ export default async function RootLayout({
       <SessionProvider session={session}>
         <body className={`${roboto.className} flex h-full`}>
           <Sidebar />
-          <div className="children h-full w-5/6 max-md:w-full flex flex-col justify-between m-auto py-6">
-            <Header />
+          <div className="children w-5/6 h-full max-lg:h-auto max-lg:w-full flex flex-col justify-between m-auto py-5 max-lg:pb-20">
+            {/* <Header /> */}
             {children}
-            <Footer />
           </div>
+          <Footer />
         </body>
       </SessionProvider>
     </html>

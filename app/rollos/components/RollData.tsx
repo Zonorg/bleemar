@@ -80,7 +80,8 @@ export default function RollData() {
                 <Link href={`/rollos/${roll.id}`}>
                   <FaEye size={20} />
                 </Link>
-                {session?.role === "Admin" && <DeleteRoll id={roll.id} />}
+                {/* {session?.role === "Admin" && <DeleteRoll id={roll.id} />} */}
+                <DeleteRoll id={roll.id} />
               </td>
             </tr>
           ))}
