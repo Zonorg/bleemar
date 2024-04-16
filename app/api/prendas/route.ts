@@ -9,7 +9,6 @@ export async function GET() {
       select: {
         id: true,
         title: true,
-        gender: true,
         total_quantity: true,
         order_date: true,
         size: true,
@@ -34,7 +33,6 @@ export async function POST(req: Request) {
   try {
     const {
       title,
-      gender,
       size,
       workshop,
       total_quantity,
@@ -44,7 +42,6 @@ export async function POST(req: Request) {
     } = await req.json();
     if (
       !title ||
-      !gender ||
       !size ||
       !workshop ||
       !total_quantity ||
@@ -60,7 +57,6 @@ export async function POST(req: Request) {
     const order = await prisma.order.create({
       data: {
         title,
-        gender,
         size,
         total_quantity,
         workshop,

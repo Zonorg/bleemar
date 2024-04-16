@@ -5,7 +5,6 @@ import DeleteOrder from "./DeleteOrder";
 interface Order {
   id: number;
   title: string;
-  gender: string;
   total_quantity: number;
   order_date: string;
   garmentcuts: {
@@ -45,7 +44,6 @@ export default function OrderData() {
   const filteredOrders = orders.filter(
     (order) =>
       order.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
       new Date(order.order_date)
         .toLocaleDateString()
         .includes(searchTerm.toLowerCase())
@@ -65,7 +63,6 @@ export default function OrderData() {
           <tr>
             <th className="px-4 py-2 text-start">Nº</th>
             <th className="px-4 py-2 text-start">Pedido</th>
-            <th className="px-4 py-2 text-start">Género</th>
             <th className="px-4 py-2 text-start">Cantidad</th>
             <th className="px-4 py-2 text-start">Fecha del pedido</th>
             <th className="px-4 py-2 text-start">Taller</th>
@@ -79,7 +76,6 @@ export default function OrderData() {
             <tr key={index} className="border-b">
               <td className="px-4 py-2">{index + 1}</td>
               <td className="px-4 py-2">{order.title}</td>
-              <td className="px-4 py-2">{order.gender}</td>
               <td className="px-4 py-2">{order.total_quantity}</td>
               <td className="px-4 py-2">
                 {new Date(order.order_date).toLocaleDateString()}
