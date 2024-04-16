@@ -85,7 +85,21 @@ export default function AddRoll() {
   const handleRemoveCut = (index: number): void => {
     const updatedCuts = [...formData.rollcuts];
     updatedCuts.splice(index, 1);
-    setFormData({ ...formData, rollcuts: updatedCuts });
+
+    // Calcular la suma total de las cantidades
+    const totalQuantity = updatedCuts.reduce(
+      (sum, cut) => sum + (cut.quantity || 0),
+      0
+    );
+
+    // Multiplicar la cantidad total por la cantidad de talles seleccionados
+    const totalQuantityWithSizes = totalQuantity * formData.size.length;
+
+    setFormData({
+      ...formData,
+      rollcuts: updatedCuts,
+      total_quantity: totalQuantityWithSizes,
+    });
   };
 
   const handleCutChange = (
@@ -96,23 +110,49 @@ export default function AddRoll() {
     const parsedValue = name === "quantity" ? parseInt(value, 10) : value;
     const updatedCuts = [...formData.rollcuts];
     updatedCuts[index] = { ...updatedCuts[index], [name]: parsedValue };
-    setFormData({ ...formData, rollcuts: updatedCuts });
+
+    // Calcular la suma total de las cantidades
+    const totalQuantity = updatedCuts.reduce(
+      (sum, cut) => sum + (cut.quantity || 0),
+      0
+    );
+
+    // Multiplicar la cantidad total por la cantidad de talles seleccionados
+    const totalQuantityWithSizes = totalQuantity * formData.size.length;
+
+    setFormData({
+      ...formData,
+      rollcuts: updatedCuts,
+      total_quantity: totalQuantityWithSizes,
+    });
   };
 
   const handleSizeChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, checked } = e.target;
     setFormData((prevState) => {
+      let newSize;
       if (checked) {
-        return { ...prevState, size: [...prevState.size, name] };
+        newSize = [...prevState.size, name];
       } else {
-        return {
-          ...prevState,
-          size: prevState.size.filter((size) => size !== name),
-        };
+        newSize = prevState.size.filter((size) => size !== name);
       }
+
+      // Calcular la suma total de las cantidades
+      const totalQuantity = prevState.rollcuts.reduce(
+        (sum, cut) => sum + (cut.quantity || 0),
+        0
+      );
+
+      // Multiplicar la cantidad total por la cantidad de talles seleccionados
+      const totalQuantityWithSizes = totalQuantity * newSize.length;
+
+      return {
+        ...prevState,
+        size: newSize,
+        total_quantity: totalQuantityWithSizes,
+      };
     });
   };
-
   const handleDetailChange = (
     e: ChangeEvent<HTMLInputElement>,
     index: number
@@ -227,12 +267,13 @@ export default function AddRoll() {
             </div>
             <div className="flex flex-col">
               <label htmlFor="total_quantity" className="font-bold">
-                Cantidad
+                Cantidad Total
               </label>
               <input
                 className="p-1 border h-9"
                 type="number"
                 name="total_quantity"
+                readOnly
                 value={formData.total_quantity}
                 onChange={handleChange}
                 min={1}
