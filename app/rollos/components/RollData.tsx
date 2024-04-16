@@ -61,7 +61,7 @@ export default function RollData() {
             <th className="px-4 py-2 text-start">Nº Pedido</th>
             <th className="px-4 py-2 text-start">Nombre</th>
             <th className="px-4 py-2 text-start">Taller</th>
-            <th className="px-4 py-2 text-start">Cantidad</th>
+            <th className="px-4 py-2 text-start">Cantidad total</th>
             <th className="px-4 py-2 text-start">Fecha del pedido</th>
             <th className="px-4 py-2 text-start">Acciones</th>
           </tr>

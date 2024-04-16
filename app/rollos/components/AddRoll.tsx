@@ -267,7 +267,7 @@ export default function AddRoll() {
             </div>
             <div className="flex flex-col">
               <label htmlFor="total_quantity" className="font-bold">
-                Cantidad Total
+                Cantidad total
               </label>
               <input
                 className="p-1 border h-9"
