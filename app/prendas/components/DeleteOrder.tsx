@@ -6,7 +6,7 @@ interface DeleteOrderProps {
   id: number;
 }
 
-const DeleteOrder: React.FC<DeleteOrderProps> = ({ id }) => {
+export default function DeleteOrder({ id }: DeleteOrderProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleDelete() {
@@ -44,6 +44,4 @@ const DeleteOrder: React.FC<DeleteOrderProps> = ({ id }) => {
       {isLoading ? <FiLoader /> : <BsFillTrashFill />}
     </button>
   );
-};
-
-export default DeleteOrder;
+}

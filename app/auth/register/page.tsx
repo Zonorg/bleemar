@@ -1,6 +1,6 @@
 "use client";
 import { useState, FormEvent, ChangeEvent } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 interface FormData {
   username: string;
@@ -17,7 +17,7 @@ interface Errors {
 }
 
 export default function Register() {
-  const router = useRouter();
+  // const router = useRouter();
 
   const [formData, setFormData] = useState<FormData>({
     username: "",

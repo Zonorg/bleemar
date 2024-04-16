@@ -5,7 +5,7 @@ interface PaymentsProps {
   rollId: string; // Prop para pasar el ID del Roll
 }
 
-const Payments: React.FC<PaymentsProps> = ({ rollId }) => {
+export default function Payments({ rollId }: PaymentsProps) {
   const [url, setUrl] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string>("");
   const [date, setDate] = useState<string>("");
@@ -88,6 +88,4 @@ const Payments: React.FC<PaymentsProps> = ({ rollId }) => {
       </div>
     </div>
   );
-};
-
-export default Payments;
+}

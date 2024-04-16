@@ -6,7 +6,7 @@ interface DeleteRollProps {
   id: number;
 }
 
-const DeleteRoll: React.FC<DeleteRollProps> = ({ id }) => {
+export default function DeleteRoll({ id }: DeleteRollProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleDelete() {
@@ -44,6 +44,4 @@ const DeleteRoll: React.FC<DeleteRollProps> = ({ id }) => {
       {isLoading ? <FiLoader /> : <BsFillTrashFill />}
     </button>
   );
-};
-
-export default DeleteRoll;
+}

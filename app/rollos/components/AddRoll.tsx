@@ -194,18 +194,6 @@ export default function AddRoll() {
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex justify-between">
-            {/* <div className="flex flex-col">
-              <label htmlFor="order_number" className="font-bold">
-                Número de pedido
-              </label>
-              <input
-                className="p-1 border h-9"
-                type="number"
-                name="order_number"
-                value={formData.order_number}
-                onChange={handleChange}
-              />
-            </div> */}
             <div className="flex flex-col">
               <label htmlFor="name" className="font-bold">
                 Nombre del pedido
@@ -378,20 +366,11 @@ export default function AddRoll() {
             <div className="flex flex-col">
               <input
                 type="checkbox"
-                name="XS"
-                checked={formData.size.includes("XS")}
-                onChange={handleSizeChange}
-              />
-              <label htmlFor="size_XS">XS</label>
-            </div>
-            <div className="flex flex-col">
-              <input
-                type="checkbox"
                 name="S"
                 checked={formData.size.includes("S")}
                 onChange={handleSizeChange}
               />
-              <label htmlFor="size_S">S</label>
+              <label htmlFor="S">S</label>
             </div>
             <div className="flex flex-col">
               <input
@@ -400,7 +379,7 @@ export default function AddRoll() {
                 checked={formData.size.includes("M")}
                 onChange={handleSizeChange}
               />
-              <label htmlFor="size_M">M</label>
+              <label htmlFor="M">M</label>
             </div>
             <div className="flex flex-col">
               <input
@@ -409,7 +388,7 @@ export default function AddRoll() {
                 checked={formData.size.includes("L")}
                 onChange={handleSizeChange}
               />
-              <label htmlFor="size_L">L</label>
+              <label htmlFor="L">L</label>
             </div>
             <div className="flex flex-col">
               <input
@@ -418,7 +397,7 @@ export default function AddRoll() {
                 checked={formData.size.includes("XL")}
                 onChange={handleSizeChange}
               />
-              <label htmlFor="size_XL">XL</label>
+              <label htmlFor="XL">XL</label>
             </div>
             <div className="flex flex-col">
               <input
@@ -427,7 +406,16 @@ export default function AddRoll() {
                 checked={formData.size.includes("XXL")}
                 onChange={handleSizeChange}
               />
-              <label htmlFor="size_XXL">XXL</label>
+              <label htmlFor="XXL">XXL</label>
+            </div>
+            <div className="flex flex-col">
+              <input
+                type="checkbox"
+                name="XXXL"
+                checked={formData.size.includes("XXXL")}
+                onChange={handleSizeChange}
+              />
+              <label htmlFor="XXXL">XXXL</label>
             </div>
           </div>
           {/* Talles */}
