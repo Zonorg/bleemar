@@ -263,6 +263,7 @@ export default function AddRoll() {
                 <option value="SOLTERO">SOLTERO</option>
                 <option value="FREDY">FREDY</option>
                 <option value="DANIEL">DANIEL</option>
+                <option value="MATEO">MATEO</option>
               </select>
             </div>
             <div className="flex flex-col">

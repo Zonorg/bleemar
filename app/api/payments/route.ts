@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
     if (!signature || !rollId || !amount || !date) {
       return NextResponse.json(
-        { message: "Datos incompletos" },
+        { message: "Provide all the data" },
         { status: 422 }
       );
     }
@@ -52,11 +52,11 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(
-      { message: "Firma y pago guardados correctamente", payment },
+      { message: "Data saved successfully", payment },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error al guardar la firma y el pago:", error);
+    console.error("Error saving data:", error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

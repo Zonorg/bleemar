@@ -25,7 +25,7 @@ export async function GET() {
     return NextResponse.json(data);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "Error de servidor" }, { status: 500 });
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
@@ -40,7 +40,7 @@ async function getNextOrderNumber() {
     const lastOrderNumber = lastRoll ? lastRoll.order_number : 0;
     return lastOrderNumber + 1;
   } catch (error) {
-    console.error("Error al obtener el próximo número de pedido:", error);
+    console.error("Error getting last order number:", error);
     throw error;
   }
 }
@@ -107,11 +107,28 @@ export async function DELETE(req: Request) {
         { message: "Provide the ID properly" },
         { status: 422 }
       );
+
     await connectToDatabase();
-    const roll = await prisma.roll.delete({
-      where: { id },
-    });
-    return NextResponse.json({ roll }, { status: 200 });
+
+    await prisma.$transaction([
+      prisma.rollCuts.deleteMany({
+        where: { rollId: id },
+      }),
+      prisma.rollDetails.deleteMany({
+        where: { rollId: id },
+      }),
+      prisma.payments.deleteMany({
+        where: { rollId: id },
+      }),
+      prisma.roll.delete({
+        where: { id },
+      }),
+    ]);
+
+    return NextResponse.json(
+      { message: "Roll and related entities deleted successfully" },
+      { status: 200 }
+    );
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
