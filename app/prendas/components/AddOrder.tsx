@@ -5,7 +5,6 @@ import { FaRegTrashAlt } from "react-icons/fa";
 export default function AddOrder() {
   const [formData, setFormData] = useState({
     title: "",
-    gender: "",
     total_quantity: 0,
     order_date: "",
     size: "",
@@ -28,15 +27,20 @@ export default function AddOrder() {
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ): void => {
     const { name, value } = e.target;
+    let parsedValue: string | number | Date;
 
-    if (e.target.tagName === "INPUT") {
-      const parsedValue =
-        name === "total_quantity" ? parseInt(value, 10) : value;
-      setFormData({ ...formData, [name]: parsedValue });
-    } else if (e.target.tagName === "SELECT") {
-      setFormData({ ...formData, [name]: value });
+    switch (e.target.type) {
+      case "number":
+        parsedValue = parseInt(value, 10);
+        break;
+      default:
+        parsedValue = value;
+        break;
     }
+
+    setFormData({ ...formData, [name]: parsedValue });
   };
+
 
   const handleCutChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -107,7 +111,6 @@ export default function AddOrder() {
         alert("Pedido agregado");
         setFormData({
           title: "",
-          gender: "",
           total_quantity: 0,
           order_date: "",
           size: "",
@@ -115,7 +118,7 @@ export default function AddOrder() {
           garmentcuts: [],
           details: [],
         });
-        window.location.reload()
+        window.location.reload();
       }
     } catch (error) {
       console.log("Error", error);
@@ -128,13 +131,13 @@ export default function AddOrder() {
         onClick={() => setModalIsOpen(true)}
         className="bg-green-s text-white font-bold px-4 py-2 rounded"
       >
-        Agregar pedido
+        Agregar entrega
       </button>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         ariaHideApp={false}
-        contentLabel="Agregar Pedido"
+        contentLabel="Agregar entrega"
         style={{
           content: {
             maxHeight: "70vh",
@@ -160,16 +163,6 @@ export default function AddOrder() {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="gender">Género</label>
-              <input
-                className="p-1 border h-9"
-                type="text"
-                name="gender"
-                value={formData.gender}
-                onChange={handleOrderChange}
-              />
-            </div>
-            <div className="flex flex-col">
               <label htmlFor="size">Talles</label>
               <select
                 className="p-1 border h-9"
@@ -178,23 +171,30 @@ export default function AddOrder() {
                 onChange={handleOrderChange}
               >
                 <option value="">Seleccionar Talle</option>
-                <option value="XS">XS</option>
                 <option value="S">S</option>
                 <option value="M">M</option>
                 <option value="L">L</option>
                 <option value="XL">XL</option>
                 <option value="XXL">XXL</option>
+                <option value="XXXL">XXXL</option>
               </select>
             </div>
             <div className="flex flex-col">
               <label htmlFor="workshop">Taller</label>
-              <input
+              <select
                 className="p-1 border h-9"
-                type="text"
                 name="workshop"
                 value={formData.workshop}
                 onChange={handleOrderChange}
-              />
+              >
+                <option value="">Seleccionar Taller</option>
+                <option value="HUGO">HUGO</option>
+                <option value="CHINO">CHINO</option>
+                <option value="SOLTERO">SOLTERO</option>
+                <option value="FREDY">FREDY</option>
+                <option value="DANIEL">DANIEL</option>
+                <option value="MATEO">MATEO</option>
+              </select>
             </div>
             <div className="flex flex-col">
               <label htmlFor="total_quantity">Cantidad</label>
@@ -333,7 +333,7 @@ export default function AddOrder() {
               type="submit"
               className="bg-green-s text-white font-bold px-4 py-2 rounded"
             >
-              Agregar pedido
+              Agregar entrega
             </button>
             <button
               onClick={() => setModalIsOpen(false)}

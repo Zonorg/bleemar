@@ -53,7 +53,7 @@ export default function OrderData() {
     <div className="overflow-x-auto max-h-128">
       <input
         type="text"
-        placeholder="Buscar por título, género o fecha..."
+        placeholder="Buscar..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full p-2 border border-gray-300 rounded-md mb-4"
