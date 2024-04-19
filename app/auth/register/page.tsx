@@ -1,34 +1,35 @@
 "use client";
 import { useState, FormEvent, ChangeEvent } from "react";
-// import { useRouter } from "next/navigation";
+import { roleRedirect } from "@/app/utils/redirect";
 
 interface FormData {
   username: string;
-  name: string;
   password: string;
+  // name: string;
   confirm_password: string;
 }
 
 interface Errors {
   username: string;
-  name: string;
+  // name: string;
   password: string;
   confirm_password: string;
 }
 
 export default function Register() {
-  // const router = useRouter();
+  const isRedirected = roleRedirect();
+  if (isRedirected) return null;
 
   const [formData, setFormData] = useState<FormData>({
     username: "",
-    name: "",
+    // name: "",
     password: "",
     confirm_password: "",
   });
 
   const [errors, setErrors] = useState<Errors>({
     username: "",
-    name: "",
+    // name: "",
     password: "",
     confirm_password: "",
   });
@@ -51,12 +52,12 @@ export default function Register() {
       newErrors.username = "";
     }
 
-    if (!formData.name.trim()) {
-      formIsValid = false;
-      newErrors.name = "Escribe un nombre";
-    } else {
-      newErrors.name = "";
-    }
+    // if (!formData.name.trim()) {
+    //   formIsValid = false;
+    //   newErrors.name = "Escribe un nombre";
+    // } else {
+    //   newErrors.name = "";
+    // }
 
     if (!formData.password.trim()) {
       formIsValid = false;
@@ -87,7 +88,7 @@ export default function Register() {
           alert("Usuario creado con éxito");
           setFormData({
             username: "",
-            name: "",
+            // name: "",
             password: "",
             confirm_password: "",
           });
@@ -99,20 +100,20 @@ export default function Register() {
   };
 
   return (
-    <div className="m-auto bg-white w-64 h-64">
+    <div className="m-auto bg-white  w-64 h-64">
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <input
           className="p-1"
           type="text"
           name="username"
-          placeholder="Nombre de usuario"
+          placeholder="Usuario"
           value={formData.username}
           onChange={handleChange}
         />
         {errors.username && (
           <span className="text-red-500 text-sm">{errors.username}</span>
         )}
-        <input
+        {/* <input
           className="p-1"
           type="text"
           name="name"
@@ -122,7 +123,7 @@ export default function Register() {
         />
         {errors.name && (
           <span className="text-red-500 text-sm">{errors.name}</span>
-        )}
+        )} */}
         <input
           className="p-1"
           type="password"

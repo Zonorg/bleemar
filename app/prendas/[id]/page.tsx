@@ -3,9 +3,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
 import Link from "next/link";
-import Payments from "../components/Payments";
-import Image from "next/image";
-import { roleRedirect } from "@/app/utils/redirect";
 
 interface RollData {
   order_number: number;
@@ -24,16 +21,11 @@ interface RollData {
     quantity: number;
   }[];
   rolldetails: { title: string; quantity: number }[];
-  payments: { id: string; amount: string; date: string; signature: string }[];
 }
 
 export default function RollDetails() {
-  const isRedirected = roleRedirect();
-  if (isRedirected) return null;
-
   const { id } = useParams<{ id: string }>();
   const [rollData, setRollData] = useState<RollData | null>(null);
-  const [showPayments, setShowPayments] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -177,55 +169,7 @@ export default function RollDetails() {
           </table>
         </div>
       </div>
-      <div className="details flex flex-col gap-3">
-        <h3 className="text-lg font-bold">Pagos</h3>
-        <table className="w-full bg-white rounded-lg">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 text-start">Monto</th>
-              <th className="px-4 py-2 text-start">Fecha</th>
-              <th className="px-4 py-2 text-start">Firma</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rollData?.payments &&
-              rollData.payments.map((payment, payIndex) => (
-                <tr key={payIndex}>
-                  <td className="px-4 py-2">
-                    {new Intl.NumberFormat("es-AR", {
-                      style: "currency",
-                      currency: "ARS",
-                    }).format(parseFloat(payment.amount))}
-                  </td>
-                  <td className="px-4 py-2">{addOneDay(payment.date)}</td>
-                  <td className="px-4 py-2">
-                    <Image
-                      src={payment.signature.replace("public", "")}
-                      alt={`Pago ${payIndex + 1}`}
-                      width={100}
-                      height={100}
-                    />
-                  </td>
-                  <td className="px-4 py-2">
-                    <button onClick={() => handleDeletePayment(payment.id)}>
-                      Eliminar pago
-                    </button>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
 
-      <div className="w-full flex flex-col gap-3 items-start">
-        <button
-          onClick={() => setShowPayments(!showPayments)}
-          className={`font-medium ${showPayments ? "text-red-600" : ""}`}
-        >
-          {showPayments ? "- Cancelar" : "+ Agregar pagos"}
-        </button>
-        {showPayments && <Payments rollId={id} />}
-      </div>
       <Link
         href="/rollos"
         className="bg-green-s text-white font-bold px-4 py-2 rounded mx-auto"

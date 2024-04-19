@@ -266,7 +266,6 @@ export default function AddRoll() {
         style={{
           content: {
             margin: "auto",
-            maxHeight: "80vh",
             overflow: "auto",
           },
         }}
@@ -444,7 +443,7 @@ export default function AddRoll() {
           {/* Talles */}
           <div className="border rounded p-2">
             <label className="font-bold block">Talles:</label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2 mt-5">
               {["S", "M", "L", "XL", "XXL", "XXXL"].map((size) => (
                 <div className="flex items-center" key={size}>
                   {/* <input

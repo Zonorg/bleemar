@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import DeleteRoll from "./DeleteRoll";
-// import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { roleRedirect } from "@/app/utils/redirect";
 
 interface Roll {
   id: number;
@@ -15,9 +15,11 @@ interface Roll {
 }
 
 export default function RollData() {
+  const isRedirected = roleRedirect();
+  if (isRedirected) return null;
+
   const [rolls, setRolls] = useState<Roll[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  // const { data: session } = useSession();
 
   async function fetchData() {
     try {
@@ -46,6 +48,14 @@ export default function RollData() {
       roll.order_date.toString().includes(searchTerm)
   );
 
+  const addOneDay = (dateString: string) => {
+    let date = new Date(dateString);
+    date.setDate(date.getDate() + 1);
+
+    let newDateString = date.toLocaleDateString();
+    return newDateString;
+  };
+
   return (
     <div className="overflow-x-auto max-h-128">
       <input
@@ -73,9 +83,7 @@ export default function RollData() {
               <td className="px-4 py-2">{roll.name}</td>
               <td className="px-4 py-2">{roll.workshop}</td>
               <td className="px-4 py-2">{roll.total_quantity}</td>
-              <td className="px-4 py-2">
-                {new Date(roll.order_date).toLocaleDateString()}
-              </td>
+              <td className="px-4 py-2">{addOneDay(roll.order_date)}</td>
               <td className="px-4 py-2 flex items-center gap-3">
                 <Link href={`/rollos/${roll.id}`}>
                   <FaEye size={20} />
