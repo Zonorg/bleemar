@@ -24,13 +24,30 @@ type FormData = {
 export default function AddRoll() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
+  const [sizeCount, setSizeCount] = useState<Record<string, number>>({
+    S: 0,
+    M: 0,
+    L: 0,
+    XL: 0,
+    XXL: 0,
+    XXXL: 0,
+  });
+
+  const getCurrentDate = (): string => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   const [formData, setFormData] = useState<FormData>({
     name: "",
     order_number: 0,
     size: [],
     workshop: "",
     total_quantity: 0,
-    order_date: "",
+    order_date: getCurrentDate(),
     rollcuts: [
       { color: "", combined: "", lining: "", quantity: 0 },
       { color: "", combined: "", lining: "", quantity: 0 },
@@ -153,6 +170,28 @@ export default function AddRoll() {
       };
     });
   };
+
+  // Función para manejar el cambio en la cantidad de cada talle
+  const handleSizeCountChange = (
+    size: keyof typeof sizeCount,
+    increment: boolean
+  ) => {
+    setSizeCount((prevState) => ({
+      ...prevState,
+      [size]: increment
+        ? prevState[size] + 1
+        : Math.max(prevState[size] - 1, 0),
+    }));
+
+    // Llama a handleSizeChange con un evento simulado
+    handleSizeChange({
+      target: {
+        name: size,
+        checked: increment || sizeCount[size] > 1, // Solo desmarca el checkbox si la cantidad es 1 y se está restando
+      },
+    } as ChangeEvent<HTMLInputElement>);
+  };
+
   const handleDetailChange = (
     e: ChangeEvent<HTMLInputElement>,
     index: number
@@ -200,7 +239,7 @@ export default function AddRoll() {
           size: [],
           workshop: "",
           total_quantity: 0,
-          order_date: "",
+          order_date: getCurrentDate(),
           rollcuts: [],
           rolldetails: [],
         });
@@ -403,61 +442,48 @@ export default function AddRoll() {
           {/* Detalles */}
 
           {/* Talles */}
-          <div className="flex gap-3 items-center justify-center border rounded p-2">
-            <label className="font-bold">Talles</label>
-            <div className="flex flex-col">
-              <input
-                type="checkbox"
-                name="S"
-                checked={formData.size.includes("S")}
-                onChange={handleSizeChange}
-              />
-              <label htmlFor="S">S</label>
-            </div>
-            <div className="flex flex-col">
-              <input
-                type="checkbox"
-                name="M"
-                checked={formData.size.includes("M")}
-                onChange={handleSizeChange}
-              />
-              <label htmlFor="M">M</label>
-            </div>
-            <div className="flex flex-col">
-              <input
-                type="checkbox"
-                name="L"
-                checked={formData.size.includes("L")}
-                onChange={handleSizeChange}
-              />
-              <label htmlFor="L">L</label>
-            </div>
-            <div className="flex flex-col">
-              <input
-                type="checkbox"
-                name="XL"
-                checked={formData.size.includes("XL")}
-                onChange={handleSizeChange}
-              />
-              <label htmlFor="XL">XL</label>
-            </div>
-            <div className="flex flex-col">
-              <input
-                type="checkbox"
-                name="XXL"
-                checked={formData.size.includes("XXL")}
-                onChange={handleSizeChange}
-              />
-              <label htmlFor="XXL">XXL</label>
-            </div>
-            <div className="flex flex-col">
-              <input
-                type="checkbox"
-                name="XXXL"
-                checked={formData.size.includes("XXXL")}
-                onChange={handleSizeChange}
-              />
-              <label htmlFor="XXXL">XXXL</label>
+          <div className="border rounded p-2">
+            <label className="font-bold block">Talles:</label>
+            <div className="grid grid-cols-3 gap-2">
+              {["S", "M", "L", "XL", "XXL", "XXXL"].map((size) => (
+                <div className="flex items-center" key={size}>
+                  {/* <input
+                    type="checkbox"
+                    name={size}
+                    checked={formData.size.includes(size)}
+                    onChange={handleSizeChange}
+                    className="mr-1"
+                  /> */}
+                  <label htmlFor={size} className="mr-1">
+                    {size}
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleSizeCountChange(
+                        size as keyof typeof sizeCount,
+                        true
+                      )
+                    }
+                    className="px-2 py-1 border"
+                  >
+                    +
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleSizeCountChange(
+                        size as keyof typeof sizeCount,
+                        false
+                      )
+                    }
+                    className="px-2 py-1 border"
+                  >
+                    -
+                  </button>
+                  <p className="ml-1">Cantidad: {sizeCount[size]}</p>
+                </div>
+              ))}
             </div>
           </div>
           {/* Talles */}

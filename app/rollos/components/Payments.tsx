@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import SignatureCanvas from "react-signature-canvas";
 
 interface PaymentsProps {
@@ -8,7 +8,14 @@ interface PaymentsProps {
 export default function Payments({ rollId }: PaymentsProps) {
   const [url, setUrl] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string>("");
-  const [date, setDate] = useState<string>("");
+  const getCurrentDate = (): string => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+  const [date, setDate] = useState<string>(getCurrentDate());
   const sigCanvas = useRef<SignatureCanvas | null>(null);
 
   const handleClear = () => {
@@ -74,8 +81,7 @@ export default function Payments({ rollId }: PaymentsProps) {
           onChange={(e) => setAmount(e.target.value)}
           className="p-1"
         />
-        <label htmlFor="amount">Fecha:</label>
-
+        <label htmlFor="date">Fecha:</label>
         <input
           type="date"
           placeholder="Fecha"
