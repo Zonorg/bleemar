@@ -99,6 +99,74 @@ export async function POST(req: Request) {
     await prisma.$disconnect();
   }
 }
+
+export async function PUT(req: Request) {
+  try {
+    const {
+      id, 
+      name,
+      size,
+      workshop,
+      order_date,
+      rollcuts,
+      rolldetails,
+    } = await req.json();
+
+    if (
+      !id ||
+      !name ||
+      !size ||
+      !workshop ||
+      !order_date ||
+      !rollcuts ||
+      !rolldetails
+    ) {
+      return NextResponse.json(
+        { message: "Provide all the data" },
+        { status: 422 }
+      );
+    }
+
+    await connectToDatabase();
+
+    const sizeString = size.join(", ");
+
+    const updatedRoll = await prisma.roll.update({
+      where: { id },
+      data: {
+        name,
+        size: sizeString,
+        workshop,
+        order_date,
+        rollcuts: { deleteMany: {} }, 
+        rolldetails: { deleteMany: {} },
+      },
+    });
+
+    // Luego, creamos nuevamente los cortes y detalles
+    await prisma.rollCuts.createMany({
+      data: rollcuts.map((cut: any) => ({
+        rollId: updatedRoll.id,
+        ...cut,
+      })),
+    });
+
+    await prisma.rollDetails.createMany({
+      data: rolldetails.map((detail: any) => ({
+        rollId: updatedRoll.id,
+        ...detail,
+      })),
+    });
+
+    return NextResponse.json({ roll: updatedRoll }, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Server Error" }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 export async function DELETE(req: Request) {
   try {
     const { id } = await req.json();

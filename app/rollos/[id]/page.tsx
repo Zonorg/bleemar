@@ -6,8 +6,9 @@ import Link from "next/link";
 import Payments from "../components/Payments";
 import Image from "next/image";
 import { RoleRedirect } from "@/app/utils/redirect";
+import EditRoll from "../components/EditRoll";
 
-interface RollData {
+export interface RollData {
   order_number: number;
   name: string;
   color: string;
@@ -31,6 +32,16 @@ export default function RollDetails() {
   const { id } = useParams<{ id: string }>();
   const [rollData, setRollData] = useState<RollData | null>(null);
   const [showPayments, setShowPayments] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState(false);
+
+  const handleEdit = () => {
+    setEditMode(true);
+  };
+
+  const handleSave = (editedData: RollData) => {
+    setEditMode(false);
+    console.log("Datos editados:", editedData);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,142 +107,150 @@ export default function RollDetails() {
 
   return (
     <>
-      <RoleRedirect />;
-      <div className="w-full px-4 py-4 flex flex-col gap-5">
-        <h2 className="text-xl font-bold">Detalles del pedido</h2>
-        <table className="w-full bg-white rounded-lg">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 text-start">Nº Pedido</th>
-              <th className="px-4 py-2 text-start">Nombre</th>
-              <th className="px-4 py-2 text-start">Taller</th>
-              <th className="px-4 py-2 text-start">Talles</th>
-              <th className="px-4 py-2 text-start">Cantidad total</th>
-              <th className="px-4 py-2 text-start">Fecha del pedido</th>
-              <th className="px-4 py-2 text-start">Acciones</th>
-            </tr>
-          </thead>
-          <tbody className="align-top">
-            {rollData && (
-              <tr>
-                <td className="px-4 py-2">{rollData.order_number}</td>
-                <td className="px-4 py-2">{rollData.name}</td>
-                <td className="px-4 py-2">{rollData.workshop}</td>
-                <td className="px-4 py-2">
-                  {sortedSizes(rollData.size).join(", ")}
-                </td>
-                <td className="px-4 py-2">{rollData.total_quantity}</td>
-                <td className="px-4 py-2">{addOneDay(rollData.order_date)}</td>
-                <td className="px-4 py-2">
-                  <PiPencilSimpleLineFill size={20} />
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-        <div className="aditional_data flex gap-5 max-xl:flex-col">
-          <div className="cuts flex flex-col gap-3">
-            <h3 className="text-lg font-bold">Cortes</h3>
-            <table className="w-128 bg-white rounded-lg">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 text-start">Color</th>
-                  <th className="px-4 py-2 text-start">Combinado</th>
-                  <th className="px-4 py-2 text-start">Forro</th>
-                  <th className="px-4 py-2 text-start">Cantidad</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rollData?.rollcuts &&
-                  rollData.rollcuts.map((cut, cutIndex) => (
-                    <tr key={cutIndex}>
-                      <td className="px-4 py-2">{cut.color}</td>
-                      <td className="px-4 py-2">{cut.combined}</td>
-                      <td className="px-4 py-2">{cut.lining}</td>
-                      <td className="px-4 py-2">{cut.quantity}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="details flex flex-col gap-3">
-            <h3 className="text-lg font-bold">Detalles</h3>
-            <table className="w-128 bg-white rounded-lg">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 text-start">Item</th>
-                  <th className="px-4 py-2 text-start">Cantidad</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rollData?.rolldetails &&
-                  rollData.rolldetails.map((detail, cutIndex) => (
-                    <tr key={cutIndex}>
-                      <td className="px-4 py-2">{detail.title}</td>
-                      <td className="px-4 py-2">{detail.quantity}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div className="details flex flex-col gap-3">
-          <h3 className="text-lg font-bold">Pagos</h3>
+      <RoleRedirect />
+      {!editMode ? (
+        <div className="w-full px-4 py-4 flex flex-col gap-5">
+          <h2 className="text-xl font-bold">Detalles del pedido</h2>
           <table className="w-full bg-white rounded-lg">
             <thead>
               <tr>
-                <th className="px-4 py-2 text-start">Monto</th>
-                <th className="px-4 py-2 text-start">Fecha</th>
-                <th className="px-4 py-2 text-start">Firma</th>
+                <th className="px-4 py-2 text-start">Nº Pedido</th>
+                <th className="px-4 py-2 text-start">Nombre</th>
+                <th className="px-4 py-2 text-start">Taller</th>
+                <th className="px-4 py-2 text-start">Talles</th>
+                <th className="px-4 py-2 text-start">Cantidad total</th>
+                <th className="px-4 py-2 text-start">Fecha del pedido</th>
+                <th className="px-4 py-2 text-start">Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              {rollData?.payments &&
-                rollData.payments.map((payment, payIndex) => (
-                  <tr key={payIndex}>
-                    <td className="px-4 py-2">
-                      {new Intl.NumberFormat("es-AR", {
-                        style: "currency",
-                        currency: "ARS",
-                      }).format(parseFloat(payment.amount))}
-                    </td>
-                    <td className="px-4 py-2">{addOneDay(payment.date)}</td>
-                    <td className="px-4 py-2">
-                      <Image
-                        src={payment.signature.replace("public", "")}
-                        alt={`Pago ${payIndex + 1}`}
-                        width={100}
-                        height={100}
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <button onClick={() => handleDeletePayment(payment.id)}>
-                        Eliminar pago
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+            <tbody className="align-top">
+              {rollData && (
+                <tr>
+                  <td className="px-4 py-2">{rollData.order_number}</td>
+                  <td className="px-4 py-2">{rollData.name}</td>
+                  <td className="px-4 py-2">{rollData.workshop}</td>
+                  <td className="px-4 py-2">
+                    {sortedSizes(rollData.size).join(", ")}
+                  </td>
+                  <td className="px-4 py-2">{rollData.total_quantity}</td>
+                  <td className="px-4 py-2">
+                    {addOneDay(rollData.order_date)}
+                  </td>
+                  <td className="px-4 py-2">
+                    <button onClick={handleEdit}>
+                      <PiPencilSimpleLineFill size={20} />
+                    </button>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
-        </div>
+          <div className="aditional_data flex gap-5 max-xl:flex-col">
+            <div className="cuts flex flex-col gap-3">
+              <h3 className="text-lg font-bold">Cortes</h3>
+              <table className="w-128 bg-white rounded-lg">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2 text-start">Color</th>
+                    <th className="px-4 py-2 text-start">Combinado</th>
+                    <th className="px-4 py-2 text-start">Forro</th>
+                    <th className="px-4 py-2 text-start">Cantidad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rollData?.rollcuts &&
+                    rollData.rollcuts.map((cut, cutIndex) => (
+                      <tr key={cutIndex}>
+                        <td className="px-4 py-2">{cut.color}</td>
+                        <td className="px-4 py-2">{cut.combined}</td>
+                        <td className="px-4 py-2">{cut.lining}</td>
+                        <td className="px-4 py-2">{cut.quantity}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
 
-        <div className="w-full flex flex-col gap-3 items-start">
-          <button
-            onClick={() => setShowPayments(!showPayments)}
-            className={`font-medium ${showPayments ? "text-red-600" : ""}`}
+            <div className="details flex flex-col gap-3">
+              <h3 className="text-lg font-bold">Detalles</h3>
+              <table className="w-128 bg-white rounded-lg">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2 text-start">Item</th>
+                    <th className="px-4 py-2 text-start">Cantidad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rollData?.rolldetails &&
+                    rollData.rolldetails.map((detail, cutIndex) => (
+                      <tr key={cutIndex}>
+                        <td className="px-4 py-2">{detail.title}</td>
+                        <td className="px-4 py-2">{detail.quantity}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="details flex flex-col gap-3">
+            <h3 className="text-lg font-bold">Pagos</h3>
+            <table className="w-full bg-white rounded-lg">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2 text-start">Monto</th>
+                  <th className="px-4 py-2 text-start">Fecha</th>
+                  <th className="px-4 py-2 text-start">Firma</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rollData?.payments &&
+                  rollData.payments.map((payment, payIndex) => (
+                    <tr key={payIndex}>
+                      <td className="px-4 py-2">
+                        {new Intl.NumberFormat("es-AR", {
+                          style: "currency",
+                          currency: "ARS",
+                        }).format(parseFloat(payment.amount))}
+                      </td>
+                      <td className="px-4 py-2">{addOneDay(payment.date)}</td>
+                      <td className="px-4 py-2">
+                        <Image
+                          src={payment.signature.replace("public", "")}
+                          alt={`Pago ${payIndex + 1}`}
+                          width={100}
+                          height={100}
+                        />
+                      </td>
+                      <td className="px-4 py-2">
+                        <button onClick={() => handleDeletePayment(payment.id)}>
+                          Eliminar pago
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="w-full flex flex-col gap-3 items-start">
+            <button
+              onClick={() => setShowPayments(!showPayments)}
+              className={`font-medium ${showPayments ? "text-red-600" : ""}`}
+            >
+              {showPayments ? "- Cancelar" : "+ Agregar pagos"}
+            </button>
+            {showPayments && <Payments rollId={id} />}
+          </div>
+          <Link
+            href="/rollos"
+            className="bg-green-s text-white font-bold px-4 py-2 rounded mx-auto"
           >
-            {showPayments ? "- Cancelar" : "+ Agregar pagos"}
-          </button>
-          {showPayments && <Payments rollId={id} />}
+            Volver
+          </Link>
         </div>
-        <Link
-          href="/rollos"
-          className="bg-green-s text-white font-bold px-4 py-2 rounded mx-auto"
-        >
-          Volver
-        </Link>
-      </div>
+      ) : (
+        <EditRoll rollData={rollData} onSave={handleSave} />
+      )}
     </>
   );
 }
