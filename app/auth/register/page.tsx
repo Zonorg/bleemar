@@ -128,6 +128,7 @@ export default function Register() {
             type="password"
             name="password"
             placeholder="Contraseña"
+            autoComplete="off"
             value={formData.password}
             onChange={handleChange}
           />
@@ -139,6 +140,7 @@ export default function Register() {
             type="password"
             name="confirm_password"
             placeholder="Confirmar Contraseña"
+            autoComplete="off"
             value={formData.confirm_password}
             onChange={handleChange}
           />
