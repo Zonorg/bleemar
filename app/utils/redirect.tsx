@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
-export const roleRedirect = () => {
+export const RoleRedirect = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -11,7 +11,7 @@ export const roleRedirect = () => {
     if (session?.user?.name !== "Admin") {
       router.push("/prendas");
     }
-  }, [session]);
+  }, [session, router]);
 
   return null;
 };

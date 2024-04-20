@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import DeleteRoll from "./DeleteRoll";
 import Link from "next/link";
-import { roleRedirect } from "@/app/utils/redirect";
 
 interface Roll {
   id: number;
@@ -15,9 +14,6 @@ interface Roll {
 }
 
 export default function RollData() {
-  const isRedirected = roleRedirect();
-  if (isRedirected) return null;
-
   const [rolls, setRolls] = useState<Roll[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
 

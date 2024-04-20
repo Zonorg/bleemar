@@ -1,6 +1,6 @@
 "use client";
 import { useState, FormEvent, ChangeEvent } from "react";
-import { roleRedirect } from "@/app/utils/redirect";
+import { RoleRedirect } from "@/app/utils/redirect";
 
 interface FormData {
   username: string;
@@ -17,9 +17,6 @@ interface Errors {
 }
 
 export default function Register() {
-  const isRedirected = roleRedirect();
-  if (isRedirected) return null;
-
   const [formData, setFormData] = useState<FormData>({
     username: "",
     // name: "",
@@ -100,20 +97,22 @@ export default function Register() {
   };
 
   return (
-    <div className="m-auto bg-white  w-64 h-64">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <input
-          className="p-1"
-          type="text"
-          name="username"
-          placeholder="Usuario"
-          value={formData.username}
-          onChange={handleChange}
-        />
-        {errors.username && (
-          <span className="text-red-500 text-sm">{errors.username}</span>
-        )}
-        {/* <input
+    <>
+      <RoleRedirect />
+      <div className="m-auto bg-white  w-64 h-64">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <input
+            className="p-1"
+            type="text"
+            name="username"
+            placeholder="Usuario"
+            value={formData.username}
+            onChange={handleChange}
+          />
+          {errors.username && (
+            <span className="text-red-500 text-sm">{errors.username}</span>
+          )}
+          {/* <input
           className="p-1"
           type="text"
           name="name"
@@ -124,37 +123,38 @@ export default function Register() {
         {errors.name && (
           <span className="text-red-500 text-sm">{errors.name}</span>
         )} */}
-        <input
-          className="p-1"
-          type="password"
-          name="password"
-          placeholder="Contraseña"
-          value={formData.password}
-          onChange={handleChange}
-        />
-        {errors.password && (
-          <span className="text-red-500 text-sm">{errors.password}</span>
-        )}
-        <input
-          className="p-1"
-          type="password"
-          name="confirm_password"
-          placeholder="Confirmar Contraseña"
-          value={formData.confirm_password}
-          onChange={handleChange}
-        />
-        {errors.confirm_password && (
-          <span className="text-red-500 text-sm">
-            {errors.confirm_password}
-          </span>
-        )}
-        <button
-          type="submit"
-          className="bg-green-s text-white font-bold px-4 py-2 rounded"
-        >
-          Crear usuario
-        </button>
-      </form>
-    </div>
+          <input
+            className="p-1"
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          {errors.password && (
+            <span className="text-red-500 text-sm">{errors.password}</span>
+          )}
+          <input
+            className="p-1"
+            type="password"
+            name="confirm_password"
+            placeholder="Confirmar Contraseña"
+            value={formData.confirm_password}
+            onChange={handleChange}
+          />
+          {errors.confirm_password && (
+            <span className="text-red-500 text-sm">
+              {errors.confirm_password}
+            </span>
+          )}
+          <button
+            type="submit"
+            className="bg-green-s text-white font-bold px-4 py-2 rounded"
+          >
+            Crear usuario
+          </button>
+        </form>
+      </div>
+    </>
   );
 }

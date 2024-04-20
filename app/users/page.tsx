@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { roleRedirect } from "@/app/utils/redirect";
+import { RoleRedirect } from "@/app/utils/redirect";
 
 interface Order {
   id: number;
@@ -10,9 +10,6 @@ interface Order {
 }
 
 export default function UserData() {
-  const isRedirected = roleRedirect();
-  if (isRedirected) return null;
-
   const [users, setUsers] = useState<Order[]>([]);
 
   async function fetchData() {
@@ -34,28 +31,31 @@ export default function UserData() {
   }, []);
 
   return (
-    <div className="overflow-x-auto h-screen py-2">
-      <table className="w-full bg-white rounded-lg">
-        <thead>
-          <tr>
-            <th className="px-4 py-2 text-start">ID</th>
-            <th className="px-4 py-2 text-start">Nombre de usuario</th>
-            {/* <th className="px-4 py-2 text-start">Nombre</th> */}
-            <th className="px-4 py-2 text-start">Rol</th>
-            <th className="px-4 py-2 text-start">Acciones</th>
-          </tr>
-        </thead>
-        <tbody className="align-top">
-          {users.map((order, index) => (
-            <tr key={index} className="border-b">
-              <td className="px-4 py-2">{index + 1}</td>
-              <td className="px-4 py-2">{order.username}</td>
-              <td className="px-4 py-2">{order.name}</td>
-              {/* <td className="px-4 py-2">{order.role}</td> */}
+    <>
+      <RoleRedirect />
+      <div className="overflow-x-auto h-screen py-2">
+        <table className="w-full bg-white rounded-lg">
+          <thead>
+            <tr>
+              <th className="px-4 py-2 text-start">ID</th>
+              <th className="px-4 py-2 text-start">Nombre de usuario</th>
+              {/* <th className="px-4 py-2 text-start">Nombre</th> */}
+              <th className="px-4 py-2 text-start">Rol</th>
+              <th className="px-4 py-2 text-start">Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody className="align-top">
+            {users.map((order, index) => (
+              <tr key={index} className="border-b">
+                <td className="px-4 py-2">{index + 1}</td>
+                <td className="px-4 py-2">{order.username}</td>
+                <td className="px-4 py-2">{order.name}</td>
+                {/* <td className="px-4 py-2">{order.role}</td> */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
