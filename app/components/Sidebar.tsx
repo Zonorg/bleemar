@@ -4,10 +4,12 @@ import { GiRolledCloth } from "react-icons/gi";
 import { FaShirt, FaGear } from "react-icons/fa6";
 import { IoIosExit } from "react-icons/io";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+
   if (pathname === "/auth/login") {
     return null;
   }
@@ -37,30 +39,34 @@ export default function Sidebar() {
               <FaShirt size={18} />
               Prendas
             </Link>
-            <Link
-              className={`flex items-center gap-2 hover:bg-background-gray p-2 rounded-md ${
-                isActive("/rollos")
-                  ? "bg-green-s text-white hover:bg-green-s"
-                  : ""
-              }`}
-              href="/rollos"
-            >
-              <GiRolledCloth className="rotate-12" size={18} />
-              Rollos
-            </Link>
+            {session?.user?.name === "Admin" && (
+              <Link
+                className={`flex items-center gap-2 hover:bg-background-gray p-2 rounded-md ${
+                  isActive("/rollos")
+                    ? "bg-green-s text-white hover:bg-green-s"
+                    : ""
+                }`}
+                href="/rollos"
+              >
+                <GiRolledCloth className="rotate-12" size={18} />
+                Rollos
+              </Link>
+            )}
           </div>
           <div className="sidebar_bottom_menu flex flex-col">
-            <Link
-              className={`flex items-center gap-2 hover:bg-background-gray p-2 rounded-md ${
-                isActive("/settings")
-                  ? "bg-green-s text-white hover:bg-green-s"
-                  : ""
-              }`}
-              href="/settings"
-            >
-              <FaGear size={16} />
-              Configuración
-            </Link>
+            {session?.user?.name === "Admin" && (
+              <Link
+                className={`flex items-center gap-2 hover:bg-background-gray p-2 rounded-md ${
+                  isActive("/settings")
+                    ? "bg-green-s text-white hover:bg-green-s"
+                    : ""
+                }`}
+                href="/settings"
+              >
+                <FaGear size={16} />
+                Configuración
+              </Link>
+            )}
             <Link
               className="flex items-center gap-2 hover:bg-background-gray p-2 rounded-md"
               href="#"

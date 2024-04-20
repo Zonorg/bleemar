@@ -3,11 +3,13 @@ import Link from "next/link";
 import { GiRolledCloth } from "react-icons/gi";
 import { FaShirt, FaGear } from "react-icons/fa6";
 import { IoIosExit } from "react-icons/io";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 export default function Footer() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+
   if (pathname === "/auth/login") {
     return null;
   }
@@ -27,24 +29,30 @@ export default function Footer() {
         <FaShirt size={18} />
         Prendas
       </Link>
-      <Link
-        className={`flex flex-col items-center p-2 rounded-md ${
-          isActive("/rollos") ? "text-green-xs" : ""
-        }`}
-        href="/rollos"
-      >
-        <GiRolledCloth size={18} />
-        Rollos
-      </Link>
-      <Link
-        className={`flex flex-col items-center p-2 rounded-md ${
-          isActive("/settings") ? "text-green-xs" : ""
-        }`}
-        href="/settings"
-      >
-        <FaGear size={18} />
-        Configuración
-      </Link>
+      {session?.user?.name === "Admin" && (
+        <Link
+          className={`flex flex-col items-center p-2 rounded-md ${
+            isActive("/rollos") ? "text-green-xs" : ""
+          }`}
+          href="/rollos"
+        >
+          <GiRolledCloth size={18} />
+          Rollos
+        </Link>
+      )}
+
+      {session?.user?.name === "Admin" && (
+        <Link
+          className={`flex flex-col items-center p-2 rounded-md ${
+            isActive("/settings") ? "text-green-xs" : ""
+          }`}
+          href="/settings"
+        >
+          <FaGear size={18} />
+          Configuración
+        </Link>
+      )}
+
       <Link
         href="#"
         onClick={() => signOut()}
