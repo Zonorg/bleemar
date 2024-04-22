@@ -11,13 +11,11 @@ import EditRoll from "../components/EditRoll";
 export interface RollData {
   order_number: number;
   name: string;
-  color: string;
-  combined: string;
-  lining: string;
   workshop: string;
   size: string;
   total_quantity: number;
   order_date: string;
+  completed: boolean;
   rollcuts: {
     color: string;
     combined: string;

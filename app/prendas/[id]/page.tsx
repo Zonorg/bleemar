@@ -1,19 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { PiPencilSimpleLineFill } from "react-icons/pi";
+import { FaDownload } from "react-icons/fa";
 import Link from "next/link";
+import PDFPreview from "../components/PDFPreview";
 
 interface RollData {
   order_number: number;
   name: string;
-  color: string;
-  combined: string;
-  lining: string;
   workshop: string;
   size: string;
   total_quantity: number;
   order_date: string;
+  completed: boolean;
   rollcuts: {
     color: string;
     combined: string;
@@ -26,6 +25,7 @@ interface RollData {
 export default function RollDetails() {
   const { id } = useParams<{ id: string }>();
   const [rollData, setRollData] = useState<RollData | null>(null);
+  const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,32 +55,6 @@ export default function RollDetails() {
     return sizeArray.sort((a, b) => sizeOrder[a] - sizeOrder[b]);
   };
 
-  const handleDeletePayment = async (paymentId: string) => {
-    const confirmDelete = window.confirm(
-      "¿Estás seguro de que deseas eliminar este pago?"
-    );
-
-    if (!confirmDelete) {
-      return;
-    }
-    try {
-      const response = await fetch("/api/payments", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: paymentId }),
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      window.location.reload();
-      alert("Pago eliminado");
-    } catch (error) {
-      console.error("Error deleting payment", error);
-    }
-  };
-
   const addOneDay = (dateString: string) => {
     let date = new Date(dateString);
     date.setDate(date.getDate() + 1);
@@ -89,8 +63,21 @@ export default function RollDetails() {
     return newDateString;
   };
 
+  const closePDFPreview = () => {
+    setShowPDFPreview(false);
+  };
+
   return (
     <div className="w-full px-4 py-4 flex flex-col gap-5">
+      {showPDFPreview && rollData && (
+        <div>
+          <PDFPreview
+            rollData={[rollData]}
+            addOneDay={addOneDay}
+            closePDFPreview={closePDFPreview}
+          />
+        </div>
+      )}
       <h2 className="text-xl font-bold">Detalles del pedido</h2>
       <table className="w-full bg-white rounded-lg">
         <thead>
@@ -101,6 +88,7 @@ export default function RollDetails() {
             <th className="px-4 py-2 text-start">Talles</th>
             <th className="px-4 py-2 text-start">Cantidad total</th>
             <th className="px-4 py-2 text-start">Fecha del pedido</th>
+            <th className="px-4 py-2 text-start">Estado</th>
             <th className="px-4 py-2 text-start">Acciones</th>
           </tr>
         </thead>
@@ -116,7 +104,19 @@ export default function RollDetails() {
               <td className="px-4 py-2">{rollData.total_quantity}</td>
               <td className="px-4 py-2">{addOneDay(rollData.order_date)}</td>
               <td className="px-4 py-2">
-                <PiPencilSimpleLineFill size={20} />
+                {rollData.completed ? "Completo" : "Pendiente"}
+              </td>
+              <td className="px-4 py-2">
+                <button>
+                  <button
+                    onClick={() => {
+                      setShowPDFPreview(true);
+                    }}
+                    className="mb-4"
+                  >
+                    <FaDownload />
+                  </button>
+                </button>
               </td>
             </tr>
           )}
@@ -131,7 +131,7 @@ export default function RollDetails() {
                 <th className="px-4 py-2 text-start">Color</th>
                 <th className="px-4 py-2 text-start">Combinado</th>
                 <th className="px-4 py-2 text-start">Forro</th>
-                <th className="px-4 py-2 text-start">Cantidad</th>
+                <th className="px-4 py-2 text-start"> </th>
               </tr>
             </thead>
             <tbody>

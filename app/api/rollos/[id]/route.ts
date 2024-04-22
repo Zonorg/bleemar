@@ -21,6 +21,7 @@ export async function GET(req: Request, { params }: { params: any }) {
         workshop: true,
         total_quantity: true,
         order_date: true,
+        completed: true,
         rollcuts: true,
         rolldetails: true,
         payments: true,

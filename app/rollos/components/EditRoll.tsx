@@ -8,9 +8,7 @@ interface RollData {
   size: string;
   total_quantity: number;
   order_date: string;
-  color: string;
-  combined: string;
-  lining: string;
+  completed: boolean;
   rollcuts: {
     color: string;
     combined: string;
@@ -34,9 +32,7 @@ export default function EditRoll({ rollData, onSave }: Props) {
     size: "",
     total_quantity: 0,
     order_date: "",
-    color: "",
-    combined: "",
-    lining: "",
+    completed: false,
     rollcuts: [],
     rolldetails: [],
     payments: [],
