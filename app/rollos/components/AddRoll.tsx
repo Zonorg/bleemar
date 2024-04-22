@@ -268,6 +268,9 @@ export default function AddRoll() {
             margin: "auto",
             overflow: "auto",
           },
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+          },
         }}
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">

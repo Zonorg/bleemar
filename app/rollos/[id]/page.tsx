@@ -2,11 +2,13 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
+import { ImCross } from "react-icons/im";
 import Link from "next/link";
 import Payments from "../components/Payments";
 import Image from "next/image";
 import { RoleRedirect } from "@/app/utils/redirect";
 import EditRoll from "../components/EditRoll";
+import Modal from "react-modal";
 
 export interface RollData {
   order_number: number;
@@ -31,6 +33,11 @@ export default function RollDetails() {
   const [rollData, setRollData] = useState<RollData | null>(null);
   const [showPayments, setShowPayments] = useState<boolean>(false);
   const [editMode, setEditMode] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
 
   const handleEdit = () => {
     setEditMode(true);
@@ -235,13 +242,36 @@ export default function RollDetails() {
           </div>
 
           <div className="w-full flex flex-col gap-3 items-start">
-            <button
-              onClick={() => setShowPayments(!showPayments)}
-              className={`font-medium ${showPayments ? "text-red-600" : ""}`}
-            >
-              {showPayments ? "- Cancelar" : "+ Agregar pagos"}
+            <button onClick={toggleModal} className="font-medium text-green-l">
+              + Agregar pago
             </button>
-            {showPayments && <Payments rollId={id} />}
+            <Modal
+              isOpen={showModal}
+              onRequestClose={toggleModal}
+              contentLabel="Add payment"
+              style={{
+                content: {
+                  margin: "auto",
+                  overflow: "auto",
+                  width: "50%",
+                  height: "50vh",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                overlay: {
+                  backgroundColor: "rgba(0, 0, 0, 0.6)",
+                },
+              }}
+            >
+              <Payments rollId={id} />
+              <button
+                className=" font-bold rounded absolute top-2 right-5"
+                onClick={toggleModal}
+              >
+                <ImCross className="text-zinc-900" />
+              </button>
+            </Modal>
           </div>
           <Link
             href="/rollos"

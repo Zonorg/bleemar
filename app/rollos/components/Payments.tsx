@@ -45,6 +45,7 @@ export default function Payments({ rollId }: PaymentsProps) {
         });
 
         if (!response.ok) {
+          alert("Revisa los datos")
           throw new Error("Error while saving data");
         }
 
@@ -59,12 +60,12 @@ export default function Payments({ rollId }: PaymentsProps) {
   };
 
   return (
-    <div className="flex flex-col gap-3">
-      <div style={{ border: "2px solid black", width: 500, height: 200 }}>
+    <div className="flex flex-col gap-3 w-full">
+      <div className="border border-black m-auto">
         <SignatureCanvas
           canvasProps={{
             width: 500,
-            height: 200,
+            height: 250,
             className: "sigCanvas",
           }}
           ref={(ref) => {
@@ -72,14 +73,14 @@ export default function Payments({ rollId }: PaymentsProps) {
           }}
         />
       </div>
-      <div className="flex gap-3 items-center">
+      <div className="flex gap-3 m-auto items-center">
         <label htmlFor="amount">$</label>
         <input
           type="text"
           placeholder="Monto"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="p-1"
+          className="p-1 border"
         />
         <label htmlFor="date">Fecha:</label>
         <input
@@ -87,10 +88,20 @@ export default function Payments({ rollId }: PaymentsProps) {
           placeholder="Fecha"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="p-1"
+          className="p-1 border"
         />
-        <button onClick={handleGenerate}>Guardar pago</button>
-        <button onClick={handleClear}>Limpiar firma</button>
+        <button
+          className="bg-green-s text-white px-2 py-1 rounded"
+          onClick={handleGenerate}
+        >
+          Guardar pago
+        </button>
+        <button
+          className="bg-red-500 text-white px-2 py-1 rounded"
+          onClick={handleClear}
+        >
+          Limpiar firma
+        </button>
       </div>
     </div>
   );
