@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import DeleteRoll from "./DeleteRoll";
@@ -52,6 +51,27 @@ export default function RollData() {
     return newDateString;
   };
 
+  const exportToPdf = async () => {
+    try {
+      const res = await fetch("/api/pdfdata", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ rolls: filteredRolls }),
+      });
+      if (res.ok) {
+        const { pdfUrl } = await res.json();
+        // Abre la URL del PDF en una nueva pestaña
+        window.open(pdfUrl, "_blank");
+      } else {
+        console.error("Error generating PDF:", res.statusText);
+      }
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    }
+  };
+
   return (
     <div className="overflow-x-auto max-h-128">
       <input
@@ -61,36 +81,40 @@ export default function RollData() {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full p-2 border border-gray-300 rounded-md mb-4"
       />
-      <table className="w-full bg-white rounded-lg">
-        <thead>
-          <tr>
-            <th className="px-4 py-2 text-start">Nº Pedido</th>
-            <th className="px-4 py-2 text-start">Nombre</th>
-            <th className="px-4 py-2 text-start">Taller</th>
-            <th className="px-4 py-2 text-start">Cantidad total</th>
-            <th className="px-4 py-2 text-start">Fecha del pedido</th>
-            <th className="px-4 py-2 text-start">Acciones</th>
-          </tr>
-        </thead>
-        <tbody className="align-top">
-          {filteredRolls.map((roll, index) => (
-            <tr key={index} className="border-b">
-              <td className="px-4 py-2">{roll.order_number}</td>
-              <td className="px-4 py-2">{roll.name}</td>
-              <td className="px-4 py-2">{roll.workshop}</td>
-              <td className="px-4 py-2">{roll.total_quantity}</td>
-              <td className="px-4 py-2">{addOneDay(roll.order_date)}</td>
-              <td className="px-4 py-2 flex items-center gap-3">
-                <Link href={`/rollos/${roll.id}`}>
-                  <FaEye size={20} />
-                </Link>
-                {/* {session?.role === "Admin" && <DeleteRoll id={roll.id} />} */}
-                <DeleteRoll id={roll.id} />
-              </td>
+      <button onClick={exportToPdf} className="mb-4">
+        Exportar a PDF
+      </button>
+      <div id="table-container">
+        <table className="w-full bg-white rounded-lg">
+          <thead>
+            <tr>
+              <th className="px-4 py-2 text-start">Nº Pedido</th>
+              <th className="px-4 py-2 text-start">Nombre</th>
+              <th className="px-4 py-2 text-start">Taller</th>
+              <th className="px-4 py-2 text-start">Cantidad total</th>
+              <th className="px-4 py-2 text-start">Fecha del pedido</th>
+              <th className="px-4 py-2 text-start">Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="align-top">
+            {filteredRolls.map((roll, index) => (
+              <tr key={index} className="border-b">
+                <td className="px-4 py-2">{roll.order_number}</td>
+                <td className="px-4 py-2">{roll.name}</td>
+                <td className="px-4 py-2">{roll.workshop}</td>
+                <td className="px-4 py-2">{roll.total_quantity}</td>
+                <td className="px-4 py-2">{addOneDay(roll.order_date)}</td>
+                <td className="px-4 py-2 flex items-center gap-3">
+                  <Link href={`/rollos/${roll.id}`}>
+                    <FaEye size={20} />
+                  </Link>
+                  <DeleteRoll id={roll.id} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

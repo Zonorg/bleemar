@@ -26,7 +26,6 @@ model Order {
   workshop       String
   garmentcuts    Garmentcuts[]
   details        Details[]
-  isCompleted    Boolean       @default(false)
   updatedAt      DateTime?     @updatedAt
   createdAt      DateTime      @default(now())
 }
@@ -61,6 +60,7 @@ model Roll {
   rollcuts       RollCuts[]
   rolldetails    RollDetails[]
   payments       Payments[]
+  completed      Boolean       @default(false)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime?     @updatedAt
 }
