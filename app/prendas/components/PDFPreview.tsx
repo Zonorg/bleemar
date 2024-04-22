@@ -49,7 +49,6 @@ export default function PDFPreview({
     },
     tableRow: {
       flexDirection: "row",
-      backgroundColor: "#d1d5db",
       fontSize: 12,
       color: "#333333",
     },
@@ -57,6 +56,8 @@ export default function PDFPreview({
       width: "50%",
       border: "1px solid black",
       padding: 5,
+      color: "#ffffff",
+      backgroundColor: "#09c184",
     },
     tableCell: {
       width: "50%",
