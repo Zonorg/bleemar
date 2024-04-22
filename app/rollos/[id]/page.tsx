@@ -118,6 +118,7 @@ export default function RollDetails() {
                 <th className="px-4 py-2 text-start">Talles</th>
                 <th className="px-4 py-2 text-start">Cantidad total</th>
                 <th className="px-4 py-2 text-start">Fecha del pedido</th>
+                <th className="px-4 py-2 text-start">Estado</th>
                 <th className="px-4 py-2 text-start">Acciones</th>
               </tr>
             </thead>
@@ -133,6 +134,9 @@ export default function RollDetails() {
                   <td className="px-4 py-2">{rollData.total_quantity}</td>
                   <td className="px-4 py-2">
                     {addOneDay(rollData.order_date)}
+                  </td>
+                  <td className="px-4 py-2">
+                    {rollData.completed ? "Pagado" : "Pendiente"}
                   </td>
                   <td className="px-4 py-2">
                     <button onClick={handleEdit}>
