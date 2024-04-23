@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
+import { FaDownload } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import Link from "next/link";
 import Payments from "../components/Payments";
@@ -9,6 +10,7 @@ import Image from "next/image";
 import { RoleRedirect } from "@/app/utils/redirect";
 import EditRoll from "../components/EditRoll";
 import Modal from "react-modal";
+import PDFPreview from "@/app/prendas/components/PDFPreview";
 
 export interface RollData {
   order_number: number;
@@ -31,9 +33,9 @@ export interface RollData {
 export default function RollDetails() {
   const { id } = useParams<{ id: string }>();
   const [rollData, setRollData] = useState<RollData | null>(null);
-  const [showPayments, setShowPayments] = useState<boolean>(false);
   const [editMode, setEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -110,11 +112,24 @@ export default function RollDetails() {
     return newDateString;
   };
 
+  const closePDFPreview = () => {
+    setShowPDFPreview(false);
+  };
+
   return (
     <>
       <RoleRedirect />
       {!editMode ? (
         <div className="w-full h-[85vh] px-4 py-4 flex flex-col gap-5">
+          {showPDFPreview && rollData && (
+            <div>
+              <PDFPreview
+                rollData={[rollData]}
+                addOneDay={addOneDay}
+                closePDFPreview={closePDFPreview}
+              />
+            </div>
+          )}
           <div className="flex flex-col gap-3 overflow-x-auto">
             <h2 className="text-xl font-bold">Detalles del pedido</h2>
             <table className="w-full bg-white rounded-lg">
@@ -146,9 +161,16 @@ export default function RollDetails() {
                     <td className="px-4 py-2">
                       {rollData.completed ? "Pagado" : "Pendiente"}
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-2 flex gap-2 items-center">
                       <button onClick={handleEdit}>
                         <PiPencilSimpleLineFill size={20} />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowPDFPreview(true);
+                        }}
+                      >
+                        <FaDownload />
                       </button>
                     </td>
                   </tr>

@@ -107,7 +107,6 @@ export default function RollDetails() {
                     onClick={() => {
                       setShowPDFPreview(true);
                     }}
-                    className="mb-4"
                   >
                     <FaDownload />
                   </button>

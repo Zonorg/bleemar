@@ -1,5 +1,5 @@
 "use client";
-// import AddOrder from "./components/AddOrder";
+import AddRoll from "../rollos/components/AddRoll";
 import OrderData from "./components/OrderData";
 
 export default function Cortes() {
@@ -7,7 +7,7 @@ export default function Cortes() {
     <div className="w-full px-4 h-screen">
       <div className="flex justify-between items-center px-4 py-4">
         <h3 className="text-xl font-bold">Historial de entregas</h3>
-        {/* <AddOrder /> */}
+        <AddRoll />
       </div>
       <OrderData />
     </div>
