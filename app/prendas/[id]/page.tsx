@@ -67,7 +67,7 @@ export default function RollDetails() {
   };
 
   return (
-    <div className="w-full px-4 py-4 flex flex-col gap-5">
+    <div className="w-full h-[85vh] px-4 py-4 flex flex-col gap-5">
       {showPDFPreview && rollData && (
         <div>
           <PDFPreview
@@ -77,32 +77,32 @@ export default function RollDetails() {
           />
         </div>
       )}
-      <h2 className="text-xl font-bold">Detalles del pedido</h2>
-      <table className="w-full bg-white rounded-lg">
-        <thead>
-          <tr>
-            <th className="px-4 py-2 text-start">Nº Pedido</th>
-            <th className="px-4 py-2 text-start">Nombre</th>
-            <th className="px-4 py-2 text-start">Taller</th>
-            <th className="px-4 py-2 text-start">Talles</th>
-            <th className="px-4 py-2 text-start">Cantidad total</th>
-            <th className="px-4 py-2 text-start">Fecha del pedido</th>
-            <th className="px-4 py-2 text-start">Acciones</th>
-          </tr>
-        </thead>
-        <tbody className="align-top">
-          {rollData && (
+      <div className="flex flex-col gap-3 overflow-x-auto">
+        <h2 className="text-xl font-bold">Detalles del pedido</h2>
+        <table className="bg-white rounded-lg w-full">
+          <thead>
             <tr>
-              <td className="px-4 py-2">{rollData.order_number}</td>
-              <td className="px-4 py-2">{rollData.name}</td>
-              <td className="px-4 py-2">{rollData.workshop}</td>
-              <td className="px-4 py-2">
-                {sortedSizes(rollData.size).join(", ")}
-              </td>
-              <td className="px-4 py-2">{rollData.total_quantity}</td>
-              <td className="px-4 py-2">{addOneDay(rollData.order_date)}</td>
-              <td className="px-4 py-2">
-                <button>
+              <th className="px-4 py-2 text-start">Nº Pedido</th>
+              <th className="px-4 py-2 text-start">Nombre</th>
+              <th className="px-4 py-2 text-start">Taller</th>
+              <th className="px-4 py-2 text-start">Talles</th>
+              <th className="px-4 py-2 text-start">Cantidad total</th>
+              <th className="px-4 py-2 text-start">Fecha del pedido</th>
+              <th className="px-4 py-2 text-start">Acciones</th>
+            </tr>
+          </thead>
+          <tbody className="align-top">
+            {rollData && (
+              <tr>
+                <td className="px-4 py-2">{rollData.order_number}</td>
+                <td className="px-4 py-2">{rollData.name}</td>
+                <td className="px-4 py-2">{rollData.workshop}</td>
+                <td className="px-4 py-2">
+                  {sortedSizes(rollData.size).join(", ")}
+                </td>
+                <td className="px-4 py-2">{rollData.total_quantity}</td>
+                <td className="px-4 py-2">{addOneDay(rollData.order_date)}</td>
+                <td className="px-4 py-2">
                   <button
                     onClick={() => {
                       setShowPDFPreview(true);
@@ -111,14 +111,14 @@ export default function RollDetails() {
                   >
                     <FaDownload />
                   </button>
-                </button>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       <div className="aditional_data flex gap-5 max-xl:flex-col">
-        <div className="cuts flex flex-col gap-3">
+        <div className="cuts flex flex-col gap-3 overflow-x-auto">
           <h3 className="text-lg font-bold">Cortes</h3>
           <table className="w-128 bg-white rounded-lg">
             <thead>
@@ -126,7 +126,7 @@ export default function RollDetails() {
                 <th className="px-4 py-2 text-start">Color</th>
                 <th className="px-4 py-2 text-start">Combinado</th>
                 <th className="px-4 py-2 text-start">Forro</th>
-                <th className="px-4 py-2 text-start"> </th>
+                <th className="px-4 py-2 text-start">Cantidad</th>
               </tr>
             </thead>
             <tbody>
@@ -143,7 +143,7 @@ export default function RollDetails() {
           </table>
         </div>
 
-        <div className="details flex flex-col gap-3">
+        <div className="details flex flex-col gap-3 overflow-x-auto">
           <h3 className="text-lg font-bold">Detalles</h3>
           <table className="w-128 bg-white rounded-lg">
             <thead>

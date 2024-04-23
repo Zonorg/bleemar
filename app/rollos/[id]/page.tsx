@@ -114,48 +114,50 @@ export default function RollDetails() {
     <>
       <RoleRedirect />
       {!editMode ? (
-        <div className="w-full px-4 py-4 flex flex-col gap-5">
-          <h2 className="text-xl font-bold">Detalles del pedido</h2>
-          <table className="w-full bg-white rounded-lg">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 text-start">Nº Pedido</th>
-                <th className="px-4 py-2 text-start">Nombre</th>
-                <th className="px-4 py-2 text-start">Taller</th>
-                <th className="px-4 py-2 text-start">Talles</th>
-                <th className="px-4 py-2 text-start">Cantidad total</th>
-                <th className="px-4 py-2 text-start">Fecha del pedido</th>
-                <th className="px-4 py-2 text-start">Estado</th>
-                <th className="px-4 py-2 text-start">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="align-top">
-              {rollData && (
+        <div className="w-full h-[85vh] px-4 py-4 flex flex-col gap-5">
+          <div className="flex flex-col gap-3 overflow-x-auto">
+            <h2 className="text-xl font-bold">Detalles del pedido</h2>
+            <table className="w-full bg-white rounded-lg">
+              <thead>
                 <tr>
-                  <td className="px-4 py-2">{rollData.order_number}</td>
-                  <td className="px-4 py-2">{rollData.name}</td>
-                  <td className="px-4 py-2">{rollData.workshop}</td>
-                  <td className="px-4 py-2">
-                    {sortedSizes(rollData.size).join(", ")}
-                  </td>
-                  <td className="px-4 py-2">{rollData.total_quantity}</td>
-                  <td className="px-4 py-2">
-                    {addOneDay(rollData.order_date)}
-                  </td>
-                  <td className="px-4 py-2">
-                    {rollData.completed ? "Pagado" : "Pendiente"}
-                  </td>
-                  <td className="px-4 py-2">
-                    <button onClick={handleEdit}>
-                      <PiPencilSimpleLineFill size={20} />
-                    </button>
-                  </td>
+                  <th className="px-4 py-2 text-start">Nº Pedido</th>
+                  <th className="px-4 py-2 text-start">Nombre</th>
+                  <th className="px-4 py-2 text-start">Taller</th>
+                  <th className="px-4 py-2 text-start">Talles</th>
+                  <th className="px-4 py-2 text-start">Cantidad total</th>
+                  <th className="px-4 py-2 text-start">Fecha del pedido</th>
+                  <th className="px-4 py-2 text-start">Estado</th>
+                  <th className="px-4 py-2 text-start">Acciones</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="align-top">
+                {rollData && (
+                  <tr>
+                    <td className="px-4 py-2">{rollData.order_number}</td>
+                    <td className="px-4 py-2">{rollData.name}</td>
+                    <td className="px-4 py-2">{rollData.workshop}</td>
+                    <td className="px-4 py-2">
+                      {sortedSizes(rollData.size).join(", ")}
+                    </td>
+                    <td className="px-4 py-2">{rollData.total_quantity}</td>
+                    <td className="px-4 py-2">
+                      {addOneDay(rollData.order_date)}
+                    </td>
+                    <td className="px-4 py-2">
+                      {rollData.completed ? "Pagado" : "Pendiente"}
+                    </td>
+                    <td className="px-4 py-2">
+                      <button onClick={handleEdit}>
+                        <PiPencilSimpleLineFill size={20} />
+                      </button>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
           <div className="aditional_data flex gap-5 max-xl:flex-col">
-            <div className="cuts flex flex-col gap-3">
+            <div className="flex flex-col gap-3 overflow-x-auto">
               <h3 className="text-lg font-bold">Cortes</h3>
               <table className="w-128 bg-white rounded-lg">
                 <thead>
@@ -180,7 +182,7 @@ export default function RollDetails() {
               </table>
             </div>
 
-            <div className="details flex flex-col gap-3">
+            <div className="flex flex-col gap-3 overflow-x-auto">
               <h3 className="text-lg font-bold">Detalles</h3>
               <table className="w-128 bg-white rounded-lg">
                 <thead>
@@ -249,16 +251,18 @@ export default function RollDetails() {
               isOpen={showModal}
               onRequestClose={toggleModal}
               contentLabel="Add payment"
+              ariaHideApp={false}
               style={{
                 content: {
                   margin: "auto",
                   overflow: "auto",
-                  width: "50%",
-                  height: "50vh",
+                  width: "90vw",
+                  height: "60vh",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                 },
+
                 overlay: {
                   backgroundColor: "rgba(0, 0, 0, 0.6)",
                 },
