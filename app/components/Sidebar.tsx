@@ -57,7 +57,7 @@ export default function Sidebar() {
             {session?.user?.name === "Admin" && (
               <Link
                 className={`flex items-center gap-2 hover:bg-background-gray p-2 rounded-md ${
-                  isActive("/settings")
+                  isActive("/settings") || isActive("/auth/register")
                     ? "bg-green-s text-white hover:bg-green-s"
                     : ""
                 }`}

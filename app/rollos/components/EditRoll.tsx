@@ -1,5 +1,4 @@
-import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface RollData {
   order_number: number;
@@ -38,9 +37,12 @@ export default function EditRoll({ rollData, onSave }: Props) {
     payments: [],
   });
 
-  if (!rollData) {
-    return <div>Cargando...</div>;
-  }
+  // Use useEffect to update editedData when rollData changes
+  useEffect(() => {
+    if (rollData) {
+      setEditedData(rollData);
+    }
+  }, [rollData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -60,12 +62,17 @@ export default function EditRoll({ rollData, onSave }: Props) {
       <table className="w-full bg-white rounded-lg">
         <thead>
           <tr>
-            <th className="px-4 py-2 text-start">Nº Pedido</th>
-            <th className="px-4 py-2 text-start">Nombre</th>
-            <th className="px-4 py-2 text-start">Taller</th>
-            <th className="px-4 py-2 text-start">Talles</th>
-            <th className="px-4 py-2 text-start">Cantidad total</th>
-            <th className="px-4 py-2 text-start">Fecha del pedido</th>
+            <th className="px-4 py-2 text-start border bg-zinc-100">
+              Nombre de pedido
+            </th>
+            <th className="px-4 py-2 text-start border bg-zinc-100">Taller</th>
+            <th className="px-4 py-2 text-start border bg-zinc-100">Talles</th>
+            <th className="px-4 py-2 text-start border bg-zinc-100">
+              Cantidad total
+            </th>
+            <th className="px-4 py-2 text-start border bg-zinc-100">
+              Fecha del pedido
+            </th>
           </tr>
         </thead>
         <tbody className="align-top">
@@ -76,6 +83,7 @@ export default function EditRoll({ rollData, onSave }: Props) {
                 name="name"
                 value={editedData.name}
                 onChange={handleChange}
+                className="px-4 py-1 border w-full"
               />
             </td>
             <td>
@@ -84,6 +92,7 @@ export default function EditRoll({ rollData, onSave }: Props) {
                 name="workshop"
                 value={editedData.workshop}
                 onChange={handleChange}
+                className="px-4 py-1 border w-full"
               />
             </td>
             <td>
@@ -92,6 +101,7 @@ export default function EditRoll({ rollData, onSave }: Props) {
                 name="size"
                 value={editedData.size}
                 onChange={handleChange}
+                className="px-4 py-1 border w-full"
               />
             </td>
             <td>
@@ -100,6 +110,7 @@ export default function EditRoll({ rollData, onSave }: Props) {
                 name="total_quantity"
                 value={editedData.total_quantity}
                 onChange={handleChange}
+                className="px-4 py-1 border w-full"
               />
             </td>
             <td>
@@ -108,6 +119,7 @@ export default function EditRoll({ rollData, onSave }: Props) {
                 name="order_date"
                 value={editedData.order_date}
                 onChange={handleChange}
+                className="px-4 py-1 border w-full"
               />
             </td>
           </tr>

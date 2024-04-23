@@ -1,6 +1,8 @@
 "use client";
 import { useState, FormEvent, ChangeEvent } from "react";
 import { RoleRedirect } from "@/app/utils/redirect";
+import { IoArrowBack } from "react-icons/io5";
+import Link from "next/link";
 
 interface FormData {
   username: string;
@@ -99,63 +101,68 @@ export default function Register() {
   return (
     <>
       <RoleRedirect />
-      <div className="m-auto bg-white  w-64 h-64">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <input
-            className="p-1"
-            type="text"
-            name="username"
-            placeholder="Usuario"
-            value={formData.username}
-            onChange={handleChange}
-          />
-          {errors.username && (
-            <span className="text-red-500 text-sm">{errors.username}</span>
-          )}
-          {/* <input
-          className="p-1"
-          type="text"
-          name="name"
-          placeholder="Nombre"
-          value={formData.name}
-          onChange={handleChange}
-        />
-        {errors.name && (
-          <span className="text-red-500 text-sm">{errors.name}</span>
-        )} */}
-          <input
-            className="p-1"
-            type="password"
-            name="password"
-            placeholder="Contraseña"
-            autoComplete="off"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          {errors.password && (
-            <span className="text-red-500 text-sm">{errors.password}</span>
-          )}
-          <input
-            className="p-1"
-            type="password"
-            name="confirm_password"
-            placeholder="Confirmar Contraseña"
-            autoComplete="off"
-            value={formData.confirm_password}
-            onChange={handleChange}
-          />
-          {errors.confirm_password && (
-            <span className="text-red-500 text-sm">
-              {errors.confirm_password}
-            </span>
-          )}
-          <button
-            type="submit"
-            className="bg-green-s text-white font-bold px-4 py-2 rounded"
-          >
-            Crear usuario
-          </button>
-        </form>
+      <div className="flex flex-col gap-5 justify-center items-center h-screen">
+        <h2 className="font-medium text-xl">Crear usuario</h2>
+        <div className="bg-white p-8 rounded-lg shadow-md w-80">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div className="input-container">
+              <input
+                className="p-2 border border-gray-300 rounded-md w-full"
+                type="text"
+                name="username"
+                placeholder="Usuario"
+                value={formData.username}
+                onChange={handleChange}
+              />
+              {errors.username && (
+                <span className="text-red-500 text-xs">{errors.username}</span>
+              )}
+            </div>
+            <div className="input-container">
+              <input
+                className="p-2 border border-gray-300 rounded-md w-full"
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                autoComplete="off"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              {errors.password && (
+                <span className="text-red-500 text-xs">{errors.password}</span>
+              )}
+            </div>
+            <div className="input-container">
+              <input
+                className="p-2 border border-gray-300 rounded-md w-full"
+                type="password"
+                name="confirm_password"
+                placeholder="Confirmar Contraseña"
+                autoComplete="off"
+                value={formData.confirm_password}
+                onChange={handleChange}
+              />
+              {errors.confirm_password && (
+                <span className="text-red-500 text-xs">
+                  {errors.confirm_password}
+                </span>
+              )}
+            </div>
+            <button
+              type="submit"
+              className="bg-green-s text-white font-bold px-4 py-2 rounded hover:bg-green-m"
+            >
+              Crear usuario
+            </button>
+          </form>
+        </div>
+        <Link
+          href="/settings"
+          className="flex gap-2 items-center font-medium hover:text-green-s"
+        >
+          <IoArrowBack />
+          Ir atrás
+        </Link>
       </div>
     </>
   );

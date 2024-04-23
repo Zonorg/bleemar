@@ -44,7 +44,9 @@ export default function Footer() {
       {session?.user?.name === "Admin" && (
         <Link
           className={`flex flex-col items-center p-2 rounded-md ${
-            isActive("/settings") ? "text-green-xs" : ""
+            isActive("/settings") || isActive("/auth/register")
+              ? "text-green-xs"
+              : ""
           }`}
           href="/settings"
         >

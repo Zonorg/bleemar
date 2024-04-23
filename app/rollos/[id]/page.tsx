@@ -135,14 +135,30 @@ export default function RollDetails() {
             <table className="w-full bg-white rounded-lg">
               <thead>
                 <tr>
-                  <th className="px-4 py-2 text-start">Nº Pedido</th>
-                  <th className="px-4 py-2 text-start">Nombre</th>
-                  <th className="px-4 py-2 text-start">Taller</th>
-                  <th className="px-4 py-2 text-start">Talles</th>
-                  <th className="px-4 py-2 text-start">Cantidad total</th>
-                  <th className="px-4 py-2 text-start">Fecha del pedido</th>
-                  <th className="px-4 py-2 text-start">Estado</th>
-                  <th className="px-4 py-2 text-start">Acciones</th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Nº Pedido
+                  </th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Nombre
+                  </th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Taller
+                  </th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Talles
+                  </th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Cantidad total
+                  </th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Fecha del pedido
+                  </th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Estado
+                  </th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody className="align-top">
@@ -184,10 +200,18 @@ export default function RollDetails() {
               <table className="w-128 bg-white rounded-lg">
                 <thead>
                   <tr>
-                    <th className="px-4 py-2 text-start">Color</th>
-                    <th className="px-4 py-2 text-start">Combinado</th>
-                    <th className="px-4 py-2 text-start">Forro</th>
-                    <th className="px-4 py-2 text-start">Cantidad</th>
+                    <th className="px-4 py-2 text-start border bg-zinc-100">
+                      Color
+                    </th>
+                    <th className="px-4 py-2 text-start border bg-zinc-100">
+                      Combinado
+                    </th>
+                    <th className="px-4 py-2 text-start border bg-zinc-100">
+                      Forro
+                    </th>
+                    <th className="px-4 py-2 text-start border bg-zinc-100">
+                      Cantidad
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -202,6 +226,9 @@ export default function RollDetails() {
                     ))}
                 </tbody>
               </table>
+              <button className="font-medium text-green-l">
+                + Agregar entrega
+              </button>
             </div>
 
             <div className="flex flex-col gap-3 overflow-x-auto">
@@ -209,8 +236,12 @@ export default function RollDetails() {
               <table className="w-128 bg-white rounded-lg">
                 <thead>
                   <tr>
-                    <th className="px-4 py-2 text-start">Item</th>
-                    <th className="px-4 py-2 text-start">Cantidad</th>
+                    <th className="px-4 py-2 text-start border bg-zinc-100">
+                      Item
+                    </th>
+                    <th className="px-4 py-2 text-start border bg-zinc-100">
+                      Cantidad
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -230,9 +261,18 @@ export default function RollDetails() {
             <table className="w-full bg-white rounded-lg">
               <thead>
                 <tr>
-                  <th className="px-4 py-2 text-start">Monto</th>
-                  <th className="px-4 py-2 text-start">Fecha</th>
-                  <th className="px-4 py-2 text-start">Firma</th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Monto
+                  </th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Fecha
+                  </th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Firma
+                  </th>
+                  <th className="px-4 py-2 text-start border bg-zinc-100">
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody>
