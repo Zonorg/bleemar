@@ -43,6 +43,12 @@ export default function PDFPreview({
       margin: 10,
       padding: 10,
     },
+    documentTitle: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "#333333",
+      margin: "2px auto",
+    },
     table: {
       width: "auto",
       marginBottom: 10,
@@ -76,6 +82,7 @@ export default function PDFPreview({
         <PDFViewer width="100%" height="100%">
           <Document>
             <Page size="A4" style={styles.page}>
+              <Text style={styles.documentTitle}>BleeMar</Text>
               <View style={styles.section}>
                 <View style={styles.tableRow}>
                   <Text style={styles.tableCellHeader}>Nº PEDIDO</Text>
