@@ -6,7 +6,7 @@ interface RollData {
   order_number: number;
   name: string;
   workshop: string;
-  size: string;
+  size: string | string[];
   total_quantity: number;
   order_date: string;
   completed: boolean;
@@ -23,15 +23,16 @@ interface RollData {
 }
 interface Props {
   rollData: RollData | null;
+  closeEdition: () => void;
 }
 
-export default function EditRoll({ rollData }: Props) {
+export default function EditRoll({ rollData, closeEdition }: Props) {
   const [editedData, setEditedData] = useState<RollData>({
     id: "",
     order_number: 0,
     name: "",
     workshop: "",
-    size: "",
+    size: [],
     total_quantity: 0,
     order_date: "",
     completed: false,
@@ -42,9 +43,12 @@ export default function EditRoll({ rollData }: Props) {
 
   useEffect(() => {
     if (rollData) {
-      setEditedData(rollData);
+      const newSize = Array.isArray(rollData.size)
+        ? rollData.size
+        : rollData.size.split(",");
+      setEditedData({ ...rollData, size: newSize });
     }
-  }, [rollData]);
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -337,7 +341,7 @@ export default function EditRoll({ rollData }: Props) {
         <button
           className="blue_plain_button"
           onClick={() => {
-            window.location.reload();
+            closeEdition();
           }}
         >
           Cancelar

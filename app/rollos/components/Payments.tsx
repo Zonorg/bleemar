@@ -93,7 +93,7 @@ export default function Payments({ rollId }: PaymentsProps) {
         <button className="green_plain_button" onClick={handleGenerate}>
           Guardar pago
         </button>
-        <button className="blue _plain_button" onClick={handleClear}>
+        <button className="blue_plain_button" onClick={handleClear}>
           Limpiar firma
         </button>
       </div>

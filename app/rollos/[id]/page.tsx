@@ -113,6 +113,10 @@ export default function RollDetails() {
     setShowPDFPreview(false);
   };
 
+  const closeEdition = () => {
+    setEditMode(false);
+  };
+
   return (
     <>
       <RoleRedirect />
@@ -314,7 +318,7 @@ export default function RollDetails() {
           </Link>
         </div>
       ) : (
-        <EditRoll rollData={rollData} />
+        <EditRoll rollData={rollData} closeEdition={closeEdition} />
       )}
     </>
   );
