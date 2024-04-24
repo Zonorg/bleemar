@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import RollData from "../page";
 
 interface RollData {
+  id: string;
   order_number: number;
   name: string;
   workshop: string;
@@ -9,22 +11,23 @@ interface RollData {
   order_date: string;
   completed: boolean;
   rollcuts: {
+    id: string;
     color: string;
     combined: string;
     lining: string;
     quantity: number;
   }[];
-  rolldetails: { title: string; quantity: number }[];
+  rolldetails: { id: string; title: string; quantity: number }[];
   payments: { id: string; amount: string; date: string; signature: string }[];
 }
 
 interface Props {
   rollData: RollData | null;
-  onSave: (data: RollData) => void;
 }
 
-export default function EditRoll({ rollData, onSave }: Props) {
+export default function EditRoll({ rollData }: Props) {
   const [editedData, setEditedData] = useState<RollData>({
+    id: "",
     order_number: 0,
     name: "",
     workshop: "",
@@ -37,7 +40,6 @@ export default function EditRoll({ rollData, onSave }: Props) {
     payments: [],
   });
 
-  // Use useEffect to update editedData when rollData changes
   useEffect(() => {
     if (rollData) {
       setEditedData(rollData);
@@ -45,34 +47,61 @@ export default function EditRoll({ rollData, onSave }: Props) {
   }, [rollData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     setEditedData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]:
+        type === "number"
+          ? Number(value)
+          : name === "size"
+          ? value.split(",")
+          : value,
     }));
   };
 
-  const handleSave = () => {
-    onSave(editedData);
+  const handleSave = async () => {
+    try {
+      if (editedData) {
+        const { id, rollcuts, rolldetails, ...rest } = editedData; // Extraer id, rollcuts y rolldetails del objeto editedData
+
+        // Imprimir los datos que se enviarán en la solicitud PUT
+        console.log("Datos a enviar:", { id, ...rest, rollcuts, rolldetails });
+
+        const response = await fetch(`/api/rollos`, {
+          // Utilizar la URL sin el id en los parámetros
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id, ...rest, rollcuts, rolldetails }), // Enviar todos los datos incluyendo id, rollcuts y rolldetails en el body
+        });
+
+        if (response.ok) {
+          alert("Pedido editado correctamente");
+          // Manejar cualquier lógica adicional aquí, si es necesario
+        } else {
+          console.log("La solicitud no fue exitosa");
+          const responseData = await response.json();
+          console.log(responseData);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al editar el pedido, revisa todos los datos");
+    }
   };
 
   return (
     <div className="w-full px-4 py-4 flex flex-col gap-5">
       <h2 className="text-xl font-bold">Editar pedido</h2>
       <table className="w-full bg-white rounded-lg">
-        <thead>
+        <thead className="rounded-lg text-white bg-green-s">
           <tr>
-            <th className="px-4 py-2 text-start border bg-zinc-100">
-              Nombre de pedido
-            </th>
-            <th className="px-4 py-2 text-start border bg-zinc-100">Taller</th>
-            <th className="px-4 py-2 text-start border bg-zinc-100">Talles</th>
-            <th className="px-4 py-2 text-start border bg-zinc-100">
-              Cantidad total
-            </th>
-            <th className="px-4 py-2 text-start border bg-zinc-100">
-              Fecha del pedido
-            </th>
+            <th className="p-2 text-start border">Nombre de pedido</th>
+            <th className="p-2 text-start border">Taller</th>
+            <th className="p-2 text-start border">Talles</th>
+            <th className="p-2 text-start border">Cantidad total</th>
+            <th className="p-2 text-start border">Fecha del pedido</th>
           </tr>
         </thead>
         <tbody className="align-top">
@@ -83,7 +112,7 @@ export default function EditRoll({ rollData, onSave }: Props) {
                 name="name"
                 value={editedData.name}
                 onChange={handleChange}
-                className="px-4 py-1 border w-full"
+                className="p-2 w-full"
               />
             </td>
             <td>
@@ -92,7 +121,7 @@ export default function EditRoll({ rollData, onSave }: Props) {
                 name="workshop"
                 value={editedData.workshop}
                 onChange={handleChange}
-                className="px-4 py-1 border w-full"
+                className="p-2 w-full"
               />
             </td>
             <td>
@@ -101,7 +130,7 @@ export default function EditRoll({ rollData, onSave }: Props) {
                 name="size"
                 value={editedData.size}
                 onChange={handleChange}
-                className="px-4 py-1 border w-full"
+                className="p-2 w-full"
               />
             </td>
             <td>
@@ -110,7 +139,7 @@ export default function EditRoll({ rollData, onSave }: Props) {
                 name="total_quantity"
                 value={editedData.total_quantity}
                 onChange={handleChange}
-                className="px-4 py-1 border w-full"
+                className="p-2 w-full"
               />
             </td>
             <td>
@@ -119,10 +148,104 @@ export default function EditRoll({ rollData, onSave }: Props) {
                 name="order_date"
                 value={editedData.order_date}
                 onChange={handleChange}
-                className="px-4 py-1 border w-full"
+                className="p-2 w-full"
               />
             </td>
           </tr>
+        </tbody>
+      </table>
+      <table className="w-full bg-white rounded-lg">
+        <thead className="rounded-lg text-white bg-green-s">
+          <tr className="rounded-lg">
+            <th className="p-2 text-start border">Color</th>
+            <th className="p-2 text-start border">Combinado</th>
+            <th className="p-2 text-start border">Forro</th>
+            <th className="p-2 text-start border">Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          {editedData.rollcuts.map((rollcut, index) => (
+            <tr key={index}>
+              <td>
+                <input
+                  type="text"
+                  name="rollcut_color"
+                  value={rollcut.color}
+                  onChange={handleChange}
+                  data-index={index}
+                  className="p-2 w-full"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="rollcut_combined"
+                  value={rollcut.combined}
+                  onChange={handleChange}
+                  data-index={index}
+                  className="p-2 w-full"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="rollcut_lining"
+                  value={rollcut.lining}
+                  onChange={handleChange}
+                  data-index={index}
+                  className="p-2 w-full"
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  name="rollcut_quantity"
+                  value={rollcut.quantity}
+                  onChange={handleChange}
+                  data-index={index}
+                  className="p-2 w-full"
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <table className="w-full bg-white rounded-lg">
+        <thead>
+          <tr>
+            <th className="p-2 text-start border bg-green-s text-white">
+              Detalle
+            </th>
+            <th className="p-2 text-start border bg-green-s text-white">
+              Cantidad
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {editedData.rolldetails.map((rolldetail, index) => (
+            <tr key={index}>
+              <td>
+                <input
+                  type="text"
+                  name="rolldetail_title"
+                  value={rolldetail.title}
+                  onChange={handleChange}
+                  data-index={index}
+                  className="p-2 w-full"
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  name="rolldetail_quantity"
+                  value={rolldetail.quantity}
+                  onChange={handleChange}
+                  data-index={index}
+                  className="p-2 w-full"
+                />
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
       <button onClick={handleSave}>Guardar cambios</button>

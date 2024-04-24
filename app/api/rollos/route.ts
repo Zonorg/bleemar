@@ -102,61 +102,87 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    const {
-      id, 
-      name,
-      size,
-      workshop,
-      order_date,
-      rollcuts,
-      rolldetails,
-    } = await req.json();
+    const { id, name, size, workshop, order_date, rollcuts, rolldetails } =
+      await req.json();
 
-    if (
-      !id ||
-      !name ||
-      !size ||
-      !workshop ||
-      !order_date ||
-      !rollcuts ||
-      !rolldetails
-    ) {
+    if (!id) {
       return NextResponse.json(
-        { message: "Provide all the data" },
+        { message: "Provide the ID of the roll to update" },
         { status: 422 }
       );
     }
 
     await connectToDatabase();
 
-    const sizeString = size.join(", ");
+    const existingRoll = await prisma.roll.findUnique({
+      where: { id },
+      include: { rollcuts: true, rolldetails: true },
+    });
 
+    if (!existingRoll) {
+      return NextResponse.json({ message: "Roll not found" }, { status: 404 });
+    }
+
+    // Actualizar los campos proporcionados en la solicitud
     const updatedRoll = await prisma.roll.update({
       where: { id },
       data: {
-        name,
-        size: sizeString,
-        workshop,
-        order_date,
-        rollcuts: { deleteMany: {} }, 
-        rolldetails: { deleteMany: {} },
+        name: name || existingRoll.name,
+        size: size ? size.join(", ") : existingRoll.size,
+        workshop: workshop || existingRoll.workshop,
+        order_date: order_date || existingRoll.order_date,
       },
     });
 
-    // Luego, creamos nuevamente los cortes y detalles
-    await prisma.rollCuts.createMany({
-      data: rollcuts.map((cut: any) => ({
-        rollId: updatedRoll.id,
-        ...cut,
-      })),
-    });
+    // Actualizar rollcuts si se proporcionan en la solicitud
+    if (rollcuts) {
+      await Promise.all(
+        rollcuts.map(async (cut: any) => {
+          if (cut.id) {
+            await prisma.rollCuts.update({
+              where: { id: cut.id },
+              data: {
+                color: cut.color,
+                combined: cut.combined,
+                lining: cut.lining,
+                quantity: cut.quantity,
+              },
+            });
+          } else {
+            await prisma.rollCuts.create({
+              data: {
+                ...cut,
+                rollId: updatedRoll.id,
+              },
+            });
+          }
+        })
+      );
+    }
 
-    await prisma.rollDetails.createMany({
-      data: rolldetails.map((detail: any) => ({
-        rollId: updatedRoll.id,
-        ...detail,
-      })),
-    });
+    // Actualizar rolldetails si se proporcionan en la solicitud
+    if (rolldetails) {
+      await Promise.all(
+        rolldetails.map(async (detail: any) => {
+          if (detail.id) {
+            await prisma.rollDetails.update({
+              where: { id: detail.id },
+              data: {
+                title: detail.title,
+                quantity: detail.quantity,
+              },
+            });
+          } else {
+            await prisma.rollDetails.create({
+              data: {
+                ...detail,
+                rollId: updatedRoll.id,
+              },
+            });
+          }
+        })
+      );
+    }
 
     return NextResponse.json({ roll: updatedRoll }, { status: 200 });
   } catch (error) {

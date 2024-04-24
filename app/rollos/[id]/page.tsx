@@ -12,7 +12,8 @@ import EditRoll from "../components/EditRoll";
 import Modal from "react-modal";
 import PDFPreview from "@/app/prendas/components/PDFPreview";
 
-export interface RollData {
+interface RollData {
+  id: string;
   order_number: number;
   name: string;
   workshop: string;
@@ -21,12 +22,13 @@ export interface RollData {
   order_date: string;
   completed: boolean;
   rollcuts: {
+    id: string;
     color: string;
     combined: string;
     lining: string;
     quantity: number;
   }[];
-  rolldetails: { title: string; quantity: number }[];
+  rolldetails: { id: string; title: string; quantity: number }[];
   payments: { id: string; amount: string; date: string; signature: string }[];
 }
 
@@ -43,11 +45,6 @@ export default function RollDetails() {
 
   const handleEdit = () => {
     setEditMode(true);
-  };
-
-  const handleSave = (editedData: RollData) => {
-    setEditMode(false);
-    console.log("Datos editados:", editedData);
   };
 
   useEffect(() => {
@@ -347,7 +344,7 @@ export default function RollDetails() {
           </Link>
         </div>
       ) : (
-        <EditRoll rollData={rollData} onSave={handleSave} />
+        <EditRoll rollData={rollData} />
       )}
     </>
   );
