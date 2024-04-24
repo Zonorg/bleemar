@@ -95,13 +95,13 @@ export default function EditRoll({ rollData }: Props) {
     <div className="w-full px-4 py-4 flex flex-col gap-5">
       <h2 className="text-xl font-bold">Editar pedido</h2>
       <table className="w-full bg-white rounded-lg">
-        <thead className="rounded-lg text-white bg-green-s">
-          <tr>
-            <th className="p-2 text-start border">Nombre de pedido</th>
-            <th className="p-2 text-start border">Taller</th>
-            <th className="p-2 text-start border">Talles</th>
-            <th className="p-2 text-start border">Cantidad total</th>
-            <th className="p-2 text-start border">Fecha del pedido</th>
+        <thead>
+          <tr className="border-b">
+            <th className="px-4 py-2 text-start">Nombre de pedido</th>
+            <th className="px-4 py-2 text-start">Taller</th>
+            <th className="px-4 py-2 text-start">Talles</th>
+            <th className="px-4 py-2 text-start">Cantidad total</th>
+            <th className="px-4 py-2 text-start">Fecha del pedido</th>
           </tr>
         </thead>
         <tbody className="align-top">
@@ -112,7 +112,7 @@ export default function EditRoll({ rollData }: Props) {
                 name="name"
                 value={editedData.name}
                 onChange={handleChange}
-                className="p-2 w-full"
+                className="px-4 py-2 w-full"
               />
             </td>
             <td>
@@ -121,7 +121,7 @@ export default function EditRoll({ rollData }: Props) {
                 name="workshop"
                 value={editedData.workshop}
                 onChange={handleChange}
-                className="p-2 w-full"
+                className="px-4 py-2 w-full"
               />
             </td>
             <td>
@@ -130,7 +130,7 @@ export default function EditRoll({ rollData }: Props) {
                 name="size"
                 value={editedData.size}
                 onChange={handleChange}
-                className="p-2 w-full"
+                className="px-4 py-2 w-full"
               />
             </td>
             <td>
@@ -139,7 +139,7 @@ export default function EditRoll({ rollData }: Props) {
                 name="total_quantity"
                 value={editedData.total_quantity}
                 onChange={handleChange}
-                className="p-2 w-full"
+                className="px-4 py-2 w-full"
               />
             </td>
             <td>
@@ -148,19 +148,19 @@ export default function EditRoll({ rollData }: Props) {
                 name="order_date"
                 value={editedData.order_date}
                 onChange={handleChange}
-                className="p-2 w-full"
+                className="px-4 py-2 w-full"
               />
             </td>
           </tr>
         </tbody>
       </table>
       <table className="w-full bg-white rounded-lg">
-        <thead className="rounded-lg text-white bg-green-s">
-          <tr className="rounded-lg">
-            <th className="p-2 text-start border">Color</th>
-            <th className="p-2 text-start border">Combinado</th>
-            <th className="p-2 text-start border">Forro</th>
-            <th className="p-2 text-start border">Cantidad</th>
+        <thead>
+          <tr className="border-b">
+            <th className="px-4 py-2 text-start">Color</th>
+            <th className="px-4 py-2 text-start">Combinado</th>
+            <th className="px-4 py-2 text-start">Forro</th>
+            <th className="px-4 py-2 text-start">Cantidad</th>
           </tr>
         </thead>
         <tbody>
@@ -173,7 +173,7 @@ export default function EditRoll({ rollData }: Props) {
                   value={rollcut.color}
                   onChange={handleChange}
                   data-index={index}
-                  className="p-2 w-full"
+                  className="px-4 py-2 w-full"
                 />
               </td>
               <td>
@@ -183,7 +183,7 @@ export default function EditRoll({ rollData }: Props) {
                   value={rollcut.combined}
                   onChange={handleChange}
                   data-index={index}
-                  className="p-2 w-full"
+                  className="px-4 py-2 w-full"
                 />
               </td>
               <td>
@@ -193,7 +193,7 @@ export default function EditRoll({ rollData }: Props) {
                   value={rollcut.lining}
                   onChange={handleChange}
                   data-index={index}
-                  className="p-2 w-full"
+                  className="px-4 py-2 w-full"
                 />
               </td>
               <td>
@@ -203,7 +203,7 @@ export default function EditRoll({ rollData }: Props) {
                   value={rollcut.quantity}
                   onChange={handleChange}
                   data-index={index}
-                  className="p-2 w-full"
+                  className="px-4 py-2 w-full"
                 />
               </td>
             </tr>
@@ -212,13 +212,9 @@ export default function EditRoll({ rollData }: Props) {
       </table>
       <table className="w-full bg-white rounded-lg">
         <thead>
-          <tr>
-            <th className="p-2 text-start border bg-green-s text-white">
-              Detalle
-            </th>
-            <th className="p-2 text-start border bg-green-s text-white">
-              Cantidad
-            </th>
+          <tr className="border-b">
+            <th className="px-4 py-2 text-start">Detalle</th>
+            <th className="px-4 py-2 text-start">Cantidad</th>
           </tr>
         </thead>
         <tbody>
@@ -231,7 +227,7 @@ export default function EditRoll({ rollData }: Props) {
                   value={rolldetail.title}
                   onChange={handleChange}
                   data-index={index}
-                  className="p-2 w-full"
+                  className="px-4 py-2 w-full"
                 />
               </td>
               <td>
@@ -241,7 +237,7 @@ export default function EditRoll({ rollData }: Props) {
                   value={rolldetail.quantity}
                   onChange={handleChange}
                   data-index={index}
-                  className="p-2 w-full"
+                  className="px-4 py-2 w-full"
                 />
               </td>
             </tr>
@@ -249,6 +245,13 @@ export default function EditRoll({ rollData }: Props) {
         </tbody>
       </table>
       <button onClick={handleSave}>Guardar cambios</button>
+      <button
+        onClick={() => {
+          window.location.reload();
+        }}
+      >
+        Cancelar
+      </button>
     </div>
   );
 }

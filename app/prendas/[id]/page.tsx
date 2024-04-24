@@ -81,7 +81,7 @@ export default function RollDetails() {
         <h2 className="text-xl font-bold">Detalles del pedido</h2>
         <table className="bg-white rounded-lg w-full">
           <thead>
-            <tr>
+            <tr className="border-b">
               <th className="px-4 py-2 text-start">Nº Pedido</th>
               <th className="px-4 py-2 text-start">Nombre</th>
               <th className="px-4 py-2 text-start">Taller</th>
@@ -116,12 +116,12 @@ export default function RollDetails() {
           </tbody>
         </table>
       </div>
-      <div className="aditional_data flex gap-5 max-xl:flex-col">
+      <div className="aditional_data flex flex-col gap-5">
         <div className="cuts flex flex-col gap-3 overflow-x-auto">
           <h3 className="text-lg font-bold">Cortes</h3>
-          <table className="w-128 bg-white rounded-lg">
+          <table className="w-full bg-white rounded-lg">
             <thead>
-              <tr>
+              <tr className="border-b">
                 <th className="px-4 py-2 text-start">Color</th>
                 <th className="px-4 py-2 text-start">Combinado</th>
                 <th className="px-4 py-2 text-start">Forro</th>
@@ -144,9 +144,9 @@ export default function RollDetails() {
 
         <div className="details flex flex-col gap-3 overflow-x-auto">
           <h3 className="text-lg font-bold">Detalles</h3>
-          <table className="w-128 bg-white rounded-lg">
+          <table className="w-full bg-white rounded-lg">
             <thead>
-              <tr>
+              <tr className="border-b">
                 <th className="px-4 py-2 text-start">Item</th>
                 <th className="px-4 py-2 text-start">Cantidad</th>
               </tr>
@@ -166,7 +166,7 @@ export default function RollDetails() {
 
       <Link
         href="/rollos"
-        className="bg-green-s text-white font-bold px-4 py-2 rounded mx-auto"
+        className="bg-green-s hover:bg-green-m text-white font-bold px-4 py-2 rounded mx-auto"
       >
         Volver
       </Link>

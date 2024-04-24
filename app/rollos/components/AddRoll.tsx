@@ -254,7 +254,7 @@ export default function AddRoll() {
     <div>
       <button
         onClick={() => setModalIsOpen(true)}
-        className="bg-green-s text-white font-bold px-4 py-2 rounded"
+        className="bg-green-s hover:bg-green-m text-white font-bold px-4 py-2 rounded"
       >
         Agregar pedido
       </button>

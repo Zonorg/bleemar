@@ -58,11 +58,11 @@ export default function RollData() {
         placeholder="Buscar pedido..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-2 border border-gray-300 rounded-md mb-4"
+        className="w-full m-auto px-4 py-2 border rounded-md mb-4"
       />
       <table className="w-full bg-white rounded-lg">
         <thead>
-          <tr>
+          <tr className="border-b">
             <th className="px-4 py-2 text-start">Nº Pedido</th>
             <th className="px-4 py-2 text-start">Nombre</th>
             <th className="px-4 py-2 text-start">Taller</th>
@@ -73,7 +73,7 @@ export default function RollData() {
         </thead>
         <tbody className="align-top">
           {filteredRolls.map((roll, index) => (
-            <tr key={index} className="border-b">
+            <tr key={index}>
               <td className="px-4 py-2">{roll.order_number}</td>
               <td className="px-4 py-2">{roll.name}</td>
               <td className="px-4 py-2">{roll.workshop}</td>
