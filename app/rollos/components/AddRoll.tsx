@@ -144,6 +144,25 @@ export default function AddRoll() {
     });
   };
 
+  const handleSizeCountChange = (
+    size: keyof typeof sizeCount,
+    increment: boolean
+  ) => {
+    setSizeCount((prevState) => ({
+      ...prevState,
+      [size]: increment ? prevState[size] + 1 : 0,
+    }));
+
+    setTimeout(() => {
+      handleSizeChange({
+        target: {
+          name: size,
+          checked: increment || sizeCount[size] > 0,
+        },
+      } as ChangeEvent<HTMLInputElement>);
+    }, 0);
+  };
+
   const handleSizeChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, checked } = e.target;
     setFormData((prevState) => {
@@ -169,27 +188,6 @@ export default function AddRoll() {
         total_quantity: totalQuantityWithSizes,
       };
     });
-  };
-
-  // Función para manejar el cambio en la cantidad de cada talle
-  const handleSizeCountChange = (
-    size: keyof typeof sizeCount,
-    increment: boolean
-  ) => {
-    setSizeCount((prevState) => ({
-      ...prevState,
-      [size]: increment
-        ? prevState[size] + 1
-        : Math.max(prevState[size] - 1, 0),
-    }));
-
-    // Llama a handleSizeChange con un evento simulado
-    handleSizeChange({
-      target: {
-        name: size,
-        checked: increment || sizeCount[size] > 1, // Solo desmarca el checkbox si la cantidad es 1 y se está restando
-      },
-    } as ChangeEvent<HTMLInputElement>);
   };
 
   const handleDetailChange = (
@@ -252,10 +250,7 @@ export default function AddRoll() {
 
   return (
     <div>
-      <button
-        onClick={() => setModalIsOpen(true)}
-        className="bg-green-s hover:bg-green-m text-white font-bold px-4 py-2 rounded"
-      >
+      <button onClick={() => setModalIsOpen(true)} className="green_button">
         Agregar pedido
       </button>
       <Modal

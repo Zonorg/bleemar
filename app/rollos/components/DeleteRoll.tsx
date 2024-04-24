@@ -41,7 +41,7 @@ export default function DeleteRoll({ id }: DeleteRollProps) {
 
   return (
     <button onClick={handleDelete} disabled={isLoading}>
-      {isLoading ? <FiLoader /> : <BsFillTrashFill />}
+      {isLoading ? <FiLoader className="animate-spin" /> : <BsFillTrashFill />}
     </button>
   );
 }

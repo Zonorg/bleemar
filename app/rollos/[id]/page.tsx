@@ -155,10 +155,18 @@ export default function RollDetails() {
                     <td className="px-4 py-2">
                       {addOneDay(rollData.order_date)}
                     </td>
-                    <td className="px-4 py-2">
-                      {rollData.completed ? "Pagado" : "Pendiente"}
+                    <td className="p-2">
+                      <span
+                        className={
+                          rollData.completed
+                            ? "bg-green-500 p-2 text-white font-medium rounded-full"
+                            : "bg-yellow-500 p-2 text-white font-medium rounded-full"
+                        }
+                      >
+                        {rollData.completed ? "Pagado" : "Pendiente"}
+                      </span>
                     </td>
-                    <td className="px-4 py-2 flex gap-4 py-2 items-center">
+                    <td className="px-4 py-2 flex gap-4 items-center">
                       <button onClick={handleEdit}>
                         <PiPencilSimpleLineFill size={20} />
                       </button>
@@ -199,9 +207,7 @@ export default function RollDetails() {
                     ))}
                 </tbody>
               </table>
-              <button className="font-medium text-green-s m-auto hover:text-green-m">
-                + Agregar entrega
-              </button>
+              <button className="green_plain_button">+ Agregar entrega</button>
             </div>
 
             <div className="details flex flex-col gap-3 overflow-x-auto">
@@ -257,7 +263,7 @@ export default function RollDetails() {
                       </td>
                       <td className="px-4 py-2">
                         <button
-                          className="text-red-500 font-medium hover:text-red-700"
+                          className="blue_plain_button"
                           onClick={() => handleDeletePayment(payment.id)}
                         >
                           Eliminar pago
@@ -270,10 +276,7 @@ export default function RollDetails() {
           </div>
 
           <div className="w-full flex flex-col gap-3 items-start">
-            <button
-              onClick={toggleModal}
-              className="font-medium text-green-s hover:text-green-m"
-            >
+            <button onClick={toggleModal} className="green_plain_button">
               + Agregar pago
             </button>
             <Modal
@@ -299,17 +302,14 @@ export default function RollDetails() {
             >
               <Payments rollId={id} />
               <button
-                className=" font-bold rounded absolute topx-4 py-2 right-5"
+                className=" font-bold rounded absolute top-4 right-5"
                 onClick={toggleModal}
               >
                 <ImCross className="text-zinc-900" />
               </button>
             </Modal>
           </div>
-          <Link
-            href="/rollos"
-            className="bg-green-s hover:bg-green-m text-white font-bold px-4 py-2 rounded mx-auto"
-          >
+          <Link href="/rollos" className="green_button font-medium mx-auto">
             Volver
           </Link>
         </div>

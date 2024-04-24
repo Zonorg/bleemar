@@ -46,3 +46,48 @@ export async function GET(req: Request, { params }: { params: any }) {
     await prisma.$disconnect();
   }
 }
+
+export async function DELETE(req: Request, { params }: { params: any }) {
+  try {
+    // const rollId = String(params.id);
+    // Tal vez en un futuro uso esto
+    const { id, entityType } = await req.json();
+    if (
+      !id ||
+      !entityType ||
+      (entityType !== "rollCut" && entityType !== "rollDetail")
+    )
+      return NextResponse.json(
+        {
+          message:
+            "Provide the ID and entityType properly ('rollCut' or 'rollDetail')",
+        },
+        { status: 422 }
+      );
+
+    await connectToDatabase();
+
+    if (entityType === "rollCut") {
+      await prisma.rollCuts.deleteMany({
+        where: { id },
+      });
+    } else if (entityType === "rollDetail") {
+      await prisma.rollDetails.deleteMany({
+        where: { id },
+      });
+    }
+
+    return NextResponse.json(
+      { message: `${entityType} with the provided ID deleted successfully` },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting entity:", error);
+    return NextResponse.json(
+      { message: "Failed to delete entity" },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}

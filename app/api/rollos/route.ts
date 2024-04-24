@@ -102,8 +102,16 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    const { id, name, size, workshop, order_date, rollcuts, rolldetails } =
-      await req.json();
+    const {
+      id,
+      name,
+      size,
+      workshop,
+      order_date,
+      completed,
+      rollcuts,
+      rolldetails,
+    } = await req.json();
 
     if (!id) {
       return NextResponse.json(
@@ -123,7 +131,6 @@ export async function PUT(req: Request) {
       return NextResponse.json({ message: "Roll not found" }, { status: 404 });
     }
 
-    // Actualizar los campos proporcionados en la solicitud
     const updatedRoll = await prisma.roll.update({
       where: { id },
       data: {
@@ -131,6 +138,7 @@ export async function PUT(req: Request) {
         size: size ? size.join(", ") : existingRoll.size,
         workshop: workshop || existingRoll.workshop,
         order_date: order_date || existingRoll.order_date,
+        completed: completed !== undefined ? completed : existingRoll.completed,
       },
     });
 

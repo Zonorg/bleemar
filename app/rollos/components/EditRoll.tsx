@@ -19,8 +19,8 @@ interface RollData {
   }[];
   rolldetails: { id: string; title: string; quantity: number }[];
   payments: { id: string; amount: string; date: string; signature: string }[];
+  [key: string]: any;
 }
-
 interface Props {
   rollData: RollData | null;
 }
@@ -46,41 +46,106 @@ export default function EditRoll({ rollData }: Props) {
     }
   }, [rollData]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    index?: number,
+    nestedKey?: string
+  ) => {
     const { name, value, type } = e.target;
-    setEditedData((prevData) => ({
-      ...prevData,
-      [name]:
-        type === "number"
-          ? Number(value)
-          : name === "size"
-          ? value.split(",")
-          : value,
-    }));
+    let processedValue: any;
+
+    if (type === "number") {
+      processedValue = Number(value);
+    } else if (name === "size") {
+      processedValue = value.split(",");
+    } else if (name === "completed") {
+      processedValue = value === "true";
+    } else {
+      processedValue = value;
+    }
+
+    if (index !== undefined && nestedKey !== undefined) {
+      setEditedData((prevData) => {
+        const updatedNestedObject = {
+          ...prevData[nestedKey][index],
+          [name]: processedValue,
+        };
+        return {
+          ...prevData,
+          [nestedKey]: [
+            ...prevData[nestedKey].slice(0, index),
+            updatedNestedObject,
+            ...prevData[nestedKey].slice(index + 1),
+          ],
+        };
+      });
+    } else {
+      setEditedData((prevData) => ({ ...prevData, [name]: processedValue }));
+    }
+  };
+
+  const handleDelete = async (id: string, entityType: string) => {
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de que deseas eliminar este dato?"
+    );
+    if (!confirmDelete) {
+      return;
+    }
+    try {
+      const response = await fetch(`/api/rollos/${editedData.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id, entityType }),
+      });
+
+      if (response.ok) {
+        alert("Elemento eliminado correctamente");
+        if (entityType === "rollCut") {
+          setEditedData((prevData) => ({
+            ...prevData,
+            rollcuts: prevData.rollcuts.filter((rollcut) => rollcut.id !== id),
+          }));
+        } else if (entityType === "rollDetail") {
+          setEditedData((prevData) => ({
+            ...prevData,
+            rolldetails: prevData.rolldetails.filter(
+              (rolldetail) => rolldetail.id !== id
+            ),
+          }));
+        }
+      } else {
+        alert("Error al eliminar el elemento");
+        const responseData = await response.json();
+        console.log(responseData);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al eliminar el elemento");
+    }
   };
 
   const handleSave = async () => {
     try {
       if (editedData) {
-        const { id, rollcuts, rolldetails, ...rest } = editedData; // Extraer id, rollcuts y rolldetails del objeto editedData
+        const { id, rollcuts, rolldetails, ...rest } = editedData;
 
-        // Imprimir los datos que se enviarán en la solicitud PUT
-        console.log("Datos a enviar:", { id, ...rest, rollcuts, rolldetails });
+        console.log("Data:", { id, ...rest, rollcuts, rolldetails });
 
         const response = await fetch(`/api/rollos`, {
-          // Utilizar la URL sin el id en los parámetros
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id, ...rest, rollcuts, rolldetails }), // Enviar todos los datos incluyendo id, rollcuts y rolldetails en el body
+          body: JSON.stringify({ id, ...rest, rollcuts, rolldetails }),
         });
 
         if (response.ok) {
           alert("Pedido editado correctamente");
-          // Manejar cualquier lógica adicional aquí, si es necesario
+          window.location.reload();
         } else {
-          console.log("La solicitud no fue exitosa");
+          alert("Revisa los datos");
           const responseData = await response.json();
           console.log(responseData);
         }
@@ -144,12 +209,23 @@ export default function EditRoll({ rollData }: Props) {
             </td>
             <td>
               <input
-                type="text"
+                type="date"
                 name="order_date"
                 value={editedData.order_date}
                 onChange={handleChange}
                 className="px-4 py-2 w-full"
               />
+            </td>
+            <td>
+              <select
+                name="completed"
+                onChange={handleChange}
+                value={editedData.completed ? "true" : "false"}
+                className="p-1 border h-10"
+              >
+                <option value="false">Pendiente</option>
+                <option value="true">Pagado</option>
+              </select>
             </td>
           </tr>
         </tbody>
@@ -169,42 +245,46 @@ export default function EditRoll({ rollData }: Props) {
               <td>
                 <input
                   type="text"
-                  name="rollcut_color"
+                  name="color"
                   value={rollcut.color}
-                  onChange={handleChange}
-                  data-index={index}
+                  onChange={(e) => handleChange(e, index, "rollcuts")}
                   className="px-4 py-2 w-full"
                 />
               </td>
               <td>
                 <input
                   type="text"
-                  name="rollcut_combined"
+                  name="combined"
                   value={rollcut.combined}
-                  onChange={handleChange}
-                  data-index={index}
+                  onChange={(e) => handleChange(e, index, "rollcuts")}
                   className="px-4 py-2 w-full"
                 />
               </td>
               <td>
                 <input
                   type="text"
-                  name="rollcut_lining"
+                  name="lining"
                   value={rollcut.lining}
-                  onChange={handleChange}
-                  data-index={index}
+                  onChange={(e) => handleChange(e, index, "rollcuts")}
                   className="px-4 py-2 w-full"
                 />
               </td>
               <td>
                 <input
                   type="number"
-                  name="rollcut_quantity"
+                  name="quantity"
                   value={rollcut.quantity}
-                  onChange={handleChange}
-                  data-index={index}
+                  onChange={(e) => handleChange(e, index, "rollcuts")}
                   className="px-4 py-2 w-full"
                 />
+              </td>
+              <td>
+                <button
+                  className="delete_plain_button"
+                  onClick={() => handleDelete(rollcut.id, "rollCut")}
+                >
+                  Eliminar
+                </button>
               </td>
             </tr>
           ))}
@@ -223,35 +303,46 @@ export default function EditRoll({ rollData }: Props) {
               <td>
                 <input
                   type="text"
-                  name="rolldetail_title"
+                  name="title"
                   value={rolldetail.title}
-                  onChange={handleChange}
-                  data-index={index}
+                  onChange={(e) => handleChange(e, index, "rolldetails")}
                   className="px-4 py-2 w-full"
                 />
               </td>
               <td>
                 <input
                   type="number"
-                  name="rolldetail_quantity"
+                  name="quantity"
                   value={rolldetail.quantity}
-                  onChange={handleChange}
-                  data-index={index}
+                  onChange={(e) => handleChange(e, index, "rolldetails")}
                   className="px-4 py-2 w-full"
                 />
+              </td>
+              <td>
+                <button
+                  className="delete_plain_button"
+                  onClick={() => handleDelete(rolldetail.id, "rollDetail")}
+                >
+                  Eliminar
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <button onClick={handleSave}>Guardar cambios</button>
-      <button
-        onClick={() => {
-          window.location.reload();
-        }}
-      >
-        Cancelar
-      </button>
+      <div className="flex m-auto gap-5">
+        <button className="green_button" onClick={handleSave}>
+          Guardar cambios
+        </button>
+        <button
+          className="blue_plain_button"
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Cancelar
+        </button>
+      </div>
     </div>
   );
 }

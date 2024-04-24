@@ -45,7 +45,7 @@ export default function Payments({ rollId }: PaymentsProps) {
         });
 
         if (!response.ok) {
-          alert("Revisa los datos")
+          alert("Revisa los datos");
           throw new Error("Error while saving data");
         }
 
@@ -90,16 +90,10 @@ export default function Payments({ rollId }: PaymentsProps) {
           onChange={(e) => setDate(e.target.value)}
           className="p-1 border"
         />
-        <button
-          className="bg-green-s text-white px-2 py-1 rounded"
-          onClick={handleGenerate}
-        >
+        <button className="green_plain_button" onClick={handleGenerate}>
           Guardar pago
         </button>
-        <button
-          className="bg-red-500 text-white px-2 py-1 rounded"
-          onClick={handleClear}
-        >
+        <button className="blue _plain_button" onClick={handleClear}>
           Limpiar firma
         </button>
       </div>

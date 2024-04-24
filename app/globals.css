@@ -23,3 +23,38 @@ body {
   height: 100%;
   width: 100%;
 }
+
+button {
+  font-weight: 500;
+}
+
+.green_button {
+  background-color: #09c184;
+  padding: 0.5rem 1rem;
+  color: #ffffff;
+  border-radius: 0.25rem;
+}
+.green_button:hover {
+  background-color: #0a8967;
+}
+
+.green_plain_button {
+  color: #09c184;
+}
+.green_plain_button:hover {
+  color: #0a8967;
+}
+
+.blue_plain_button {
+  color: #3b82f6;
+}
+.blue_plain_button:hover {
+  color: #1d4ed8;
+}
+
+.delete_plain_button {
+  color: #f43f5e;
+}
+.delete_plain_button:hover {
+  color: #e11d48;
+}
