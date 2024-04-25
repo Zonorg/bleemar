@@ -3,7 +3,7 @@ import { BsFillTrashFill } from "react-icons/bs";
 import { FiLoader } from "react-icons/fi";
 
 interface DeleteRollProps {
-  id: number;
+  id: string;
 }
 
 export default function DeleteRoll({ id }: DeleteRollProps) {

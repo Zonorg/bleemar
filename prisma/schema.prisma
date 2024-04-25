@@ -66,13 +66,14 @@ model Roll {
 }
 
 model RollCuts {
-  id       String  @id @default(uuid()) @map("_id")
-  color    String
-  combined String
-  lining   String
-  quantity Int
-  Roll     Roll?   @relation(fields: [rollId], references: [id])
-  rollId   String?
+  id        String  @id @default(uuid()) @map("_id")
+  color     String
+  combined  String
+  lining    String
+  quantity  Int
+  delivered Int     @default(0)
+  Roll      Roll?   @relation(fields: [rollId], references: [id])
+  rollId    String?
 }
 
 model RollDetails {

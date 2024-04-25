@@ -27,9 +27,11 @@ interface RollData {
     combined: string;
     lining: string;
     quantity: number;
+    delivered: number;
   }[];
   rolldetails: { id: string; title: string; quantity: number }[];
   payments: { id: string; amount: string; date: string; signature: string }[];
+  [key: string]: any;
 }
 
 export default function RollDetails() {
@@ -38,6 +40,7 @@ export default function RollDetails() {
   const [editMode, setEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
+  const [amount, setAmount] = useState(0);
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -115,6 +118,34 @@ export default function RollDetails() {
 
   const closeEdition = () => {
     setEditMode(false);
+  };
+
+  const handleOperation = async (
+    operation: "add" | "subtract",
+    cutId: string
+  ) => {
+    try {
+      const response = await fetch("/api/deliveries/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: cutId,
+          operation,
+          amount,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -197,6 +228,8 @@ export default function RollDetails() {
                     <th className="px-4 py-2 text-start">Combinado</th>
                     <th className="px-4 py-2 text-start">Forro</th>
                     <th className="px-4 py-2 text-start">Cantidad</th>
+                    <th className="px-4 py-2 text-start">Entregado</th>
+                    <th className="px-4 py-2 text-start">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -207,6 +240,19 @@ export default function RollDetails() {
                         <td className="px-4 py-2">{cut.combined}</td>
                         <td className="px-4 py-2">{cut.lining}</td>
                         <td className="px-4 py-2">{cut.quantity}</td>
+                        <td className="px-4 py-2">{cut.delivered}</td>
+                        <td className="px-4 py-2">
+                          <input
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(Number(e.target.value))}
+                          />
+                          <button
+                            onClick={() => handleOperation("add", cut.id)}
+                          >
+                            +
+                          </button>
+                        </td>
                       </tr>
                     ))}
                 </tbody>
@@ -306,7 +352,7 @@ export default function RollDetails() {
             >
               <Payments rollId={id} />
               <button
-                className=" font-bold rounded absolute top-4 right-5"
+                className="font-bold rounded absolute top-4 right-5"
                 onClick={toggleModal}
               >
                 <ImCross className="text-zinc-900" />

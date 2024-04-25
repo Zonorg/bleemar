@@ -4,7 +4,7 @@ import DeleteRoll from "./DeleteRoll";
 import Link from "next/link";
 
 interface Roll {
-  id: number;
+  id: string;
   order_number: number;
   name: string;
   workshop: string;

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { RoleRedirect } from "@/app/utils/redirect";
 
-interface Order {
+interface User {
   id: number;
   username: string;
   name: string;
@@ -10,7 +10,7 @@ interface Order {
 }
 
 export default function UserData() {
-  const [users, setUsers] = useState<Order[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   async function fetchData() {
     try {
@@ -45,11 +45,11 @@ export default function UserData() {
             </tr>
           </thead>
           <tbody className="align-top">
-            {users.map((order, index) => (
+            {users.map((user, index) => (
               <tr key={index} className="border-b">
                 <td className="px-4 py-2">{index + 1}</td>
-                <td className="px-4 py-2">{order.username}</td>
-                <td className="px-4 py-2">{order.name}</td>
+                <td className="px-4 py-2">{user.username}</td>
+                <td className="px-4 py-2">{user.name}</td>
                 {/* <td className="px-4 py-2">{order.role}</td> */}
               </tr>
             ))}

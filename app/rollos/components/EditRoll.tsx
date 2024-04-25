@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import RollData from "../page";
 
-interface RollData {
+export interface RollData {
   id: string;
   order_number: number;
   name: string;
@@ -21,6 +20,7 @@ interface RollData {
   payments: { id: string; amount: string; date: string; signature: string }[];
   [key: string]: any;
 }
+
 interface Props {
   rollData: RollData | null;
   closeEdition: () => void;
@@ -45,7 +45,7 @@ export default function EditRoll({ rollData, closeEdition }: Props) {
     if (rollData) {
       const newSize = Array.isArray(rollData.size)
         ? rollData.size
-        : rollData.size.split(",");
+        : rollData.size.split(",").map((size) => size.trim());
       setEditedData({ ...rollData, size: newSize });
     }
   }, []);
