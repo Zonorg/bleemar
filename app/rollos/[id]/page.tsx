@@ -40,7 +40,7 @@ export default function RollDetails() {
   const [editMode, setEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
-  const [amount, setAmount] = useState(0);
+  const [quantities, setQuantities] = useState<{ [cutId: string]: number }>({});
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -50,17 +50,17 @@ export default function RollDetails() {
     setEditMode(true);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`/api/rollos/${id}`);
-        const data = await response.json();
-        setRollData(data);
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`/api/rollos/${id}`);
+      const data = await response.json();
+      setRollData(data);
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [id]);
 
@@ -76,6 +76,48 @@ export default function RollDetails() {
   const sortedSizes = (sizes: string) => {
     const sizeArray = sizes.split(", ").map((size) => size.trim());
     return sizeArray.sort((a, b) => sizeOrder[a] - sizeOrder[b]);
+  };
+
+  const handleQuantityChange = (cutId: string, delivered: number) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [cutId]: delivered,
+    }));
+  };
+
+  const handleAddDeliveries = async () => {
+    try {
+      const response = await fetch("/api/deliveries/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(
+          Object.entries(quantities).map(([id, amount]) => ({
+            id,
+            operation: "add",
+            amount,
+          }))
+        ),
+      });
+
+      if (!response.ok) {
+        alert("Revisa los datos");
+        console.log(response.status);
+        throw new Error("Network response was not ok");
+      }
+
+      if (response.ok) {
+        alert("Entregas actualizadas");
+        setQuantities({});
+      }
+
+      const data = await response.json();
+      console.log(data);
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleDeletePayment = async (paymentId: string) => {
@@ -118,34 +160,6 @@ export default function RollDetails() {
 
   const closeEdition = () => {
     setEditMode(false);
-  };
-
-  const handleOperation = async (
-    operation: "add" | "subtract",
-    cutId: string
-  ) => {
-    try {
-      const response = await fetch("/api/deliveries/", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: cutId,
-          operation,
-          amount,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   return (
@@ -229,7 +243,7 @@ export default function RollDetails() {
                     <th className="px-4 py-2 text-start">Forro</th>
                     <th className="px-4 py-2 text-start">Cantidad</th>
                     <th className="px-4 py-2 text-start">Entregado</th>
-                    <th className="px-4 py-2 text-start">Acciones</th>
+                    <th className="px-4 py-2 text-start">Entregas</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -244,20 +258,26 @@ export default function RollDetails() {
                         <td className="px-4 py-2">
                           <input
                             type="number"
-                            value={amount}
-                            onChange={(e) => setAmount(Number(e.target.value))}
+                            className="px-4 py-1 border rounded"
+                            value={quantities[cut.id] || ""}
+                            onChange={(e) =>
+                              handleQuantityChange(
+                                cut.id,
+                                Number(e.target.value)
+                              )
+                            }
                           />
-                          <button
-                            onClick={() => handleOperation("add", cut.id)}
-                          >
-                            +
-                          </button>
                         </td>
                       </tr>
                     ))}
                 </tbody>
               </table>
-              <button className="green_plain_button">+ Agregar entrega</button>
+              <button
+                onClick={handleAddDeliveries}
+                className="green_plain_button"
+              >
+                + Agregar entregas
+              </button>
             </div>
 
             <div className="details flex flex-col gap-3 overflow-x-auto">
