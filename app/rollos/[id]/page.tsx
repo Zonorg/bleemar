@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
 import { FaDownload } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
+import { GrStatusGoodSmall } from "react-icons/gr";
 import Link from "next/link";
 import Payments from "../components/Payments";
 import Image from "next/image";
@@ -244,6 +245,7 @@ export default function RollDetails() {
                     <th className="px-4 py-2 text-start">Cantidad</th>
                     <th className="px-4 py-2 text-start">Entregado</th>
                     <th className="px-4 py-2 text-start">Entregas</th>
+                    <th className="px-4 py-2 text-start">Estado</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -267,6 +269,13 @@ export default function RollDetails() {
                               )
                             }
                           />
+                        </td>
+                        <td className="px-4 py-2">
+                          {cut.delivered === cut.quantity ? (
+                            <GrStatusGoodSmall className="text-green-500"/>
+                          ) : (
+                            <GrStatusGoodSmall className="text-yellow-500"/>
+                          )}
                         </td>
                       </tr>
                     ))}
