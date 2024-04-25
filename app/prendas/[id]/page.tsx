@@ -2,41 +2,47 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { FaDownload } from "react-icons/fa";
+import { GrStatusGoodSmall } from "react-icons/gr";
 import Link from "next/link";
 import PDFPreview from "../components/PDFPreview";
 
 interface RollData {
+  id: string;
   order_number: number;
   name: string;
   workshop: string;
   size: string;
   total_quantity: number;
   order_date: string;
+  completed: boolean;
   rollcuts: {
+    id: string;
     color: string;
     combined: string;
     lining: string;
     quantity: number;
+    delivered: number;
   }[];
-  rolldetails: { title: string; quantity: number }[];
+  rolldetails: { id: string; title: string; quantity: number }[];
 }
 
 export default function RollDetails() {
   const { id } = useParams<{ id: string }>();
   const [rollData, setRollData] = useState<RollData | null>(null);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
+  const [quantities, setQuantities] = useState<{ [cutId: string]: number }>({});
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`/api/rollos/${id}`);
+      const data = await response.json();
+      setRollData(data);
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`/api/rollos/${id}`);
-        const data = await response.json();
-        setRollData(data);
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
-
     fetchData();
   }, [id]);
 
@@ -64,6 +70,48 @@ export default function RollDetails() {
 
   const closePDFPreview = () => {
     setShowPDFPreview(false);
+  };
+
+  const handleQuantityChange = (cutId: string, delivered: number) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [cutId]: delivered,
+    }));
+  };
+
+  const handleAddDeliveries = async () => {
+    try {
+      const response = await fetch("/api/deliveries/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(
+          Object.entries(quantities).map(([id, amount]) => ({
+            id,
+            operation: "add",
+            amount,
+          }))
+        ),
+      });
+
+      if (!response.ok) {
+        alert("Revisa los datos");
+        console.log(response.status);
+        throw new Error("Network response was not ok");
+      }
+
+      if (response.ok) {
+        alert("Entregas actualizadas");
+        setQuantities({});
+      }
+
+      const data = await response.json();
+      console.log(data);
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -126,6 +174,9 @@ export default function RollDetails() {
                 <th className="px-4 py-2 text-start">Combinado</th>
                 <th className="px-4 py-2 text-start">Forro</th>
                 <th className="px-4 py-2 text-start">Cantidad</th>
+                <th className="px-4 py-2 text-start">Entregado</th>
+                <th className="px-4 py-2 text-start">Entregas</th>
+                <th className="px-4 py-2 text-start">Estado</th>
               </tr>
             </thead>
             <tbody>
@@ -136,10 +187,34 @@ export default function RollDetails() {
                     <td className="px-4 py-2">{cut.combined}</td>
                     <td className="px-4 py-2">{cut.lining}</td>
                     <td className="px-4 py-2">{cut.quantity}</td>
+                    <td className="px-4 py-2">{cut.delivered}</td>
+                    <td className="px-4 py-2">
+                      <input
+                        type="number"
+                        className="px-4 py-1 border rounded"
+                        value={quantities[cut.id] || ""}
+                        onChange={(e) =>
+                          handleQuantityChange(cut.id, Number(e.target.value))
+                        }
+                      />
+                    </td>
+                    <td className="px-4 py-2">
+                      {cut.delivered === cut.quantity ? (
+                        <GrStatusGoodSmall className="text-green-500" />
+                      ) : (
+                        <GrStatusGoodSmall className="text-yellow-500" />
+                      )}
+                    </td>
                   </tr>
                 ))}
             </tbody>
           </table>
+          <button
+            onClick={handleAddDeliveries}
+            className="green_plain_button m-auto"
+          >
+            + Agregar entregas
+          </button>
         </div>
 
         <div className="details flex flex-col gap-3 overflow-x-auto">

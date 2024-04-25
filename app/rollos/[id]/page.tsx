@@ -41,7 +41,6 @@ export default function RollDetails() {
   const [editMode, setEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
-  const [quantities, setQuantities] = useState<{ [cutId: string]: number }>({});
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -77,48 +76,6 @@ export default function RollDetails() {
   const sortedSizes = (sizes: string) => {
     const sizeArray = sizes.split(", ").map((size) => size.trim());
     return sizeArray.sort((a, b) => sizeOrder[a] - sizeOrder[b]);
-  };
-
-  const handleQuantityChange = (cutId: string, delivered: number) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [cutId]: delivered,
-    }));
-  };
-
-  const handleAddDeliveries = async () => {
-    try {
-      const response = await fetch("/api/deliveries/", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(
-          Object.entries(quantities).map(([id, amount]) => ({
-            id,
-            operation: "add",
-            amount,
-          }))
-        ),
-      });
-
-      if (!response.ok) {
-        alert("Revisa los datos");
-        console.log(response.status);
-        throw new Error("Network response was not ok");
-      }
-
-      if (response.ok) {
-        alert("Entregas actualizadas");
-        setQuantities({});
-      }
-
-      const data = await response.json();
-      console.log(data);
-      fetchData();
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   const handleDeletePayment = async (paymentId: string) => {
@@ -243,8 +200,6 @@ export default function RollDetails() {
                     <th className="px-4 py-2 text-start">Combinado</th>
                     <th className="px-4 py-2 text-start">Forro</th>
                     <th className="px-4 py-2 text-start">Cantidad</th>
-                    <th className="px-4 py-2 text-start">Entregado</th>
-                    <th className="px-4 py-2 text-start">Entregas</th>
                     <th className="px-4 py-2 text-start">Estado</th>
                   </tr>
                 </thead>
@@ -256,37 +211,17 @@ export default function RollDetails() {
                         <td className="px-4 py-2">{cut.combined}</td>
                         <td className="px-4 py-2">{cut.lining}</td>
                         <td className="px-4 py-2">{cut.quantity}</td>
-                        <td className="px-4 py-2">{cut.delivered}</td>
-                        <td className="px-4 py-2">
-                          <input
-                            type="number"
-                            className="px-4 py-1 border rounded"
-                            value={quantities[cut.id] || ""}
-                            onChange={(e) =>
-                              handleQuantityChange(
-                                cut.id,
-                                Number(e.target.value)
-                              )
-                            }
-                          />
-                        </td>
                         <td className="px-4 py-2">
                           {cut.delivered === cut.quantity ? (
-                            <GrStatusGoodSmall className="text-green-500"/>
+                            <GrStatusGoodSmall className="text-green-500" />
                           ) : (
-                            <GrStatusGoodSmall className="text-yellow-500"/>
+                            <GrStatusGoodSmall className="text-yellow-500" />
                           )}
                         </td>
                       </tr>
                     ))}
                 </tbody>
               </table>
-              <button
-                onClick={handleAddDeliveries}
-                className="green_plain_button"
-              >
-                + Agregar entregas
-              </button>
             </div>
 
             <div className="details flex flex-col gap-3 overflow-x-auto">
