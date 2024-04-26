@@ -2,6 +2,20 @@ import { prisma } from "@/prisma";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/prisma/server-helpers";
 
+export async function GET(req: Request) {
+  try {
+    await connectToDatabase();
+
+    // Obtener los datos de RollCutSizes
+    const rollCutSizes = await prisma.rollCutSizes.findMany();
+
+    return NextResponse.json(rollCutSizes, { status: 200 });
+  } catch (error) {
+    console.error("Error:", error);
+    return NextResponse.json({ message: "Database error" }, { status: 500 });
+  }
+}
+
 export async function PUT(req: Request) {
   try {
     const requestData = await req.json();
@@ -17,7 +31,8 @@ export async function PUT(req: Request) {
 
     const responses = [];
 
-    for (const { id, operation, amount } of requestData) {
+    for (const { id, operation, sizes } of requestData) {
+      // Validar datos de entrada...
       if (!id) {
         responses.push({
           message: "ID is missing for a cut",
@@ -26,9 +41,9 @@ export async function PUT(req: Request) {
         continue;
       }
 
-      if (!operation || !amount) {
+      if (!operation || !["add"].includes(operation)) {
         responses.push({
-          message: "Operation or amount is missing for a cut",
+          message: `Invalid operation '${operation}' for cut ${id}. Use 'add' operation only`,
           status: 422,
         });
         continue;
@@ -44,33 +59,63 @@ export async function PUT(req: Request) {
         continue;
       }
 
-      let updatedDelivered;
-
       if (operation === "add") {
-        // Calculate the updated delivered amount
-        updatedDelivered = existingCut.delivered + amount;
+        // Calcular la cantidad total entregada sumando las cantidades de los tamaños
+        const totalDelivered = Object.values<number>(sizes).reduce(
+          (total: number, current: number) => total + current,
+          0
+        );
 
-        // Ensure delivered amount is never less than 0
-        updatedDelivered = Math.max(updatedDelivered, 0);
+        // Calcular la cantidad total entregada después de la actualización
+        const updatedDelivered = existingCut.delivered + totalDelivered;
 
-        // Ensure delivered amount is never greater than quantity
-        updatedDelivered = Math.min(updatedDelivered, existingCut.quantity);
+        // Asegurar que la cantidad entregada no exceda la cantidad total
+        const newDelivered = Math.min(updatedDelivered, existingCut.quantity);
 
+        // Asegurar que la cantidad entregada no sea menor que 0
+        const finalDelivered = Math.max(newDelivered, 0);
+
+        // Actualizar la cantidad entregada en el modelo RollCuts
         const updatedCut = await prisma.rollCuts.update({
           where: { id },
-          data: { delivered: updatedDelivered },
+          data: { delivered: finalDelivered },
         });
+
+        // Actualizar las cantidades individuales de cada talla en el modelo RollCutSizes
+        for (const [size, quantity] of Object.entries(sizes)) {
+          const existingRollCutSize = await prisma.rollCutSizes.findFirst({
+            where: {
+              cutId: id,
+              size,
+            },
+          });
+
+          if (existingRollCutSize) {
+            // Si ya existe una entrada para esta talla, actualizamos la cantidad
+            await prisma.rollCutSizes.update({
+              where: {
+                id: existingRollCutSize.id,
+              },
+              data: {
+                quantity: existingRollCutSize.quantity + Number(quantity),
+              },
+            });
+          } else {
+            // Si no existe una entrada para esta talla, la creamos
+            await prisma.rollCutSizes.create({
+              data: {
+                cutId: id,
+                size,
+                quantity: Number(quantity),
+              },
+            });
+          }
+        }
 
         responses.push({
           updated: updatedCut,
           status: 200,
         });
-      } else {
-        responses.push({
-          message: `Invalid operation '${operation}' for cut ${id}. Use 'add' operation only`,
-          status: 422,
-        });
-        continue;
       }
     }
 

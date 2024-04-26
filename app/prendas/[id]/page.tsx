@@ -22,6 +22,7 @@ interface RollData {
     lining: string;
     quantity: number;
     delivered: number;
+    rollcutsizes: { id: string; size: string; quantity: number }[];
   }[];
   rolldetails: { id: string; title: string; quantity: number }[];
 }
@@ -29,8 +30,13 @@ interface RollData {
 export default function RollDetails() {
   const { id } = useParams<{ id: string }>();
   const [rollData, setRollData] = useState<RollData | null>(null);
+  const [sizeData, setSizeData] = useState<RollData | null>(null);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
   const [quantities, setQuantities] = useState<{ [cutId: string]: number }>({});
+
+  const [sizes, setSizes] = useState<{
+    [cutId: string]: { [size: string]: number };
+  }>({});
 
   const fetchData = async () => {
     try {
@@ -42,9 +48,35 @@ export default function RollDetails() {
     }
   };
 
+  const fetchDataSizes = async () => {
+    try {
+      const response = await fetch("/api/deliveries");
+      const data = await response.json();
+      setSizeData(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
+  };
+
   useEffect(() => {
     fetchData();
+    fetchDataSizes();
   }, [id]);
+
+  const handleSizeQuantityChange = (
+    cutId: string,
+    size: string,
+    quantity: number
+  ) => {
+    setSizes((prevSizes) => ({
+      ...prevSizes,
+      [cutId]: {
+        ...prevSizes[cutId],
+        [size]: quantity,
+      },
+    }));
+  };
 
   const sizeOrder: { [size: string]: number } = {
     S: 0,
@@ -72,27 +104,24 @@ export default function RollDetails() {
     setShowPDFPreview(false);
   };
 
-  const handleQuantityChange = (cutId: string, delivered: number) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [cutId]: delivered,
-    }));
-  };
-
   const handleAddDeliveries = async () => {
     try {
+      // Extraer los datos antes de enviarlos
+      const requestData = Object.entries(sizes).map(([id, sizeQuantities]) => ({
+        id,
+        operation: "add",
+        sizes: sizeQuantities,
+      }));
+
+      // Hacer un console.log de los datos antes de enviarlos
+      console.log("Datos que se están enviando:", requestData);
+
       const response = await fetch("/api/deliveries/", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(
-          Object.entries(quantities).map(([id, amount]) => ({
-            id,
-            operation: "add",
-            amount,
-          }))
-        ),
+        body: JSON.stringify(requestData),
       });
 
       if (!response.ok) {
@@ -103,7 +132,7 @@ export default function RollDetails() {
 
       if (response.ok) {
         alert("Entregas actualizadas");
-        setQuantities({});
+        setSizes({});
       }
 
       const data = await response.json();
@@ -166,16 +195,12 @@ export default function RollDetails() {
       </div>
       <div className="aditional_data flex flex-col gap-5">
         <div className="cuts flex flex-col gap-3 overflow-x-auto">
-          <h3 className="text-lg font-bold">Cortes</h3>
+          <h3 className="text-lg font-bold">Entregas</h3>
           <table className="w-full bg-white rounded-lg">
             <thead>
               <tr className="border-b">
-                <th className="px-4 py-2 text-start">Color</th>
-                <th className="px-4 py-2 text-start">Combinado</th>
-                <th className="px-4 py-2 text-start">Forro</th>
+                <th className="px-4 py-2 text-start">Corte</th>
                 <th className="px-4 py-2 text-start">Cantidad</th>
-                <th className="px-4 py-2 text-start">Entregado</th>
-                <th className="px-4 py-2 text-start">Entregas</th>
                 <th className="px-4 py-2 text-start">Estado</th>
               </tr>
             </thead>
@@ -184,20 +209,7 @@ export default function RollDetails() {
                 rollData.rollcuts.map((cut, cutIndex) => (
                   <tr key={cutIndex}>
                     <td className="px-4 py-2">{cut.color}</td>
-                    <td className="px-4 py-2">{cut.combined}</td>
-                    <td className="px-4 py-2">{cut.lining}</td>
                     <td className="px-4 py-2">{cut.quantity}</td>
-                    <td className="px-4 py-2">{cut.delivered}</td>
-                    <td className="px-4 py-2">
-                      <input
-                        type="number"
-                        className="px-4 py-1 border rounded"
-                        value={quantities[cut.id] || ""}
-                        onChange={(e) =>
-                          handleQuantityChange(cut.id, Number(e.target.value))
-                        }
-                      />
-                    </td>
                     <td className="px-4 py-2">
                       {cut.delivered === cut.quantity ? (
                         <GrStatusGoodSmall className="text-green-500" />
@@ -205,6 +217,43 @@ export default function RollDetails() {
                         <GrStatusGoodSmall className="text-yellow-500" />
                       )}
                     </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          <table className="w-full bg-white rounded-lg">
+            <thead>
+              <tr className="border-b">
+                <th className="px-4 py-2 text-start">Corte</th>
+                <th className="px-4 py-2 text-start">Entregado</th>
+                <th className="px-4 py-2 text-start">Entregar Talles</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rollData?.rollcuts &&
+                rollData.rollcuts.map((cut, cutIndex) => (
+                  <tr key={cutIndex}>
+                    <td className="px-4 py-2">{cut.color}</td>
+                    <td className="px-4 py-2">{cut.delivered}</td>
+                    {sortedSizes(rollData.size).map((size, index) => (
+                      <td className="px-4 py-2" key={index}>
+                        <label className="block text-xs font-medium text-gray-500 mb-1">
+                          {size}
+                        </label>
+                        <input
+                          type="number"
+                          className="px-4 py-1 border rounded"
+                          value={sizes[cut.id]?.[size] || ""}
+                          onChange={(e) =>
+                            handleSizeQuantityChange(
+                              cut.id,
+                              size,
+                              Number(e.target.value)
+                            )
+                          }
+                        />
+                      </td>
+                    ))}
                   </tr>
                 ))}
             </tbody>

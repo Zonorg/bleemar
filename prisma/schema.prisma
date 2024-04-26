@@ -66,14 +66,24 @@ model Roll {
 }
 
 model RollCuts {
-  id        String  @id @default(uuid()) @map("_id")
-  color     String
-  combined  String
-  lining    String
+  id           String         @id @default(uuid()) @map("_id")
+  color        String
+  combined     String
+  lining       String
+  quantity     Int
+  delivered    Int            @default(0)
+  Roll         Roll?          @relation(fields: [rollId], references: [id])
+  rollId       String?
+  rollCutSizes RollCutSizes[]
+}
+
+model RollCutSizes {
+  id        String   @id @default(uuid()) @map("_id")
+  cutId     String
+  size      String
   quantity  Int
-  delivered Int     @default(0)
-  Roll      Roll?   @relation(fields: [rollId], references: [id])
-  rollId    String?
+  createdAt DateTime @default(now())
+  RollCut   RollCuts @relation(fields: [cutId], references: [id])
 }
 
 model RollDetails {
