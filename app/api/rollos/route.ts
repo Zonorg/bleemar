@@ -213,6 +213,9 @@ export async function DELETE(req: Request) {
     await connectToDatabase();
 
     await prisma.$transaction([
+      prisma.rollCutSizes.deleteMany({
+        where: { RollCut: { rollId: id } }, // Filtrar por rollId
+      }),
       prisma.rollCuts.deleteMany({
         where: { rollId: id },
       }),

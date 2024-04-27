@@ -2,20 +2,6 @@ import { prisma } from "@/prisma";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/prisma/server-helpers";
 
-export async function GET(req: Request) {
-  try {
-    await connectToDatabase();
-
-    // Obtener los datos de RollCutSizes
-    const rollCutSizes = await prisma.rollCutSizes.findMany();
-
-    return NextResponse.json(rollCutSizes, { status: 200 });
-  } catch (error) {
-    console.error("Error:", error);
-    return NextResponse.json({ message: "Database error" }, { status: 500 });
-  }
-}
-
 export async function PUT(req: Request) {
   try {
     const requestData = await req.json();

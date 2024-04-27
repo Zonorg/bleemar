@@ -22,7 +22,25 @@ export async function GET(req: Request, { params }: { params: any }) {
         total_quantity: true,
         order_date: true,
         completed: true,
-        rollcuts: true,
+        rollcuts: {
+          select: {
+            id: true,
+            color: true,
+            combined: true,
+            lining: true,
+            quantity: true,
+            delivered: true,
+            rollCutSizes: {
+              select: {
+                id: true,
+                cutId: true,
+                size: true,
+                quantity: true,
+                createdAt: true,
+              },
+            },
+          },
+        },
         rolldetails: true,
         payments: true,
       },

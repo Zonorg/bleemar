@@ -22,15 +22,22 @@ interface RollData {
     lining: string;
     quantity: number;
     delivered: number;
-    rollcutsizes: { id: string; size: string; quantity: number }[];
+    rollCutSizes: RollCutSize[];
   }[];
   rolldetails: { id: string; title: string; quantity: number }[];
+}
+
+interface RollCutSize {
+  id: string;
+  cutId: string;
+  size: string;
+  quantity: number;
+  createdAt: string;
 }
 
 export default function RollDetails() {
   const { id } = useParams<{ id: string }>();
   const [rollData, setRollData] = useState<RollData | null>(null);
-  const [sizeData, setSizeData] = useState<RollData | null>(null);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
   const [quantities, setQuantities] = useState<{ [cutId: string]: number }>({});
 
@@ -48,20 +55,8 @@ export default function RollDetails() {
     }
   };
 
-  const fetchDataSizes = async () => {
-    try {
-      const response = await fetch("/api/deliveries");
-      const data = await response.json();
-      setSizeData(data);
-      console.log(data);
-    } catch (error) {
-      console.error("Error fetching data", error);
-    }
-  };
-
   useEffect(() => {
     fetchData();
-    fetchDataSizes();
   }, [id]);
 
   const handleSizeQuantityChange = (
@@ -202,23 +197,32 @@ export default function RollDetails() {
                 <th className="px-4 py-2 text-start">Corte</th>
                 <th className="px-4 py-2 text-start">Cantidad</th>
                 <th className="px-4 py-2 text-start">Estado</th>
+                {rollData?.rollcuts[0]?.rollCutSizes.map((size, index) => (
+                  <th key={index} className="px-4 py-2 text-start">
+                    {size.size}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {rollData?.rollcuts &&
-                rollData.rollcuts.map((cut, cutIndex) => (
-                  <tr key={cutIndex}>
-                    <td className="px-4 py-2">{cut.color}</td>
-                    <td className="px-4 py-2">{cut.quantity}</td>
-                    <td className="px-4 py-2">
-                      {cut.delivered === cut.quantity ? (
-                        <GrStatusGoodSmall className="text-green-500" />
-                      ) : (
-                        <GrStatusGoodSmall className="text-yellow-500" />
-                      )}
+              {rollData?.rollcuts.map((cut, cutIndex) => (
+                <tr key={cutIndex}>
+                  <td className="px-4 py-2">{cut.color}</td>
+                  <td className="px-4 py-2">{cut.quantity}</td>
+                  <td className="px-4 py-2">
+                    {cut.delivered === cut.quantity ? (
+                      <GrStatusGoodSmall className="text-green-500" />
+                    ) : (
+                      <GrStatusGoodSmall className="text-yellow-500" />
+                    )}
+                  </td>
+                  {cut.rollCutSizes.map((size, sizeIndex) => (
+                    <td key={sizeIndex} className="px-4 py-2">
+                      {size.quantity}
                     </td>
-                  </tr>
-                ))}
+                  ))}
+                </tr>
+              ))}
             </tbody>
           </table>
           <table className="w-full bg-white rounded-lg">
