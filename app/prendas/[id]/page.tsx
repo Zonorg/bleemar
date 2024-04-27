@@ -39,7 +39,7 @@ export default function RollDetails() {
   const { id } = useParams<{ id: string }>();
   const [rollData, setRollData] = useState<RollData | null>(null);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
-  const [quantities, setQuantities] = useState<{ [cutId: string]: number }>({});
+  const [editMode, setEditMode] = useState(false);
 
   const [sizes, setSizes] = useState<{
     [cutId: string]: { [size: string]: number };
@@ -101,14 +101,12 @@ export default function RollDetails() {
 
   const handleAddDeliveries = async () => {
     try {
-      // Extraer los datos antes de enviarlos
       const requestData = Object.entries(sizes).map(([id, sizeQuantities]) => ({
         id,
         operation: "add",
         sizes: sizeQuantities,
       }));
 
-      // Hacer un console.log de los datos antes de enviarlos
       console.log("Datos que se están enviando:", requestData);
 
       const response = await fetch("/api/deliveries/", {
@@ -138,8 +136,15 @@ export default function RollDetails() {
     }
   };
 
+  const handleEditMode = () => {
+    setEditMode(!editMode);
+    if (!editMode) {
+      setSizes({});
+    }
+  };
+
   return (
-    <div className="w-full h-[85vh] px-4 py-4 flex flex-col gap-5">
+    <div className="w-full px-4 py-4 flex flex-col gap-5">
       {showPDFPreview && rollData && (
         <div>
           <PDFPreview
@@ -196,77 +201,101 @@ export default function RollDetails() {
               <tr className="border-b">
                 <th className="px-4 py-2 text-start">Corte</th>
                 <th className="px-4 py-2 text-start">Cantidad</th>
+                <th className="px-4 py-2 text-start">Total entregado</th>
                 <th className="px-4 py-2 text-start">Estado</th>
-                {rollData?.rollcuts[0]?.rollCutSizes.map((size, index) => (
-                  <th key={index} className="px-4 py-2 text-start">
-                    {size.size}
-                  </th>
-                ))}
               </tr>
             </thead>
             <tbody>
-              {rollData?.rollcuts.map((cut, cutIndex) => (
-                <tr key={cutIndex}>
-                  <td className="px-4 py-2">{cut.color}</td>
-                  <td className="px-4 py-2">{cut.quantity}</td>
-                  <td className="px-4 py-2">
-                    {cut.delivered === cut.quantity ? (
-                      <GrStatusGoodSmall className="text-green-500" />
-                    ) : (
-                      <GrStatusGoodSmall className="text-yellow-500" />
-                    )}
-                  </td>
-                  {cut.rollCutSizes.map((size, sizeIndex) => (
-                    <td key={sizeIndex} className="px-4 py-2">
-                      {size.quantity}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <table className="w-full bg-white rounded-lg">
-            <thead>
-              <tr className="border-b">
-                <th className="px-4 py-2 text-start">Corte</th>
-                <th className="px-4 py-2 text-start">Entregado</th>
-                <th className="px-4 py-2 text-start">Entregar Talles</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rollData?.rollcuts &&
-                rollData.rollcuts.map((cut, cutIndex) => (
+              {rollData?.rollcuts.map((cut, cutIndex) => {
+                cut.rollCutSizes.sort((a, b) => {
+                  const sizeOrder = ["S", "M", "L", "XL", "XXL", "XXXL"];
+                  return sizeOrder.indexOf(a.size) - sizeOrder.indexOf(b.size);
+                });
+
+                return (
                   <tr key={cutIndex}>
                     <td className="px-4 py-2">{cut.color}</td>
+                    <td className="px-4 py-2">{cut.quantity}</td>
                     <td className="px-4 py-2">{cut.delivered}</td>
-                    {sortedSizes(rollData.size).map((size, index) => (
-                      <td className="px-4 py-2" key={index}>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">
-                          {size}
-                        </label>
-                        <input
-                          type="number"
-                          className="px-4 py-1 border rounded"
-                          value={sizes[cut.id]?.[size] || ""}
-                          onChange={(e) =>
-                            handleSizeQuantityChange(
-                              cut.id,
-                              size,
-                              Number(e.target.value)
-                            )
-                          }
-                        />
+                    <td className="px-4 py-2">
+                      {cut.delivered === cut.quantity ? (
+                        <GrStatusGoodSmall className="text-green-500" />
+                      ) : (
+                        <GrStatusGoodSmall className="text-yellow-500" />
+                      )}
+                    </td>
+                    {cut.rollCutSizes.map((size, sizeIndex) => (
+                      <td key={sizeIndex} className="px-4 py-2">
+                        <strong>{size.size}</strong> {size.quantity}
                       </td>
                     ))}
                   </tr>
-                ))}
+                );
+              })}
             </tbody>
           </table>
+          {editMode && (
+            <div className="edit_mode flex flex-col gap-5">
+              <table className="w-full bg-white rounded-lg">
+                <thead>
+                  <tr className="border-b">
+                    <th className="px-4 py-2 text-start">Corte</th>
+                    <th className="px-4 py-2 text-start">Entregar Talles</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rollData?.rollcuts &&
+                    rollData.rollcuts.map((cut, cutIndex) => (
+                      <tr key={cutIndex}>
+                        <td className="px-4 py-2">{cut.color}</td>
+                        {sortedSizes(rollData.size).map((size, index) => {
+                          // Verificar si el talle actual ya se mapeo
+                          if (
+                            index === 0 ||
+                            sortedSizes(rollData.size)[index] !==
+                              sortedSizes(rollData.size)[index - 1]
+                          ) {
+                            return (
+                              <td className="px-4 py-2" key={index}>
+                                <label className="block text-xs font-medium text-gray-500 mb-1">
+                                  {size}
+                                </label>
+                                <input
+                                  type="number"
+                                  className="px-4 py-1 border rounded"
+                                  value={sizes[cut.id]?.[size] || ""}
+                                  onChange={(e) =>
+                                    handleSizeQuantityChange(
+                                      cut.id,
+                                      size,
+                                      Number(e.target.value)
+                                    )
+                                  }
+                                />
+                              </td>
+                            );
+                          } else {
+                            // Si el talle se repite, no duplicarlo
+                            return null;
+                          }
+                        })}
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+              <button
+                onClick={handleAddDeliveries}
+                className="green_button m-auto"
+              >
+                + Agregar entregas
+              </button>
+            </div>
+          )}
           <button
-            onClick={handleAddDeliveries}
-            className="green_plain_button m-auto"
+            onClick={handleEditMode}
+            className={editMode ? "blue_plain_button" : "green_plain_button"}
           >
-            + Agregar entregas
+            {editMode ? "Cancelar" : "+ Agregar entregas"}
           </button>
         </div>
 
@@ -293,7 +322,7 @@ export default function RollDetails() {
       </div>
 
       <Link
-        href="/rollos"
+        href="/prendas"
         className="bg-green-s hover:bg-green-m text-white font-bold px-4 py-2 rounded mx-auto"
       >
         Volver
