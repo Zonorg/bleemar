@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { FaDownload } from "react-icons/fa";
 import { GrStatusGoodSmall } from "react-icons/gr";
+import { FiLoader } from "react-icons/fi";
 import Link from "next/link";
 import PDFPreview from "../components/PDFPreview";
 
@@ -40,6 +41,7 @@ export default function RollDetails() {
   const [rollData, setRollData] = useState<RollData | null>(null);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [sizes, setSizes] = useState<{
     [cutId: string]: { [size: string]: number };
@@ -106,7 +108,7 @@ export default function RollDetails() {
         operation: "add",
         sizes: sizeQuantities,
       }));
-
+      setLoading(true);
       console.log("Datos que se están enviando:", requestData);
 
       const response = await fetch("/api/deliveries/", {
@@ -116,7 +118,6 @@ export default function RollDetails() {
         },
         body: JSON.stringify(requestData),
       });
-
       if (!response.ok) {
         alert("Revisa los datos");
         console.log(response.status);
@@ -133,6 +134,8 @@ export default function RollDetails() {
       fetchData();
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -194,7 +197,7 @@ export default function RollDetails() {
         </table>
       </div>
       <div className="aditional_data flex flex-col gap-5">
-        <div className="cuts flex flex-col gap-3 overflow-x-auto">
+        <div className="cuts flex flex-col gap-3 overflow-x-auto overflow-y-hidden">
           <h3 className="text-lg font-bold">Entregas</h3>
           <table className="w-full bg-white rounded-lg">
             <thead>
@@ -283,20 +286,28 @@ export default function RollDetails() {
                     ))}
                 </tbody>
               </table>
-              <button
-                onClick={handleAddDeliveries}
-                className="green_button m-auto"
-              >
-                + Agregar entregas
-              </button>
+              {loading ? (
+                <FiLoader className="animate-spin text-2xl text-zinc-500 m-auto" />
+              ) : (
+                <button
+                  onClick={handleAddDeliveries}
+                  className="green_button m-auto"
+                >
+                  + Agregar entregas
+                </button>
+              )}
             </div>
           )}
-          <button
-            onClick={handleEditMode}
-            className={editMode ? "blue_plain_button" : "green_plain_button"}
-          >
-            {editMode ? "Cancelar" : "+ Agregar entregas"}
-          </button>
+          {!loading && (
+            <button
+              onClick={handleEditMode}
+              className={`${
+                editMode ? "blue_plain_button" : "green_plain_button"
+              } m-auto`}
+            >
+              {editMode ? "Cancelar" : "+ Agregar entregas"}
+            </button>
+          )}
         </div>
 
         <div className="details flex flex-col gap-3 overflow-x-auto">

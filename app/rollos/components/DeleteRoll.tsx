@@ -7,7 +7,7 @@ interface DeleteRollProps {
 }
 
 export default function DeleteRoll({ id }: DeleteRollProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function handleDelete() {
     const confirmDelete = window.confirm(
@@ -18,7 +18,7 @@ export default function DeleteRoll({ id }: DeleteRollProps) {
       return;
     }
 
-    setIsLoading(true);
+    setLoading(true);
     try {
       const response = await fetch("/api/rollos", {
         method: "DELETE",
@@ -35,13 +35,13 @@ export default function DeleteRoll({ id }: DeleteRollProps) {
     } catch (error) {
       console.error(error);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   }
 
   return (
-    <button onClick={handleDelete} disabled={isLoading}>
-      {isLoading ? <FiLoader className="animate-spin" /> : <BsFillTrashFill />}
+    <button onClick={handleDelete} disabled={loading}>
+      {loading ? <FiLoader className="animate-spin" /> : <BsFillTrashFill />}
     </button>
   );
 }
