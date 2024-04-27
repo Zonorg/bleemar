@@ -17,38 +17,6 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-model Order {
-  id             String        @id @default(uuid()) @map("_id")
-  title          String
-  total_quantity Int
-  order_date     String
-  size           String
-  workshop       String
-  garmentcuts    Garmentcuts[]
-  details        Details[]
-  updatedAt      DateTime?     @updatedAt
-  createdAt      DateTime      @default(now())
-}
-
-model Garmentcuts {
-  id       String  @id @default(uuid()) @map("_id")
-  color    String
-  combined String
-  lining   String
-  quantity Int
-  Order    Order?  @relation(fields: [orderId], references: [id])
-  orderId  String?
-}
-
-model Details {
-  id        String   @id @default(uuid()) @map("_id")
-  title     String
-  quantity  Int
-  createdAt DateTime @default(now())
-  Order     Order?   @relation(fields: [orderId], references: [id])
-  orderId   String?
-}
-
 model Roll {
   id             String        @id @default(uuid()) @map("_id")
   order_number   Int
