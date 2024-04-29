@@ -56,10 +56,11 @@ export async function PUT(req: Request) {
         const updatedDelivered = existingCut.delivered + totalDelivered;
 
         // Asegurar que la cantidad entregada no exceda la cantidad total
-        const newDelivered = Math.min(updatedDelivered, existingCut.quantity);
+        // const newDelivered = Math.min(updatedDelivered, existingCut.quantity);
 
         // Asegurar que la cantidad entregada no sea menor que 0
-        const finalDelivered = Math.max(newDelivered, 0);
+        // const finalDelivered = Math.max(newDelivered, 0);
+        const finalDelivered = Math.max(updatedDelivered, 0);
 
         // Actualizar la cantidad entregada en el modelo RollCuts
         const updatedCut = await prisma.rollCuts.update({

@@ -210,7 +210,9 @@ export default function RollDetails() {
                         <td className="px-4 py-2">{cut.color}</td>
                         <td className="px-4 py-2">{cut.combined}</td>
                         <td className="px-4 py-2">{cut.lining}</td>
-                        <td className="px-4 py-2">{cut.quantity}</td>
+                        <td className="px-4 py-2">
+                          {cut.quantity * new Set(rollData.size).size}
+                        </td>
                         <td className="px-4 py-2">
                           {cut.delivered === cut.quantity ? (
                             <GrStatusGoodSmall className="text-green-500" />
