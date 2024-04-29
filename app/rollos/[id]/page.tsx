@@ -214,7 +214,7 @@ export default function RollDetails() {
                           {cut.quantity * new Set(rollData.size).size}
                         </td>
                         <td className="px-4 py-2">
-                          {cut.delivered === cut.quantity ? (
+                          {cut.delivered >= cut.quantity * new Set(rollData.size).size ? (
                             <GrStatusGoodSmall className="text-green-500" />
                           ) : (
                             <GrStatusGoodSmall className="text-yellow-500" />
