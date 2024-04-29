@@ -42,6 +42,11 @@ export default function RollDetails() {
   const [showModal, setShowModal] = useState(false);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
 
+  //Para calcular la cantidad de talles y multiplicar la cantidad de cortes
+  const rollSizes = rollData?.size || "";
+  const sizesArray = rollSizes.replace(/\s/g, "").split(",");
+  const sizesCount = sizesArray.filter((size) => size !== "").length;
+
   const toggleModal = () => {
     setShowModal(!showModal);
   };
@@ -211,10 +216,10 @@ export default function RollDetails() {
                         <td className="px-4 py-2">{cut.combined}</td>
                         <td className="px-4 py-2">{cut.lining}</td>
                         <td className="px-4 py-2">
-                          {cut.quantity * new Set(rollData.size).size}
+                          {cut.quantity * sizesCount}
                         </td>
                         <td className="px-4 py-2">
-                          {cut.delivered >= cut.quantity * new Set(rollData.size).size ? (
+                          {cut.delivered >= cut.quantity * sizesCount ? (
                             <GrStatusGoodSmall className="text-green-500" />
                           ) : (
                             <GrStatusGoodSmall className="text-yellow-500" />

@@ -47,6 +47,11 @@ export default function RollDetails() {
     [cutId: string]: { [size: string]: number };
   }>({});
 
+  //Para calcular la cantidad de talles y multiplicar la cantidad de cortes
+  const rollSizes = rollData?.size || "";
+  const sizesArray = rollSizes.replace(/\s/g, "").split(",");
+  const sizesCount = sizesArray.filter((size) => size !== "").length;
+
   const fetchData = async () => {
     try {
       const response = await fetch(`/api/rollos/${id}`);
@@ -218,13 +223,10 @@ export default function RollDetails() {
                 return (
                   <tr key={cutIndex}>
                     <td className="px-4 py-2">{cut.color}</td>
-                    <td className="px-4 py-2">
-                      {cut.quantity * new Set(rollData.size).size}
-                    </td>
+                    <td className="px-4 py-2">{cut.quantity * sizesCount}</td>
                     <td className="px-4 py-2">{cut.delivered}</td>
                     <td className="px-4 py-2">
-                      {cut.delivered >=
-                      cut.quantity * new Set(rollData.size).size ? (
+                      {cut.delivered >= cut.quantity * sizesCount ? (
                         <GrStatusGoodSmall className="text-green-500" />
                       ) : (
                         <GrStatusGoodSmall className="text-yellow-500" />

@@ -76,6 +76,11 @@ export default function PDFPreview({
   const rollcuts = rolls.map((roll) => roll.rollcuts).flat();
   const rolldetails = rolls.map((roll) => roll.rolldetails).flat();
 
+  //Para calcular la cantidad de talles que hay y multiplicar ese valor por la cantidad de cortes
+  const rollSizes = rolls.map((roll) => roll.size).join(",");
+  const sizesArray = rollSizes.replace(/\s/g, "").split(",");
+  const sizesCount = sizesArray.filter((size) => size !== "").length;
+
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 z-50">
       <div className="max-w-4xl mx-auto mt-5 h-[95vh] overflow-auto relative">
@@ -113,7 +118,9 @@ export default function PDFPreview({
                     <Text style={styles.tableCell}>{cut.color}</Text>
                     <Text style={styles.tableCell}>{cut.combined}</Text>
                     <Text style={styles.tableCell}>{cut.lining}</Text>
-                    <Text style={styles.tableCell}>{cut.quantity}</Text>
+                    <Text style={styles.tableCell}>
+                      {cut.quantity * sizesCount}
+                    </Text>
                   </View>
                 ))}
               </View>
