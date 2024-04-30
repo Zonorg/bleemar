@@ -202,8 +202,12 @@ export default function RollDetails() {
                 <thead>
                   <tr className="border-b">
                     <th className="px-4 py-2 text-start">Color</th>
-                    <th className="px-4 py-2 text-start">Combinado</th>
-                    <th className="px-4 py-2 text-start">Forro</th>
+                    {rollData?.rollcuts.some((cut) => cut.combined) && (
+                      <th className="px-4 py-2 text-start">Combinado</th>
+                    )}
+                    {rollData?.rollcuts.some((cut) => cut.lining) && (
+                      <th className="px-4 py-2 text-start">Forro</th>
+                    )}
                     <th className="px-4 py-2 text-start">Cantidad</th>
                     <th className="px-4 py-2 text-start">Estado</th>
                   </tr>
@@ -213,11 +217,13 @@ export default function RollDetails() {
                     rollData.rollcuts.map((cut, cutIndex) => (
                       <tr key={cutIndex}>
                         <td className="px-4 py-2">{cut.color}</td>
-                        <td className="px-4 py-2">{cut.combined}</td>
-                        <td className="px-4 py-2">{cut.lining}</td>
-                        <td className="px-4 py-2">
-                          {cut.quantity * sizesCount}
-                        </td>
+                        {cut.combined && (
+                          <td className="px-4 py-2">{cut.combined}</td>
+                        )}
+                        {cut.lining && (
+                          <td className="px-4 py-2">{cut.lining}</td>
+                        )}
+                        <td className="px-4 py-2">{cut.quantity}</td>
                         <td className="px-4 py-2">
                           {cut.delivered >= cut.quantity * sizesCount ? (
                             <GrStatusGoodSmall className="text-green-500" />
