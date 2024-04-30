@@ -219,9 +219,28 @@ export default function RollDetails() {
               {rollData?.rollcuts.map((cut, cutIndex) => {
                 cut.rollCutSizes.sort((a, b) => {
                   const sizeOrder = ["S", "M", "L", "XL", "XXL", "XXXL"];
+
+                  // Extraer solo la letra del tamaño y ordenar según sizeOrder
                   const sizeA = a.size.replace(/\d+/g, "");
                   const sizeB = b.size.replace(/\d+/g, "");
-                  return sizeOrder.indexOf(sizeA) - sizeOrder.indexOf(sizeB);
+                  const letterComparison =
+                    sizeOrder.indexOf(sizeA) - sizeOrder.indexOf(sizeB);
+
+                  // Si las letras son diferentes, ordenar según la letra
+                  if (letterComparison !== 0) {
+                    return letterComparison;
+                  } else {
+                    // Si las letras son iguales, ordenar según el número (si lo hay)
+                    const numberA = parseInt(
+                      (a.size.match(/\d+/) || ["0"])[0],
+                      10
+                    );
+                    const numberB = parseInt(
+                      (b.size.match(/\d+/) || ["0"])[0],
+                      10
+                    );
+                    return numberA - numberB;
+                  }
                 });
 
                 return (
