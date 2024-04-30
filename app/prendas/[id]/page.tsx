@@ -151,6 +151,8 @@ export default function RollDetails() {
     }
   };
 
+  const [sizeInputs, setSizeInputs] = useState<{ [key: string]: string }>({});
+
   return (
     <div className="w-full px-4 py-4 flex flex-col gap-5">
       {showPDFPreview && rollData && (
@@ -217,7 +219,9 @@ export default function RollDetails() {
               {rollData?.rollcuts.map((cut, cutIndex) => {
                 cut.rollCutSizes.sort((a, b) => {
                   const sizeOrder = ["S", "M", "L", "XL", "XXL", "XXXL"];
-                  return sizeOrder.indexOf(a.size) - sizeOrder.indexOf(b.size);
+                  const sizeA = a.size.replace(/\d+/g, "");
+                  const sizeB = b.size.replace(/\d+/g, "");
+                  return sizeOrder.indexOf(sizeA) - sizeOrder.indexOf(sizeB);
                 });
 
                 return (
@@ -234,7 +238,8 @@ export default function RollDetails() {
                     </td>
                     {cut.rollCutSizes.map((size, sizeIndex) => (
                       <td key={sizeIndex} className="px-4 py-2">
-                        <strong>{size.size}</strong> {size.quantity}
+                        <strong>{size.size.replace(/\d+/g, "")}</strong>
+                        {size.quantity}
                       </td>
                     ))}
                   </tr>
@@ -253,42 +258,44 @@ export default function RollDetails() {
                 </thead>
                 <tbody>
                   {rollData?.rollcuts &&
-                    rollData.rollcuts.map((cut, cutIndex) => (
-                      <tr key={cutIndex}>
-                        <td className="px-4 py-2">{cut.color}</td>
-                        {sortedSizes(rollData.size).map((size, index) => {
-                          // Verificar si el talle actual ya se mapeo
-                          if (
-                            index === 0 ||
-                            sortedSizes(rollData.size)[index] !==
-                              sortedSizes(rollData.size)[index - 1]
-                          ) {
+                    rollData.rollcuts.map((cut, cutIndex) => {
+                      const sizesCount: { [key: string]: number } = {}; // Objeto para contar la cantidad de cada talla
+
+                      return (
+                        <tr key={cutIndex}>
+                          <td className="px-4 py-2">{cut.color}</td>
+                          {sortedSizes(rollData.size).map((size, index) => {
+                            // Contar la cantidad de cada talla
+                            sizesCount[size] = (sizesCount[size] || 0) + 1;
+
+                            // Generar un identificador único para cada talla
+                            const uniqueSize = `${size}${
+                              sizesCount[size] > 1 ? sizesCount[size] - 1 : ""
+                            }`;
+
                             return (
                               <td className="px-4 py-2" key={index}>
                                 <label className="block text-xs font-medium text-gray-500 mb-1">
-                                  {size}
+                                  {uniqueSize}
                                 </label>
                                 <input
                                   type="number"
                                   className="px-4 py-1 border rounded"
-                                  value={sizes[cut.id]?.[size] || ""}
+                                  value={sizes[cut.id]?.[uniqueSize] || ""}
                                   onChange={(e) =>
                                     handleSizeQuantityChange(
                                       cut.id,
-                                      size,
+                                      uniqueSize,
                                       Number(e.target.value)
                                     )
                                   }
                                 />
                               </td>
                             );
-                          } else {
-                            // Si el talle se repite, no duplicarlo
-                            return null;
-                          }
-                        })}
-                      </tr>
-                    ))}
+                          })}
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
               {loading ? (
@@ -346,3 +353,42 @@ export default function RollDetails() {
     </div>
   );
 }
+
+// Código viejo, para no repetir talles
+// {rollData?.rollcuts &&
+//   rollData.rollcuts.map((cut, cutIndex) => (
+//     <tr key={cutIndex}>
+//       <td className="px-4 py-2">{cut.color}</td>
+//       {sortedSizes(rollData.size).map((size, index) => {
+//         // Verificar si el talle actual ya se mapeo
+//         if (
+//           index === 0 ||
+//           sortedSizes(rollData.size)[index] !==
+//             sortedSizes(rollData.size)[index - 1]
+//         ) {
+//           return (
+//             <td className="px-4 py-2" key={index}>
+//               <label className="block text-xs font-medium text-gray-500 mb-1">
+//                 {size}
+//               </label>
+//               <input
+//                 type="number"
+//                 className="px-4 py-1 border rounded"
+//                 value={sizes[cut.id]?.[size] || ""}
+//                 onChange={(e) =>
+//                   handleSizeQuantityChange(
+//                     cut.id,
+//                     size,
+//                     Number(e.target.value)
+//                   )
+//                 }
+//               />
+//             </td>
+//           );
+//         } else {
+//           // Si el talle se repite, no duplicarlo
+//           return null;
+//         }
+//       })}
+//     </tr>
+//   ))}
