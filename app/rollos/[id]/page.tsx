@@ -286,7 +286,7 @@ export default function RollDetails() {
                           </td>
                           <td className="px-4 py-2">
                             <Image
-                              src={payment.signature.replace("public", "")}
+                              src={payment.signature}
                               alt={`Pago ${payIndex + 1}`}
                               width={100}
                               height={100}
