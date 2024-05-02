@@ -8,10 +8,10 @@ import { GrStatusGoodSmall } from "react-icons/gr";
 import Link from "next/link";
 import Payments from "../components/Payments";
 import Image from "next/image";
-import { RoleRedirect } from "@/app/utils/redirect";
 import EditRoll from "../components/EditRoll";
 import Modal from "react-modal";
 import PDFPreview from "@/app/prendas/components/PDFPreview";
+import { useSession } from "next-auth/react";
 
 interface RollData {
   id: string;
@@ -37,6 +37,7 @@ interface RollData {
 
 export default function RollDetails() {
   const { id } = useParams<{ id: string }>();
+  const { data: session } = useSession();
   const [rollData, setRollData] = useState<RollData | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -127,7 +128,6 @@ export default function RollDetails() {
 
   return (
     <>
-      <RoleRedirect />
       {!editMode ? (
         <div className="w-full px-4 py-4 flex flex-col gap-5">
           {showPDFPreview && rollData && (
@@ -258,84 +258,91 @@ export default function RollDetails() {
               </table>
             </div>
           </div>
-          <div className="details flex flex-col gap-3">
-            <h3 className="text-lg font-bold">Pagos</h3>
-            <table className="w-full bg-white rounded-lg">
-              <thead>
-                <tr className="border-b">
-                  <th className="px-4 py-2 text-start">Monto</th>
-                  <th className="px-4 py-2 text-start">Fecha</th>
-                  <th className="px-4 py-2 text-start">Firma</th>
-                  <th className="px-4 py-2 text-start">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rollData?.payments &&
-                  rollData.payments.map((payment, payIndex) => (
-                    <tr key={payIndex}>
-                      <td className="px-4 py-2">
-                        {new Intl.NumberFormat("es-AR", {
-                          style: "currency",
-                          currency: "ARS",
-                        }).format(parseFloat(payment.amount))}
-                      </td>
-                      <td className="px-4 py-2">{addOneDay(payment.date)}</td>
-                      <td className="px-4 py-2">
-                        <Image
-                          src={payment.signature.replace("public", "")}
-                          alt={`Pago ${payIndex + 1}`}
-                          width={100}
-                          height={100}
-                        />
-                      </td>
-                      <td className="px-4 py-2">
-                        <button
-                          className="blue_plain_button"
-                          onClick={() => handleDeletePayment(payment.id)}
-                        >
-                          Eliminar pago
-                        </button>
-                      </td>
+          {session?.user?.name === "Admin" && (
+            <div>
+              <div className="details flex flex-col gap-3">
+                <h3 className="text-lg font-bold">Pagos</h3>
+                <table className="w-full bg-white rounded-lg">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="px-4 py-2 text-start">Monto</th>
+                      <th className="px-4 py-2 text-start">Fecha</th>
+                      <th className="px-4 py-2 text-start">Firma</th>
+                      <th className="px-4 py-2 text-start">Acciones</th>
                     </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+                  </thead>
+                  <tbody>
+                    {rollData?.payments &&
+                      rollData.payments.map((payment, payIndex) => (
+                        <tr key={payIndex}>
+                          <td className="px-4 py-2">
+                            {new Intl.NumberFormat("es-AR", {
+                              style: "currency",
+                              currency: "ARS",
+                            }).format(parseFloat(payment.amount))}
+                          </td>
+                          <td className="px-4 py-2">
+                            {addOneDay(payment.date)}
+                          </td>
+                          <td className="px-4 py-2">
+                            <Image
+                              src={payment.signature.replace("public", "")}
+                              alt={`Pago ${payIndex + 1}`}
+                              width={100}
+                              height={100}
+                            />
+                          </td>
+                          <td className="px-4 py-2">
+                            <button
+                              className="blue_plain_button"
+                              onClick={() => handleDeletePayment(payment.id)}
+                            >
+                              Eliminar pago
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
 
-          <div className="w-full flex flex-col gap-3 items-start">
-            <button onClick={toggleModal} className="green_plain_button">
-              + Agregar pago
-            </button>
-            <Modal
-              isOpen={showModal}
-              onRequestClose={toggleModal}
-              contentLabel="Add payment"
-              ariaHideApp={false}
-              style={{
-                content: {
-                  margin: "auto",
-                  overflow: "auto",
-                  width: "90vw",
-                  height: "60vh",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                },
+              <div className="w-full flex flex-col gap-3 items-start">
+                <button onClick={toggleModal} className="green_plain_button">
+                  + Agregar pago
+                </button>
+                <Modal
+                  isOpen={showModal}
+                  onRequestClose={toggleModal}
+                  contentLabel="Add payment"
+                  ariaHideApp={false}
+                  style={{
+                    content: {
+                      margin: "auto",
+                      overflow: "auto",
+                      width: "90vw",
+                      height: "60vh",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
 
-                overlay: {
-                  backgroundColor: "rgba(0, 0, 0, 0.6)",
-                },
-              }}
-            >
-              <Payments rollId={id} />
-              <button
-                className="font-bold rounded absolute top-4 right-5"
-                onClick={toggleModal}
-              >
-                <ImCross className="text-zinc-900" />
-              </button>
-            </Modal>
-          </div>
+                    overlay: {
+                      backgroundColor: "rgba(0, 0, 0, 0.6)",
+                    },
+                  }}
+                >
+                  <Payments rollId={id} />
+                  <button
+                    className="font-bold rounded absolute top-4 right-5"
+                    onClick={toggleModal}
+                  >
+                    <ImCross className="text-zinc-900" />
+                  </button>
+                </Modal>
+              </div>
+            </div>
+          )}
+
           <Link href="/rollos" className="green_button font-medium mx-auto">
             Volver
           </Link>

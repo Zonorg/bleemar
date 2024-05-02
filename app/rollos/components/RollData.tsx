@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import DeleteRoll from "./DeleteRoll";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 interface Roll {
   id: string;
@@ -15,6 +16,7 @@ interface Roll {
 export default function RollData() {
   const [rolls, setRolls] = useState<Roll[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const { data: session } = useSession();
 
   async function fetchData() {
     try {
@@ -83,8 +85,7 @@ export default function RollData() {
                 <Link href={`/rollos/${roll.id}`}>
                   <FaEye size={20} />
                 </Link>
-                {/* {session?.role === "Admin" && <DeleteRoll id={roll.id} />} */}
-                <DeleteRoll id={roll.id} />
+                {session?.user?.name === "Admin" && <DeleteRoll id={roll.id} />}
               </td>
             </tr>
           ))}
