@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/prisma";
 import { connectToDatabase } from "@/prisma/server-helpers";
+import { getServerSession } from "next-auth";
 
-const prisma = new PrismaClient();
-
-const secretKey = "Ts~`hs1d>/<TnsXMuplitR(+~`C5,xt~9$X9mY9jPx~%tGaO/o";
+async function getSession(req: Request) {
+  const session = await getServerSession();
+  if (!session) {
+    return null; // Devolver null si no hay sesión de usuario
+  }
+  return session;
+}
 
 export async function POST(req: Request) {
   try {
@@ -90,6 +95,10 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
+    const session = await getSession(req);
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
     await connectToDatabase();
     const data = await prisma.shipping.findMany({
       orderBy: { createdAt: "desc" },

@@ -13,6 +13,7 @@ export const config = {
     "/api/payments",
     "/api/rollos",
     "/api/users",
-    "/api/shipping",
   ],
 };
+
+// "/api/shipping" no está protegida acá porque woocommerce necesita hacer un webhook, está protegida dentro de la ruta
