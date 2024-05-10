@@ -6,7 +6,7 @@ export const config = {
     "/prendas/:path*",
     "/rollos/:path*",
     "/users/:path*",
-    "/envios",
+    "/envios/:path*",
     "/settings/:path*",
     "/auth/register",
     "/api/auth/register",
