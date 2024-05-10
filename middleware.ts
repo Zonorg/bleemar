@@ -8,6 +8,10 @@ export const config = {
     "/users/:path*",
     "/settings/:path*",
     "/auth/register",
-    "/api/:path*",
+    "/api/auth/register",
+    "/api/deliveries",
+    "/api/payments",
+    "/api/rollos",
+    "/api/users",
   ],
 };

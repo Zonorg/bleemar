@@ -151,8 +151,6 @@ export default function RollDetails() {
     }
   };
 
-  const [sizeInputs, setSizeInputs] = useState<{ [key: string]: string }>({});
-
   return (
     <div className="w-full px-4 py-4 flex flex-col gap-5">
       {showPDFPreview && rollData && (

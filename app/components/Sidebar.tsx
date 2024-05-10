@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { GiRolledCloth } from "react-icons/gi";
-import { FaShirt, FaGear } from "react-icons/fa6";
+import { FaShirt, FaGear, FaFileImport  } from "react-icons/fa6";
 import { IoIosExit } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -50,6 +50,17 @@ export default function Sidebar() {
             >
               <GiRolledCloth className="rotate-12" size={18} />
               Rollos
+            </Link>
+            <Link
+              className={`flex items-center gap-2 hover:bg-background-gray p-2 rounded-md ${
+                isActive("/envios")
+                  ? "bg-green-s text-white hover:bg-green-s"
+                  : ""
+              }`}
+              href="/envios"
+            >
+              <FaFileImport size={16} />
+              Envíos
             </Link>
           </div>
           <div className="sidebar_bottom_menu flex flex-col">

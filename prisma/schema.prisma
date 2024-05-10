@@ -74,3 +74,18 @@ model Payments {
   Roll      Roll?     @relation(fields: [rollId], references: [id])
   rollId    String?
 }
+
+model Shipping {
+  id             String   @id @default(uuid()) @map("_id")
+  shipping_order Int
+  name           String
+  date           String
+  address        String
+  city           String
+  province       String
+  zip            String
+  dni            String
+  transport      String
+  customer_note  String
+  createdAt      DateTime @default(now())
+}
