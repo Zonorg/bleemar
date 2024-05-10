@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { GiRolledCloth } from "react-icons/gi";
-import { FaShirt, FaGear } from "react-icons/fa6";
+import { FaShirt, FaGear, FaFileImport } from "react-icons/fa6";
 import { IoIosExit } from "react-icons/io";
 import { signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
@@ -40,7 +40,15 @@ export default function Footer() {
           Rollos
         </Link>
       )}
-
+      <Link
+        className={`flex flex-col items-center p-2 rounded-md ${
+          isActive("/envios") ? "text-green-xs" : ""
+        }`}
+        href="/envios"
+      >
+        <FaFileImport size={18} />
+        Envíos
+      </Link>
       {session?.user?.name === "Admin" && (
         <Link
           className={`flex flex-col items-center p-2 rounded-md ${
