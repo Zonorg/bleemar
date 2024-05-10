@@ -13,5 +13,6 @@ export const config = {
     "/api/payments",
     "/api/rollos",
     "/api/users",
+    "/api/shipping",
   ],
 };

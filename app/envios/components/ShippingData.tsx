@@ -27,12 +27,7 @@ export default function ShippingData() {
 
   async function fetchData() {
     try {
-      const secretKey = "Ts~`hs1d>/<TnsXMuplitR(+~`C5,xt~9$X9mY9jPx~%tGaO/o";
-      const res = await fetch("/api/shipping", {
-        headers: {
-          authorization: `Bearer ${secretKey}`,
-        },
-      });
+      const res = await fetch("/api/shipping");
       if (res.ok) {
         const shipping = await res.json();
         setShipping(shipping);

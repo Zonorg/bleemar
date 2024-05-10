@@ -90,10 +90,6 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const authorizationHeader = req.headers.get("authorization");
-    if (!authorizationHeader || authorizationHeader !== `Bearer ${secretKey}`) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
     await connectToDatabase();
     const data = await prisma.shipping.findMany({
       orderBy: { createdAt: "desc" },
