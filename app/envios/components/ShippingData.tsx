@@ -30,7 +30,7 @@ export default function ShippingData() {
       const secretKey = "Ts~`hs1d>/<TnsXMuplitR(+~`C5,xt~9$X9mY9jPx~%tGaO/o";
       const res = await fetch("/api/shipping", {
         headers: {
-          Authorization: `Bearer ${secretKey}`,
+          authorization: `Bearer ${secretKey}`,
         },
       });
       if (res.ok) {
