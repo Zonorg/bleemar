@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaFilePdf } from "react-icons/fa6";
 import { FaDownload } from "react-icons/fa";
-
 import {
   PDFViewer,
   Page,
@@ -62,8 +61,6 @@ export default function ShippingData() {
     setSelectedShipping(null);
   };
 
-  const formattedSearchTerm = searchTerm.toLowerCase();
-
   const provinceNames: ProvinceNames = {
     A: "Salta",
     B: "Buenos Aires",
@@ -89,6 +86,10 @@ export default function ShippingData() {
     X: "Córdoba",
     Y: "Jujuy",
     Z: "Santa Cruz",
+  };
+
+  const getFullProvinceName = (initial: string) => {
+    return provinceNames[initial] || initial;
   };
 
   const styles = StyleSheet.create({
@@ -151,16 +152,14 @@ export default function ShippingData() {
               Provincia: {getFullProvinceName(selectedShipping.province)}
             </Text>
             <Text style={styles.text}>CP: {selectedShipping.zip}</Text>
+            <Text style={styles.text}>Transporte: {selectedShipping.transport}</Text>
           </View>
         )}
       </Page>
     </Document>
   );
 
-  const getFullProvinceName = (initial: string) => {
-    return provinceNames[initial] || initial;
-  };
-
+  const formattedSearchTerm = searchTerm.toLowerCase();
   const filteredData = shipping.filter(
     (ship) =>
       ship.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
