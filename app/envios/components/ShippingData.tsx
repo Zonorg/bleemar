@@ -214,7 +214,6 @@ export default function ShippingData() {
               </td>
               <td className="px-4 py-2 flex gap-3">
                 <button
-                  className="max-lg:hidden"
                   onClick={() => {
                     setShowPDFPreview(true);
                     setSelectedShipping(ship);
