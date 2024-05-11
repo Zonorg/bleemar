@@ -37,7 +37,7 @@ export default function PDFPreview({
   const styles = StyleSheet.create({
     page: {
       flexDirection: "column",
-      backgroundColor: "#f7f7f7",
+      backgroundColor: "#ffffff",
     },
     section: {
       margin: 10,
@@ -60,10 +60,9 @@ export default function PDFPreview({
     },
     tableCellHeader: {
       width: "50%",
-      border: "1px solid black",
       padding: 5,
       color: "#ffffff",
-      backgroundColor: "#09c184",
+      backgroundColor: "#333333",
     },
     tableCell: {
       width: "50%",
@@ -139,13 +138,13 @@ export default function PDFPreview({
             </Page>
           </Document>
         </PDFViewer>
-        <button
-          className="absolute bottom-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700"
-          onClick={closePDFPreview}
-        >
-          Cerrar
-        </button>
       </div>
+      <button
+        className="absolute bottom-5 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700"
+        onClick={closePDFPreview}
+      >
+        Cerrar
+      </button>
     </div>
   );
 }

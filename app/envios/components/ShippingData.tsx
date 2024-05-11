@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
-import PDFShipping from "./PDFShipping";
 import { FaFilePdf } from "react-icons/fa6";
+import { FaDownload } from "react-icons/fa";
+
+import {
+  PDFViewer,
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  PDFDownloadLink,
+} from "@react-pdf/renderer";
 
 interface Shipping {
   id: string;
@@ -15,6 +25,10 @@ interface Shipping {
   date: string;
   customer_note: string;
   createdAt: string;
+}
+
+interface ProvinceNames {
+  [key: string]: string;
 }
 
 export default function ShippingData() {
@@ -50,6 +64,103 @@ export default function ShippingData() {
 
   const formattedSearchTerm = searchTerm.toLowerCase();
 
+  const provinceNames: ProvinceNames = {
+    A: "Salta",
+    B: "Buenos Aires",
+    C: "Ciudad Autónoma de Buenos Aires",
+    D: "San Luis",
+    E: "Entre Ríos",
+    F: "La Rioja",
+    G: "Santiago del Estero",
+    H: "Chaco",
+    J: "San Juan",
+    K: "Catamarca",
+    L: "La Pampa",
+    M: "Mendoza",
+    N: "Misiones",
+    P: "Formosa",
+    Q: "Neuquén",
+    R: "Río Negro",
+    S: "Santa Fe",
+    T: "Tucumán",
+    U: "Chubut",
+    V: "Tierra del Fuego",
+    W: "Corrientes",
+    X: "Córdoba",
+    Y: "Jujuy",
+    Z: "Santa Cruz",
+  };
+
+  const styles = StyleSheet.create({
+    showPDF: {
+      height: "95vh",
+      width: "60vw",
+    },
+    button: {
+      color: "#333333",
+      fontSize: 16,
+    },
+    page: {
+      backgroundColor: "#ffffff",
+      padding: 10,
+    },
+    documentTitle: {
+      fontSize: 40,
+      fontWeight: "bold",
+      color: "#333333",
+      padding: 5,
+      textAlign: "center",
+    },
+    documentSubtitle: {
+      fontSize: 30,
+      padding: 15,
+      color: "#ffffff",
+      backgroundColor: "#333333",
+    },
+    tableRow: {
+      flexDirection: "column",
+      fontSize: 26,
+      color: "#333333",
+      margin: "50px auto",
+      width: "400px",
+    },
+    text: {
+      padding: 15,
+      borderBottom: "1px dotted black",
+    },
+  });
+
+  const MyDoc = ({
+    selectedShipping,
+  }: {
+    selectedShipping: Shipping | null;
+  }) => (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <Text style={styles.documentTitle}>BleeMar</Text>
+        {selectedShipping && (
+          <View key={selectedShipping.id} style={styles.tableRow}>
+            <Text style={styles.documentSubtitle}>Enviar a:</Text>
+            <Text style={styles.text}>{selectedShipping.name}</Text>
+            <Text style={styles.text}>Dni: {selectedShipping.dni}</Text>
+            <Text style={styles.text}>
+              Dirección: {selectedShipping.address}
+            </Text>
+            <Text style={styles.text}>Ciudad: {selectedShipping.city}</Text>
+            <Text style={styles.text}>
+              Provincia: {getFullProvinceName(selectedShipping.province)}
+            </Text>
+            <Text style={styles.text}>CP: {selectedShipping.zip}</Text>
+          </View>
+        )}
+      </Page>
+    </Document>
+  );
+
+  const getFullProvinceName = (initial: string) => {
+    return provinceNames[initial] || initial;
+  };
+
   const filteredData = shipping.filter(
     (ship) =>
       ship.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -63,12 +174,17 @@ export default function ShippingData() {
 
   return (
     <div className="overflow-x-auto max-h-128">
-      {showPDFPreview && selectedShipping && (
-        <div>
-          <PDFShipping
-            shippData={selectedShipping}
-            closePDFPreview={closePDFPreview}
-          />
+      {showPDFPreview && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-75 flex justify-center">
+          <button
+            className="z-50 absolute bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded bottom-10"
+            onClick={closePDFPreview}
+          >
+            Cerrar
+          </button>
+          <PDFViewer style={styles.showPDF}>
+            <MyDoc selectedShipping={selectedShipping} />
+          </PDFViewer>
         </div>
       )}
       <input
@@ -85,7 +201,7 @@ export default function ShippingData() {
             <th className="px-4 py-2 text-start">Cliente</th>
             <th className="px-4 py-2 text-start">CP</th>
             <th className="px-4 py-2 text-start">Fecha</th>
-            <th className="px-4 py-2 text-start">Descargar</th>
+            <th className="px-4 py-2 text-start">Acciones</th>
           </tr>
         </thead>
         <tbody className="align-top">
@@ -97,15 +213,22 @@ export default function ShippingData() {
               <td className="px-4 py-2">
                 {new Date(ship.date).toLocaleDateString("es-ES")}
               </td>
-              <td className="px-4 py-2">
+              <td className="px-4 py-2 flex gap-3">
                 <button
+                  className="max-lg:hidden"
                   onClick={() => {
-                    setSelectedShipping(ship);
                     setShowPDFPreview(true);
+                    setSelectedShipping(ship);
                   }}
                 >
                   <FaFilePdf />
                 </button>
+                <PDFDownloadLink
+                  document={<MyDoc selectedShipping={ship} />}
+                  fileName={`Pedido-${ship.shipping_order}.pdf`}
+                >
+                  <FaDownload />
+                </PDFDownloadLink>
               </td>
             </tr>
           ))}
