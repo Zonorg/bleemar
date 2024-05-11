@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         customer_note: string;
       } = await req.json();
 
-      console.log(shippingData);
+      // console.log(shippingData);
 
       if (shippingData.payment_method === "yith_pos_cash_gateway") {
         return NextResponse.json({
