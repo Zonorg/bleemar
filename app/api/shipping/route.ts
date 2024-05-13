@@ -31,6 +31,7 @@ export async function POST(req: Request) {
           postcode: string;
           city: string;
           state: string;
+          phone: string;
         };
         meta_data: { key: string; value: string }[];
         payment_method: string;
@@ -45,8 +46,10 @@ export async function POST(req: Request) {
         });
       }
 
-      const { first_name, address_1, postcode, city, state } =
+      const { first_name, address_1, postcode, city, state, phone } =
         shippingData.billing;
+
+      // const phone = shippingData.billing?.phone ?? "";
 
       const shipping_order = shippingData.id;
       const date = shippingData.date_created;
@@ -72,6 +75,7 @@ export async function POST(req: Request) {
           zip: postcode,
           city,
           province: state,
+          phone,
           dni,
           transport,
           customer_note,

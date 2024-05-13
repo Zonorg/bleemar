@@ -3,12 +3,13 @@ import { FaFilePdf } from "react-icons/fa6";
 import { FaDownload } from "react-icons/fa";
 import {
   PDFViewer,
+  PDFDownloadLink,
   Page,
   Text,
+  Image,
   View,
   Document,
   StyleSheet,
-  PDFDownloadLink,
 } from "@react-pdf/renderer";
 
 interface Shipping {
@@ -19,6 +20,7 @@ interface Shipping {
   address: string;
   city: string;
   province: string;
+  phone: string;
   dni: string;
   transport: string;
   date: string;
@@ -104,26 +106,29 @@ export default function ShippingData() {
     page: {
       backgroundColor: "#ffffff",
       padding: 10,
+      flexDirection: "row",
+      justifyContent: "flex-start",
+      alignItems: "center",
     },
-    documentTitle: {
-      fontSize: 40,
-      fontWeight: "bold",
-      color: "#333333",
-      padding: 5,
-      textAlign: "center",
+    logo: {
+      height: 120,
+      transform: "rotate(-90deg)",
     },
-    documentSubtitle: {
-      fontSize: 30,
-      padding: 15,
-      color: "#ffffff",
-      backgroundColor: "#333333",
+    tableContainer: {
+      display: "flex",
     },
     tableRow: {
       flexDirection: "column",
       fontSize: 26,
       color: "#333333",
-      margin: "50px auto",
-      width: "400px",
+      margin: "30px auto",
+      transform: "rotate(-90deg)",
+    },
+    documentSubtitle: {
+      fontSize: 30,
+      padding: 14,
+      color: "#ffffff",
+      backgroundColor: "#333333",
     },
     text: {
       padding: 15,
@@ -138,23 +143,34 @@ export default function ShippingData() {
   }) => (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.documentTitle}>BleeMar</Text>
-        {selectedShipping && (
-          <View key={selectedShipping.id} style={styles.tableRow}>
-            <Text style={styles.documentSubtitle}>Enviar a:</Text>
-            <Text style={styles.text}>{selectedShipping.name}</Text>
-            <Text style={styles.text}>Dni: {selectedShipping.dni}</Text>
-            <Text style={styles.text}>
-              Dirección: {selectedShipping.address}
-            </Text>
-            <Text style={styles.text}>Ciudad: {selectedShipping.city}</Text>
-            <Text style={styles.text}>
-              Provincia: {getFullProvinceName(selectedShipping.province)}
-            </Text>
-            <Text style={styles.text}>CP: {selectedShipping.zip}</Text>
-            <Text style={styles.text}>Transporte: {selectedShipping.transport}</Text>
-          </View>
-        )}
+        <Image src="/logo-bleemar.png" style={styles.logo} />
+        <View style={styles.tableContainer}>
+          {" "}
+          {selectedShipping && (
+            <View key={selectedShipping.id} style={styles.tableRow}>
+              <Text style={styles.text}>
+                Localidad: {selectedShipping.city}
+              </Text>
+              <Text style={styles.text}>
+                Provincia: {getFullProvinceName(selectedShipping.province)}
+              </Text>
+              <Text style={styles.text}>CP: {selectedShipping.zip}</Text>
+              <Text style={styles.text}>
+                Transporte: {selectedShipping.transport}
+              </Text>
+            </View>
+          )}
+          {selectedShipping && (
+            <View key={selectedShipping.id} style={styles.tableRow}>
+              <Text style={styles.documentSubtitle}>Enviar a:</Text>
+              <Text style={styles.text}>{selectedShipping.name}</Text>
+              <Text style={styles.text}>Dni: {selectedShipping.dni}</Text>
+              <Text style={styles.text}>
+                Teléfono: {selectedShipping.phone}
+              </Text>
+            </View>
+          )}
+        </View>
       </Page>
     </Document>
   );

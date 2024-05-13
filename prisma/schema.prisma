@@ -84,6 +84,7 @@ model Shipping {
   city           String
   province       String
   zip            String
+  phone          String
   dni            String
   transport      String
   customer_note  String
