@@ -106,27 +106,26 @@ export default function ShippingData() {
     page: {
       backgroundColor: "#ffffff",
       padding: 10,
-      flexDirection: "row",
+      flexDirection: "column",
       justifyContent: "flex-start",
       alignItems: "center",
     },
     logo: {
       height: 120,
-      transform: "rotate(-90deg)",
     },
     tableContainer: {
-      display: "flex",
+      flexDirection: "column",
     },
     tableRow: {
       flexDirection: "column",
       fontSize: 26,
       color: "#333333",
       margin: "30px auto",
-      transform: "rotate(-90deg)",
+      width: "400px",
     },
     documentSubtitle: {
       fontSize: 30,
-      padding: 14,
+      padding: 13,
       color: "#ffffff",
       backgroundColor: "#333333",
     },
@@ -145,9 +144,14 @@ export default function ShippingData() {
       <Page size="A4" style={styles.page}>
         <Image src="/logo-bleemar.png" style={styles.logo} />
         <View style={styles.tableContainer}>
-          {" "}
           {selectedShipping && (
             <View key={selectedShipping.id} style={styles.tableRow}>
+              <Text style={styles.documentSubtitle}>Enviar a:</Text>
+              <Text style={styles.text}>{selectedShipping.name}</Text>
+              <Text style={styles.text}>Dni: {selectedShipping.dni}</Text>
+              <Text style={styles.text}>
+                Teléfono: {selectedShipping.phone}
+              </Text>
               <Text style={styles.text}>
                 Localidad: {selectedShipping.city}
               </Text>
@@ -157,16 +161,6 @@ export default function ShippingData() {
               <Text style={styles.text}>CP: {selectedShipping.zip}</Text>
               <Text style={styles.text}>
                 Transporte: {selectedShipping.transport}
-              </Text>
-            </View>
-          )}
-          {selectedShipping && (
-            <View key={selectedShipping.id} style={styles.tableRow}>
-              <Text style={styles.documentSubtitle}>Enviar a:</Text>
-              <Text style={styles.text}>{selectedShipping.name}</Text>
-              <Text style={styles.text}>Dni: {selectedShipping.dni}</Text>
-              <Text style={styles.text}>
-                Teléfono: {selectedShipping.phone}
               </Text>
             </View>
           )}
