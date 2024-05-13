@@ -1,6 +1,7 @@
-import { useState, FormEvent, ChangeEvent } from "react";
+import { useState, FormEvent, ChangeEvent, useRef } from "react";
 import Modal from "react-modal";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { RiDeleteBackFill } from "react-icons/ri";
 
 type FormData = {
   name: string;
@@ -144,23 +145,49 @@ export default function AddRoll() {
     });
   };
 
-  const handleSizeCountChange = (
-    size: keyof typeof sizeCount,
-    increment: boolean
-  ) => {
+  const handleIncrement = (size: keyof typeof sizeCount) => {
     setSizeCount((prevState) => ({
       ...prevState,
-      [size]: increment ? prevState[size] + 1 : 0,
+      [size]: prevState[size] + 1,
     }));
 
-    setTimeout(() => {
-      handleSizeChange({
-        target: {
-          name: size,
-          checked: increment || sizeCount[size] > 0,
-        },
-      } as ChangeEvent<HTMLInputElement>);
-    }, 0);
+    handleSizeChange({
+      target: {
+        name: size,
+        checked: true,
+      },
+    } as ChangeEvent<HTMLInputElement>);
+  };
+
+  const handleDecrement = (size: keyof typeof sizeCount) => {
+    if (sizeCount[size] > 0) {
+      setSizeCount((prevState) => ({
+        ...prevState,
+        [size]: prevState[size] - 1, // Decrementar el contador del tamaño en 1
+      }));
+
+      setFormData((prevState) => {
+        const newSize = [...prevState.size]; // Crear una copia de la lista de tamaños seleccionados
+        const sizeIndex = newSize.indexOf(size); // Encontrar el índice del tamaño en la lista
+
+        if (sizeIndex !== -1) {
+          newSize.splice(sizeIndex, 1); // Eliminar una instancia del tamaño del array
+        }
+
+        // Recalcular la cantidad total con los tamaños seleccionados
+        const totalQuantity = prevState.rollcuts.reduce(
+          (sum, cut) => sum + (cut.quantity || 0),
+          0
+        );
+        const totalQuantityWithSizes = totalQuantity * newSize.length;
+
+        return {
+          ...prevState,
+          size: newSize,
+          total_quantity: totalQuantityWithSizes,
+        };
+      });
+    }
   };
 
   const handleSizeChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -246,6 +273,29 @@ export default function AddRoll() {
     } catch (error) {
       console.log("Error", error);
     }
+  };
+
+  const handleClose = () => {
+    setModalIsOpen(false);
+    setFormData({
+      name: "",
+      order_number: 0,
+      size: [],
+      workshop: "",
+      total_quantity: 0,
+      order_date: getCurrentDate(),
+      rollcuts: [
+        { color: "", combined: "", lining: "", quantity: 0 },
+        { color: "", combined: "", lining: "", quantity: 0 },
+        { color: "", combined: "", lining: "", quantity: 0 },
+        { color: "", combined: "", lining: "", quantity: 0 },
+        { color: "", combined: "", lining: "", quantity: 0 },
+      ],
+      rolldetails: [
+        { title: "", quantity: 0 },
+        { title: "", quantity: 0 },
+      ],
+    });
   };
 
   return (
@@ -451,34 +501,31 @@ export default function AddRoll() {
                     onChange={handleSizeChange}
                     className="mr-1"
                   /> */}
-                  <label htmlFor={size} className="mr-1">
+                  <label htmlFor={size} className="mr-1 font-bold">
                     {size}
                   </label>
                   <button
                     type="button"
                     onClick={() =>
-                      handleSizeCountChange(
-                        size as keyof typeof sizeCount,
-                        true
-                      )
+                      handleIncrement(size as keyof typeof sizeCount)
                     }
-                    className="px-2 py-1 border"
+                    className="px-2 py-1 hover:scale-110"
                   >
-                    +
+                    <FaPlus />
                   </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleSizeCountChange(
-                        size as keyof typeof sizeCount,
-                        false
-                      )
-                    }
-                    className="px-2 py-1 border"
-                  >
-                    -
-                  </button>
-                  <p className="ml-1">Cantidad: {sizeCount[size]}</p>
+                  <p className="ml-1 text-xs">CANTIDAD:</p>
+                  <p className="ml-1 font-bold">{sizeCount[size]}</p>
+                  {sizeCount[size] > 0 && ( // Condición para mostrar el botón de trash
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleDecrement(size as keyof typeof sizeCount)
+                      }
+                      className="px-2 py-1 text-red-500 hover:scale-110"
+                    >
+                      <RiDeleteBackFill size={20} />
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -493,7 +540,7 @@ export default function AddRoll() {
               Agregar pedido
             </button>
             <button
-              onClick={() => setModalIsOpen(false)}
+              onClick={handleClose}
               className="border px-4 py-2 rounded font-bold"
             >
               Cerrar
