@@ -153,6 +153,9 @@ export default function ShippingData() {
                 Teléfono: {selectedShipping.phone}
               </Text>
               <Text style={styles.text}>
+                Dirección: {selectedShipping.address}
+              </Text>
+              <Text style={styles.text}>
                 Localidad: {selectedShipping.city}
               </Text>
               <Text style={styles.text}>
