@@ -17,7 +17,10 @@ export async function POST(req: Request) {
     const contentType = req.headers.get("content-type");
     const webhookSource = req.headers.get("x-wc-webhook-source");
 
-    if (webhookSource !== "https://bleemar.com/") {
+    if (
+      webhookSource !== "https://bleemar.com/" &&
+      webhookSource !== "https://test.bleemar.com/"
+    ) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     console.log(contentType);
@@ -112,6 +115,38 @@ export async function GET(req: Request) {
     console.error(error);
     return NextResponse.json(
       { message: "Error getting shipping objects" },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function PUT(req: Request) {
+  const { id, completed, address } = await req.json();
+  if (!id) {
+    return NextResponse.json(
+      { message: "Provide the ID of the shipping object to update" },
+      { status: 422 }
+    );
+  }
+
+  try {
+    const session = await getSession(req);
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+    await connectToDatabase();
+    const shipping = await prisma.shipping.update({
+      where: { id },
+      data: { completed, address },
+    });
+
+    return NextResponse.json({ shipping });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "Error updating shipping object" },
       { status: 500 }
     );
   } finally {

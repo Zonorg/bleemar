@@ -338,12 +338,7 @@ export default function EditRoll({ rollData, closeEdition }: Props) {
         <button className="green_button" onClick={handleSave}>
           Guardar cambios
         </button>
-        <button
-          className="blue_plain_button"
-          onClick={() => {
-            closeEdition();
-          }}
-        >
+        <button className="blue_plain_button" onClick={closeEdition}>
           Cancelar
         </button>
       </div>

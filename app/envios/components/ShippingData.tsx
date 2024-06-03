@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import EditShiping from "../components/EditShiping";
+import EditShipping from "./EditShipping";
 import { FaFilePdf } from "react-icons/fa6";
 import { FaDownload } from "react-icons/fa";
+import { PiPencilSimpleLineFill } from "react-icons/pi";
 import {
   PDFViewer,
   PDFDownloadLink,
@@ -13,7 +14,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 
-interface Shipping {
+export interface Shipping {
   id: string;
   shipping_order: number;
   name: string;
@@ -26,6 +27,7 @@ interface Shipping {
   transport: string;
   date: string;
   customer_note: string;
+  completed: boolean;
   createdAt: string;
 }
 
@@ -39,6 +41,7 @@ export default function ShippingData() {
   const [selectedShipping, setSelectedShipping] = useState<Shipping | null>(
     null
   );
+  const [editMode, setEditMode] = useState(false);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
 
   async function fetchData() {
@@ -248,6 +251,10 @@ export default function ShippingData() {
     },
   });
 
+  const closeEdition = () => {
+    setEditMode(false);
+  };
+
   const formattedSearchTerm = searchTerm.toLowerCase();
   const filteredData = shipping.filter(
     (ship) =>
@@ -261,66 +268,95 @@ export default function ShippingData() {
   );
 
   return (
-    <div className="overflow-x-auto max-h-128">
-      {showPDFPreview && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-75 flex justify-center">
-          <button
-            className="z-50 absolute bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded bottom-10"
-            onClick={closePDFPreview}
-          >
-            Cerrar
-          </button>
-          <PDFViewer style={styles.showPDF}>
-            <MyDoc selectedShipping={selectedShipping} />
-          </PDFViewer>
+    <>
+      {!editMode ? (
+        <div className="overflow-x-auto max-h-128">
+          {showPDFPreview && (
+            <div className="fixed inset-0 z-50 bg-black bg-opacity-75 flex justify-center">
+              <button
+                className="z-50 absolute bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded bottom-10"
+                onClick={closePDFPreview}
+              >
+                Cerrar
+              </button>
+              <PDFViewer style={styles.showPDF}>
+                <MyDoc selectedShipping={selectedShipping} />
+              </PDFViewer>
+            </div>
+          )}
+          <input
+            type="text"
+            placeholder="Buscar pedido..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full m-auto px-4 py-2 border rounded-md mb-4"
+          />
+          <table className="w-full bg-white rounded-lg">
+            <thead>
+              <tr className="border-b">
+                <th className="px-4 py-2 text-start">Nº Pedido</th>
+                <th className="px-4 py-2 text-start">Cliente</th>
+                <th className="px-4 py-2 text-start">CP</th>
+                <th className="px-4 py-2 text-start">Fecha</th>
+                <th className="px-4 py-2 text-start">Estado</th>
+                <th className="px-4 py-2 text-start">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="align-top">
+              {filteredData.map((ship) => (
+                <tr key={ship.id} className="border-b">
+                  <td className="px-4 py-2">{ship.shipping_order}</td>
+                  <td className="px-4 py-2">{ship.name}</td>
+                  <td className="px-4 py-2">{ship.zip}</td>
+                  <td className="px-4 py-2">
+                    {new Date(ship.date).toLocaleDateString("es-ES")}
+                  </td>
+                  <td className="px-4 py-2">
+                    {ship.completed ? (
+                      <span className="font-medium text-green-500">
+                        Enviado
+                      </span>
+                    ) : (
+                      <span className="font-medium text-yellow-500">
+                        Pendiente
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-2 flex gap-3">
+                    <button
+                      onClick={() => {
+                        setEditMode(true);
+                        setSelectedShipping(ship);
+                      }}
+                    >
+                      <PiPencilSimpleLineFill size={20} />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowPDFPreview(true);
+                        setSelectedShipping(ship);
+                      }}
+                    >
+                      <FaFilePdf />
+                    </button>
+                    <PDFDownloadLink
+                      document={<MyDoc selectedShipping={ship} />}
+                      fileName={`Pedido-${ship.shipping_order}.pdf`}
+                    >
+                      <FaDownload />
+                    </PDFDownloadLink>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+      ) : (
+        <EditShipping
+          selectedShipping={selectedShipping}
+          closeEdition={closeEdition}
+        />
       )}
-      <input
-        type="text"
-        placeholder="Buscar pedido..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full m-auto px-4 py-2 border rounded-md mb-4"
-      />
-      <table className="w-full bg-white rounded-lg">
-        <thead>
-          <tr className="border-b">
-            <th className="px-4 py-2 text-start">Nº Pedido</th>
-            <th className="px-4 py-2 text-start">Cliente</th>
-            <th className="px-4 py-2 text-start">CP</th>
-            <th className="px-4 py-2 text-start">Fecha</th>
-            <th className="px-4 py-2 text-start">Acciones</th>
-          </tr>
-        </thead>
-        <tbody className="align-top">
-          {filteredData.map((ship) => (
-            <tr key={ship.id} className="border-b">
-              <td className="px-4 py-2">{ship.shipping_order}</td>
-              <td className="px-4 py-2">{ship.name}</td>
-              <td className="px-4 py-2">{ship.zip}</td>
-              <td className="px-4 py-2">
-                {new Date(ship.date).toLocaleDateString("es-ES")}
-              </td>
-              <td className="px-4 py-2 flex gap-3">
-                <button
-                  onClick={() => {
-                    setShowPDFPreview(true);
-                    setSelectedShipping(ship);
-                  }}
-                >
-                  <FaFilePdf />
-                </button>
-                <PDFDownloadLink
-                  document={<MyDoc selectedShipping={ship} />}
-                  fileName={`Pedido-${ship.shipping_order}.pdf`}
-                >
-                  <FaDownload />
-                </PDFDownloadLink>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    </>
   );
 }

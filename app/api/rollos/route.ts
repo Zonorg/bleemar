@@ -201,6 +201,7 @@ export async function PUT(req: Request) {
   }
 }
 
+// Ruta para eliminar todo un rollo incluyendo, cortes, detalles y pagos
 export async function DELETE(req: Request) {
   try {
     const { id } = await req.json();

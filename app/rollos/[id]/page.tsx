@@ -13,7 +13,7 @@ import Modal from "react-modal";
 import PDFPreview from "@/app/prendas/components/PDFPreview";
 import { useSession } from "next-auth/react";
 
-interface RollData {
+export interface RollData {
   id: string;
   order_number: number;
   name: string;

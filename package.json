@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -14,7 +14,6 @@
     "bcrypt": "^5.1.1",
     "googleapis": "^135.1.0",
     "googleapis-common": "^7.2.0",
-    "jspdf": "^2.5.1",
     "next": "^14.1.4",
     "next-auth": "^4.24.7",
     "prisma": "^5.12.1",

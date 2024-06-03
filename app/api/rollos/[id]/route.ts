@@ -65,6 +65,7 @@ export async function GET(req: Request, { params }: { params: any }) {
   }
 }
 
+//Ruta para borrar cortes y detalles individualmente en la edición de un rollo
 export async function DELETE(req: Request, { params }: { params: any }) {
   try {
     // const rollId = String(params.id);
