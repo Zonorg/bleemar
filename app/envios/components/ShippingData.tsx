@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import EditShiping from "../components/EditShiping";
 import { FaFilePdf } from "react-icons/fa6";
 import { FaDownload } from "react-icons/fa";
 import {
@@ -94,6 +95,100 @@ export default function ShippingData() {
     return provinceNames[initial] || initial;
   };
 
+  const MyDoc = ({
+    selectedShipping,
+  }: {
+    selectedShipping: Shipping | null;
+  }) => (
+    <Document>
+      <Page size="A4" orientation="landscape" style={styles.page}>
+        <Image src="/logo-bleemar.png" style={styles.logo} />
+        <View style={styles.tableContainer}>
+          {selectedShipping && (
+            <>
+              <View style={styles.table}>
+                <View style={styles.tableRowHeader}>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCellHeader}>Enviar a:</Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCellHeader}>Dni:</Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCellHeader}>Teléfono:</Text>
+                  </View>
+
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCellHeader}>Transporte:</Text>
+                  </View>
+                </View>
+                <View style={styles.tableRow}>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>
+                      {selectedShipping.name}
+                    </Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{selectedShipping.dni}</Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>
+                      {selectedShipping.phone}
+                    </Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>
+                      {selectedShipping.transport}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.table}>
+                <View style={styles.tableRowHeader}>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCellHeader}>Dirección:</Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCellHeader}>Localidad:</Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCellHeader}>Provincia:</Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCellHeader}>CP:</Text>
+                  </View>
+                </View>
+
+                <View style={styles.tableRow}>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>
+                      {selectedShipping.address}
+                    </Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>
+                      {selectedShipping.city}
+                    </Text>
+                  </View>
+
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>
+                      {getFullProvinceName(selectedShipping.province)}
+                    </Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{selectedShipping.zip}</Text>
+                  </View>
+                </View>
+              </View>
+            </>
+          )}
+        </View>
+      </Page>
+    </Document>
+  );
+
   const styles = StyleSheet.create({
     showPDF: {
       height: "95vh",
@@ -112,65 +207,46 @@ export default function ShippingData() {
     },
     logo: {
       height: 120,
+      marginBottom: 20,
     },
     tableContainer: {
-      flexDirection: "column",
+      width: "100%",
+      margin: 20,
+    },
+    table: {
+      display: "flex",
+      width: "auto",
+      borderStyle: "solid",
+      borderWidth: 1,
+      borderColor: "#bfbfbf",
+      marginBottom: 10,
     },
     tableRow: {
-      flexDirection: "column",
-      fontSize: 26,
-      color: "#333333",
-      margin: "30px auto",
-      width: "400px",
+      flexDirection: "row",
+      borderBottomStyle: "solid",
+      borderBottomWidth: 1,
+      borderBottomColor: "#bfbfbf",
     },
-    documentSubtitle: {
-      fontSize: 30,
-      padding: 13,
-      color: "#ffffff",
-      backgroundColor: "#333333",
+    tableRowHeader: {
+      flexDirection: "row",
+      backgroundColor: "#f3f3f3",
     },
-    text: {
-      padding: 15,
-      borderBottom: "1px dotted black",
+    tableCol: {
+      flex: 1,
+      borderRightStyle: "solid",
+      borderRightWidth: 1,
+      borderRightColor: "#bfbfbf",
+    },
+    tableCellHeader: {
+      padding: 10,
+      fontSize: 16,
+      fontWeight: "bold",
+    },
+    tableCell: {
+      padding: 10,
+      fontSize: 14,
     },
   });
-
-  const MyDoc = ({
-    selectedShipping,
-  }: {
-    selectedShipping: Shipping | null;
-  }) => (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <Image src="/logo-bleemar.png" style={styles.logo} />
-        <View style={styles.tableContainer}>
-          {selectedShipping && (
-            <View key={selectedShipping.id} style={styles.tableRow}>
-              <Text style={styles.documentSubtitle}>Enviar a:</Text>
-              <Text style={styles.text}>{selectedShipping.name}</Text>
-              <Text style={styles.text}>Dni: {selectedShipping.dni}</Text>
-              <Text style={styles.text}>
-                Teléfono: {selectedShipping.phone}
-              </Text>
-              <Text style={styles.text}>
-                Dirección: {selectedShipping.address}
-              </Text>
-              <Text style={styles.text}>
-                Localidad: {selectedShipping.city}
-              </Text>
-              <Text style={styles.text}>
-                Provincia: {getFullProvinceName(selectedShipping.province)}
-              </Text>
-              <Text style={styles.text}>CP: {selectedShipping.zip}</Text>
-              <Text style={styles.text}>
-                Transporte: {selectedShipping.transport}
-              </Text>
-            </View>
-          )}
-        </View>
-      </Page>
-    </Document>
-  );
 
   const formattedSearchTerm = searchTerm.toLowerCase();
   const filteredData = shipping.filter(

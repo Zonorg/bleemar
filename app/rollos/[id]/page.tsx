@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
-import { FaDownload } from "react-icons/fa";
+import { FaFilePdf } from "react-icons/fa6";
 import { ImCross } from "react-icons/im";
 import { GrStatusGoodSmall } from "react-icons/gr";
 import Link from "next/link";
@@ -187,7 +187,7 @@ export default function RollDetails() {
                           setShowPDFPreview(true);
                         }}
                       >
-                        <FaDownload />
+                        <FaFilePdf />
                       </button>
                     </td>
                   </tr>

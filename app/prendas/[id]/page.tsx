@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { FaDownload } from "react-icons/fa";
+import { FaFilePdf } from "react-icons/fa6";
 import { GrStatusGoodSmall } from "react-icons/gr";
 import { FiLoader } from "react-icons/fi";
 import Link from "next/link";
@@ -193,7 +193,7 @@ export default function RollDetails() {
                       setShowPDFPreview(true);
                     }}
                   >
-                    <FaDownload />
+                    <FaFilePdf />
                   </button>
                 </td>
               </tr>
