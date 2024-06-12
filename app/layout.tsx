@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Roboto_Condensed } from "next/font/google";
-import Sidebar from "./components/sidebar";
+import Sidebar from "./components/sidebar-global";
 import "./globals.css";
-import Footer from "./components/footer";
+import Footer from "./components/footer-global";
 // import Header from "./components/Header";
 import SessionProvider from "./components/session-provider";
 import { getServerSession } from "next-auth";

@@ -7,7 +7,7 @@ import { FaFilePdf } from "react-icons/fa6";
 import { ImCross } from "react-icons/im";
 import { GrStatusGoodSmall } from "react-icons/gr";
 import Link from "next/link";
-import Payments from "../components/payments";
+import Payments from "../components/roll-payments";
 import Image from "next/image";
 import EditRoll from "../components/edit-roll";
 import Modal from "react-modal";
