@@ -1,6 +1,6 @@
 "use client";
-import AddRoll from "./components/AddRoll";
-import RollData from "./components/RollData";
+import AddRoll from "./components/add-roll";
+import RollData from "./components/roll-data";
 
 export default function Rollos() {
   return (

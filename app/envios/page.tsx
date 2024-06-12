@@ -1,6 +1,6 @@
 "use client";
 
-import ShippingData from "./components/ShippingData";
+import ShippingData from "./components/shipping-data";
 
 export default function Envios() {
   return (

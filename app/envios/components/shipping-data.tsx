@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import EditShipping from "./EditShipping";
+import { Shipping } from "@/app/types/index";
+import EditShipping from "./edit-shipping";
 import { FaFilePdf } from "react-icons/fa6";
 import { FaDownload } from "react-icons/fa";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
@@ -13,23 +14,6 @@ import {
   Document,
   StyleSheet,
 } from "@react-pdf/renderer";
-
-export interface Shipping {
-  id: string;
-  shipping_order: number;
-  name: string;
-  zip: string;
-  address: string;
-  city: string;
-  province: string;
-  phone: string;
-  dni: string;
-  transport: string;
-  date: string;
-  customer_note: string;
-  completed: boolean;
-  createdAt: string;
-}
 
 interface ProvinceNames {
   [key: string]: string;

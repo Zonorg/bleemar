@@ -1,3 +1,4 @@
+// Extensión de la interfaz de sesión de NextAuth para usar roles u otros atributos
 import { SessionBase, UserBase } from "next-auth";
 
 declare module "next-auth" {

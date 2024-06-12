@@ -1,44 +1,23 @@
 "use client";
 import { useState, useEffect } from "react";
+import { RollDataById } from "@/app/types";
 import { useParams } from "next/navigation";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
 import { FaFilePdf } from "react-icons/fa6";
 import { ImCross } from "react-icons/im";
 import { GrStatusGoodSmall } from "react-icons/gr";
 import Link from "next/link";
-import Payments from "../components/Payments";
+import Payments from "../components/payments";
 import Image from "next/image";
-import EditRoll from "../components/EditRoll";
+import EditRoll from "../components/edit-roll";
 import Modal from "react-modal";
-import PDFPreview from "@/app/prendas/components/PDFPreview";
+import PDFPreview from "@/app/prendas/components/pdf-preview";
 import { useSession } from "next-auth/react";
-
-export interface RollData {
-  id: string;
-  order_number: number;
-  name: string;
-  workshop: string;
-  size: string;
-  total_quantity: number;
-  order_date: string;
-  completed: boolean;
-  rollcuts: {
-    id: string;
-    color: string;
-    combined: string;
-    lining: string;
-    quantity: number;
-    delivered: number;
-  }[];
-  rolldetails: { id: string; title: string; quantity: number }[];
-  payments: { id: string; amount: string; date: string; signature: string }[];
-  [key: string]: any;
-}
 
 export default function RollDetails() {
   const { id } = useParams<{ id: string }>();
   const { data: session } = useSession();
-  const [rollData, setRollData] = useState<RollData | null>(null);
+  const [rollData, setRollData] = useState<RollDataById | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);

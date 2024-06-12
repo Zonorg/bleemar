@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Shipping } from "./ShippingData";
+import { Shipping } from "@/app/types/index";
 import { FiLoader } from "react-icons/fi";
 
 interface Props {

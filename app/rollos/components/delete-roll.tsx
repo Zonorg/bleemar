@@ -2,11 +2,11 @@ import { useState } from "react";
 import { BsFillTrashFill } from "react-icons/bs";
 import { FiLoader } from "react-icons/fi";
 
-interface DeleteRollProps {
+interface DeleteRollData {
   id: string;
 }
 
-export default function DeleteRoll({ id }: DeleteRollProps) {
+export default function DeleteRoll({ id }: DeleteRollData) {
   const [loading, setLoading] = useState(false);
 
   async function handleDelete() {

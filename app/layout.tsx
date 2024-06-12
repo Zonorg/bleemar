@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Roboto_Condensed } from "next/font/google";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/sidebar";
 import "./globals.css";
-import Footer from "./components/Footer";
+import Footer from "./components/footer";
 // import Header from "./components/Header";
-import SessionProvider from "./components/SessionProvider";
+import SessionProvider from "./components/session-provider";
 import { getServerSession } from "next-auth";
 
 const roboto = Roboto_Condensed({ subsets: ["latin"] });

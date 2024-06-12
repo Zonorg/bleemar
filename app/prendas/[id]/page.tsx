@@ -1,44 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
+import { RollDataById } from "@/app/types/index";
 import { useParams } from "next/navigation";
 import { FaFilePdf } from "react-icons/fa6";
 import { GrStatusGoodSmall } from "react-icons/gr";
 import { FiLoader } from "react-icons/fi";
 import Link from "next/link";
-import PDFPreview from "../components/PDFPreview";
-
-interface RollData {
-  id: string;
-  order_number: number;
-  name: string;
-  workshop: string;
-  size: string;
-  total_quantity: number;
-  order_date: string;
-  completed: boolean;
-  rollcuts: {
-    id: string;
-    color: string;
-    combined: string;
-    lining: string;
-    quantity: number;
-    delivered: number;
-    rollCutSizes: RollCutSize[];
-  }[];
-  rolldetails: { id: string; title: string; quantity: number }[];
-}
-
-interface RollCutSize {
-  id: string;
-  cutId: string;
-  size: string;
-  quantity: number;
-  createdAt: string;
-}
+import PDFPreview from "../components/pdf-preview";
 
 export default function RollDetails() {
   const { id } = useParams<{ id: string }>();
-  const [rollData, setRollData] = useState<RollData | null>(null);
+  const [rollData, setRollData] = useState<RollDataById | null>(null);
   const [showPDFPreview, setShowPDFPreview] = useState<boolean>(false);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);

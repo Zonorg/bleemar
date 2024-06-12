@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
+import { RollData as InterfaceRollData } from "@/app/types/index";
 import { FaEye } from "react-icons/fa";
-import DeleteRoll from "./DeleteRoll";
+import DeleteRoll from "./delete-roll";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
-interface Roll {
-  id: string;
-  order_number: number;
-  name: string;
-  workshop: string;
-  total_quantity: number;
-  order_date: string;
-}
-
 export default function RollData() {
-  const [rolls, setRolls] = useState<Roll[]>([]);
+  const [rolls, setRolls] = useState<InterfaceRollData[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { data: session } = useSession();
 

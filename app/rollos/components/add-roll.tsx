@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent, useRef } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import Modal from "react-modal";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { RiDeleteBackFill } from "react-icons/ri";

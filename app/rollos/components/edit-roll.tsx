@@ -1,25 +1,5 @@
 import { useState, useEffect } from "react";
-
-export interface RollData {
-  id: string;
-  order_number: number;
-  name: string;
-  workshop: string;
-  size: string | string[];
-  total_quantity: number;
-  order_date: string;
-  completed: boolean;
-  rollcuts: {
-    id: string;
-    color: string;
-    combined: string;
-    lining: string;
-    quantity: number;
-  }[];
-  rolldetails: { id: string; title: string; quantity: number }[];
-  payments: { id: string; amount: string; date: string; signature: string }[];
-  [key: string]: any;
-}
+import { RollData } from "@/app/types/index";
 
 interface Props {
   rollData: RollData | null;

@@ -1,6 +1,6 @@
 "use client";
 // import AddRoll from "../rollos/components/AddRoll";
-import OrderData from "./components/OrderData";
+import OrderData from "./components/order-data";
 
 export default function Cortes() {
   return (
